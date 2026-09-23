@@ -496,3 +496,43 @@ descriptor
 ~~~
 
 Order-compression gain and content-compression gain must be benchmarked separately.
+
+
+## 22. T76 terminal selector
+
+Under the baseline 8-bit-q profile, the final P24 coordinate contributes a 72-bit q table:
+
+~~~text
+q1||q2||...||q9 = 72 bits
+~~~
+
+A terminal-only four-bit extension produces:
+
+~~~text
+T76 = 72-bit q table || 4-bit extension
+~~~
+
+The extension is not HR. HR may remain derived state, but constraining these four bits to HR0..HR8 would reduce the terminal selector domain.
+
+T76 can act as a deterministic selector for a restricted family of block permutations.
+
+For an 81-block universe, the architecture can map each T76 value to a distinct permutation because 81! is much larger than 2^76.
+
+The architecture therefore distinguishes:
+
+~~~text
+full arbitrary 81-element permutation space : ~401.17 bits
+T76-selected permutation family             : 76-bit selector
+~~~
+
+The second is a subset selected under shared/versioned context, not universal compression of all 81! possible orders.
+
+## 23. T76 is not cryptographic strength by definition
+
+A 76-bit field has 2^76 possible bit patterns, but field width is not automatically entropy or security strength.
+
+The evaluator may generate fewer reachable patterns.
+
+Even with a uniform secret T76, exhaustive search is bounded by 2^76, below a 128-bit modern cryptographic target.
+
+Cryptographic confidentiality/authentication remains the responsibility of separately specified standard primitives.
