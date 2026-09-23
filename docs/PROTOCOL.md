@@ -137,66 +137,89 @@ Protocol tests should include:
 - cross-implementation byte equality
 
 
-## 11. Turn trajectory fields
+## 11. DNA trajectory
 
-A rule version may define a 25-turn pre-fix evaluation trajectory.
+For the 25-unresolved-coordinate profile, first create the immutable row-major unresolved-coordinate list:
 
-For each turn:
+~~~text
+E0..E24
+~~~
 
-1. scan board coordinates in row-major order (`r1c1 -> ... -> r1c9 -> r2c1 -> ... -> r9c9`) and skip already-filled cells;
-2. for each encountered unresolved coordinate, calculate candidate values for digits 1 through 9;
-3. apply canonical numeric encoding;
-4. determine the still-unresolved candidate set for every coordinate;
-5. calculate HexDoku Hamming Rank `HR = candidate_count - 1`;
-6. construct each Canonical Candidate Table using value ascending, then digit ascending;
-7. preserve row-major order as the canonical calculation/trajectory order;
-8. after all current-turn calculations complete, derive commit/compression priority as `HR ascending -> CCT lexicographic ascending -> coordinate ID ascending`;
-9. emit/reuse trajectory immediate bit vectors according to the fixed calculation order unless a versioned stream format explicitly selects the separate priority order;
-10. commit exactly one cell using the post-calculation priority and the versioned unique-solution rule;
-11. continue to the next turn.
+The protocol then defines 25 evaluation tables:
 
-For 25 initial unresolved cells, this yields 325 evaluated cell states.
-
-## 11A. Hamming Rank field
-
-HexDoku HR has values 0..8:
-
-```text
-0 = one remaining candidate / logically determined
+~~~text
+P0  = E0..E24
+P1  = E1..E24
 ...
-8 = nine remaining candidates / maximum unresolved multiplicity
-```
+P23 = E23..E24
+P24 = E24
+~~~
 
-If explicitly serialized, HR uses a baseline 4-bit field. Values 9..14 are reserved and 15 is invalid/error.
+For each active coordinate:
 
-If both endpoints deterministically recompute HR from the same turn state, the HR field SHOULD be omitted from the payload and treated as derived state.
+1. calculate candidates 1..9 using the versioned evaluator;
+2. apply canonical numeric encoding;
+3. rank candidate entries by q ascending, then digit ascending;
+4. derive HR if required;
+5. append q values to the canonical DNA stream.
+
+After P0..P23, commit Et using the versioned deterministic resolver.
+
+After P24, E24 is resolved or checked through the Terminal Reference / Parity source and is not required to be a digit.
+
+This produces 325 evaluated coordinate states.
+
+### 11.1 HexDoku Hamming Rank
+
+~~~text
+HR = unresolved candidate multiplicity - 1
+~~~
+
+Range: 0..8.
+
+HR does not choose or reorder the next coordinate.
+
+If explicitly serialized, HR uses 4 bits. If it is exactly recomputable, it should be omitted.
+
+### 11.2 HCT header
+
+If the compressed payload uses a frequency-derived HexDoku Canonical Table (HCT), HDC must determine it in a prepass.
+
+Canonical HCT ordering:
+
+~~~text
+frequency descending
+-> q numeric value ascending on ties
+~~~
+
+HDE must obtain the HCT before decoding any HCT-coded payload.
+
+The HCT may be omitted only when it is deterministically regenerable from already shared state.
+
+### 11.3 Terminal Reference
+
+The terminal field must specify an unambiguous type/length or a deterministic reference scheme.
+
+The terminal value may be non-numeric.
+
+A hash can validate a known Parity but does not by itself recover unknown Parity bytes.
 
 ## 12. Optional standard Hamming-distance address record
 
-`HR` is reserved for HexDoku's 0..8 unresolved-multiplicity rank. When a derived bit vector is optionally referenced relative to a canonical 72-bit base state using standard bitwise Hamming distance, a compact logical record may contain:
+Standard bitwise Hamming distance is written HD and is distinct from HexDoku HR.
 
-```text
-turn_id
-cell_index
+If an optional derived-bit address is used, a record may contain:
+
+~~~text
+stage_id
+coordinate_id
 hd_distance
 combination_rank_cr
 rule_version
 optional verification bits
-```
+~~~
 
-If turn and cell are already implied by the state machine, they may be omitted.
-
-The combination rank is interpreted only under the exact versioned combinatorial ranking convention.
-
-The receiver:
-
-1. recreates the canonical base state with HDE;
-2. un-ranks the selected combination of bit positions;
-3. flips exactly those positions;
-4. obtains the exact derived bit vector;
-5. optionally verifies it by hash or check value.
-
-The protocol must never require exhaustive Hamming enumeration to resolve a single address.
+HD/CR does not affect E0..E24 coordinate order.
 
 ## 13. Information accounting
 
