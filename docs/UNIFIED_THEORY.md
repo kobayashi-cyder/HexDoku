@@ -1401,6 +1401,256 @@ gauge-anomaly cancellation
 
 to determine how much of the hypercharge pattern can be fixed without inserting the observed numbers independently.
 
+
+---
+
+## Pre-geometric phase, vacuum bubble transition, and emergence of internal directions
+
+A stronger version of the current hypothesis does not assume that the presently observed internal state space existed from the beginning.
+
+Instead, distinguish two phases:
+
+~~~text
+pre-transition phase
+    ->
+vacuum / phase transition
+    ->
+post-transition effective internal geometry
+~~~
+
+In the pre-transition phase, later notions such as:
+
+~~~text
+color direction
+weak-isospin direction
+Higgs radial direction
+left/right internal connection
+~~~
+
+need not yet be separately meaningful observables.
+
+The correct statement is therefore stronger than "they were present but hidden":
+
+> The later internal coordinates may not have been physically defined before the phase transition.
+
+This is analogous to a crystal: lattice directions become meaningful only after the ordered phase forms.
+
+### Bubble language
+
+If the transition is first order, a useful physical realization is vacuum bubble nucleation.
+
+Schematically:
+
+~~~text
+metastable / high-symmetry phase
+    ->
+critical bubble of lower-energy phase
+    ->
+bubble expansion
+    ->
+new vacuum occupies the region
+~~~
+
+The phrase "bubble bursts" should therefore be interpreted as nucleation and growth of a new vacuum phase, not as a literal shell exploding into pre-existing particle directions.
+
+### Tangent / normal decomposition after vacuum selection
+
+Let a generic order parameter be Phi and the selected vacuum be Phi_0.
+
+After the transition:
+
+~~~text
+Phi = Phi_0 + delta Phi
+~~~
+
+The fluctuation can be decomposed relative to the vacuum manifold:
+
+~~~text
+delta Phi
+=
+normal component
++
+tangent components
+~~~
+
+The tangent directions correspond to motion along the degenerate vacuum manifold.
+
+The normal direction corresponds to changing the magnitude / radial displacement away from the vacuum manifold.
+
+For a simple scalar sector this gives the structural pattern:
+
+~~~text
+tangent directions
+    -> symmetry / Goldstone directions
+
+normal direction
+    -> radial Higgs-like excitation
+~~~
+
+The local curvature of the potential in a normal direction sets a mass scale:
+
+~~~text
+m_normal^2
+=
+second derivative of V at the vacuum
+~~~
+
+and the associated correlation length is schematically:
+
+~~~text
+xi ~ 1 / m_normal
+~~~
+
+so the user's intuitive notion of "thickness" can be related to stiffness, correlation length, or bubble-wall thickness.
+
+### If time and space are also emergent
+
+If ordinary spacetime already exists before the transition, "before" and "after" can be interpreted in the usual temporal sense.
+
+If spacetime itself is emergent, then the pre-transition structure may not admit an ordinary time coordinate.
+
+In that stronger branch:
+
+~~~text
+pre-geometric ordering relation
+    ->
+transition / instability
+    ->
+effective spacetime + internal state geometry
+~~~
+
+and the word "before" means precedence in the deeper state dynamics rather than earlier coordinate time.
+
+This branch remains speculative and must eventually recover Lorentzian spacetime, causal structure, and the observed low-energy field content.
+
+---
+
+## Correct group-theoretic realization of a 3+1 internal split
+
+A four-component internal state by itself does not automatically produce the Standard Model color structure.
+
+This distinction is essential.
+
+### Fundamental-vector vacuum
+
+If a fundamental scalar:
+
+~~~text
+Phi in C^4
+~~~
+
+transforms under SU(4) and develops a vacuum expectation value such as:
+
+~~~text
+<Phi> proportional to (0,0,0,v)
+~~~
+
+then the stabilizer is:
+
+~~~text
+SU(4) -> SU(3)
+~~~
+
+not generically:
+
+~~~text
+SU(3) x U(1)
+~~~
+
+For a gauged SU(4), seven generators are broken:
+
+~~~text
+15 - 8 = 7
+~~~
+
+so this model contains seven Goldstone directions before the Higgs mechanism reorganizes them.
+
+Therefore a simple four-vector vacuum is not the correct mechanism for preserving a physical 3+1 split with an additional U(1).
+
+### Adjoint / matrix order parameter
+
+A more suitable order parameter is an SU(4)-adjoint matrix Sigma.
+
+Choose a vacuum of the form:
+
+~~~text
+<Sigma>
+proportional to
+diag(1, 1, 1, -3)
+~~~
+
+which is traceless as required for su(4).
+
+This vacuum preserves transformations acting among the first three components together with one commuting generator.
+
+Thus:
+
+~~~text
+SU(4)
+    ->
+SU(3) x U(1)
+~~~
+
+up to the usual discrete quotient in the exact global group structure.
+
+Now a fundamental four-component matter state decomposes under the unbroken subgroup as:
+
+~~~text
+4
+    ->
+3 + 1
+~~~
+
+with the first three components forming an SU(3) triplet and the fourth an SU(3) singlet.
+
+This is the correct group-theoretic version of the intuitive:
+
+~~~text
+four undifferentiated internal components
+    ->
+three equivalent directions
++
+one distinguished direction
+~~~
+
+### Physical interpretation of the current hypothesis
+
+The stronger candidate history is therefore:
+
+~~~text
+pre-geometric / high-symmetry phase
+    ->
+vacuum transition
+    ->
+matrix-like order parameter acquires structured expectation value
+    ->
+internal symmetry breaks
+    ->
+3+1 representation split becomes meaningful
+    ->
+low-energy gauge, Higgs, and matter sectors emerge
+~~~
+
+The background order parameter itself may appear experimentally only as part of the vacuum structure, while its excitations and the fields defined relative to it appear as particles.
+
+This formulation is preferable to saying that "three colors are three vacuum fluctuations."
+
+The real requirement is:
+
+> The post-transition vacuum must possess a stabilizer group and representation decomposition that reproduce the observed internal quantum numbers.
+
+The next task is to determine whether one minimal order-parameter structure can simultaneously support:
+
+~~~text
+SU(3)_C
+SU(2)_L
+U(1)_Y
+left/right chirality
+a Higgs-like internal connection
+~~~
+
+without inserting these factors independently.
+
 ## Canonical current map
 
 The current physically disciplined map is:
