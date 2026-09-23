@@ -337,3 +337,63 @@ Increasing board size or structural complexity can make direct interpretation mo
 It must not be described as cryptographic confidentiality.
 
 Security-sensitive deployments should use authenticated encryption independently of HexDoku.
+
+
+## 15. Turn-state trajectory
+
+For a board with 25 unresolved cells, the current model evaluates unresolved coordinates before one value is fixed per turn.
+
+The evaluated cell count is:
+
+```text
+N = sum(n=1..25) n = 325
+```
+
+For each unresolved coordinate c at turn t, HDE computes a versioned candidate table:
+
+```text
+E(t,c) = [(digit 1, q1), ..., (digit 9, q9)]
+```
+
+where each q is converted to a canonical fixed-width numerical representation.
+
+The ordering function, sorting direction, tie-break rule, rounding, saturation, and bit order are reconstruction-critical protocol state.
+
+With 8-bit q values, each E(t,c) contributes 72 raw bits and the 25-turn trajectory contributes 23,400 raw bits before further reduction.
+
+## 16. Immediate-value reuse
+
+The canonical q values are allowed to become machine-level immediate bit material directly.
+
+The same deterministic output may be reused as:
+
+- hash material;
+- content-address keys;
+- bus payload words;
+- Seed derivation material;
+- arithmetic operands;
+- table indexes.
+
+The protocol does not require the transport intermediary to understand the semantic meaning of q.
+
+## 17. Hamming address layer
+
+Let B be one canonical 72-bit cell-state vector.
+
+A derived vector is addressed by:
+
+```text
+(B, d, k)
+```
+
+where d is the Hamming distance and k is the canonical rank of one d-element subset of the 72 bit positions.
+
+The decoder uses combinatorial unranking to obtain the exact flip mask.
+
+No exhaustive list is required.
+
+Across all d, the generated address space has 2^72 possible 72-bit vectors. This is a generated/addressable space, not additional independent information.
+
+Different base states' Hamming spaces overlap and must not be summed as if they were disjoint information stores.
+
+The detailed definition is in `docs/TRAJECTORY.md`.
