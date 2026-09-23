@@ -171,9 +171,9 @@ See [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md).
 
 ---
 
-## T76 compression accounting
+## T76 compression accounting (future Payload Profile)
 
-T76 can identify one order from a versioned family containing at most 2^76 orders.
+A future Payload Profile with a genuinely free T76 field could identify one order from a versioned family containing at most 2^76 orders. **Sudoku Profile v1 does not provide this free 76-bit selector.**
 
 For **25 distinct elements**, the complete arbitrary permutation space is larger:
 
@@ -193,7 +193,7 @@ When comparing against a naive explicit list of 25 IDs, the reduction can be sub
 | 25 × 64-bit IDs | 1,600 | 76 | 95.25% |
 | 25 × 256-bit hashes | 6,400 | 76 | 98.81% |
 
-These percentages are valid only when the element set, rule version, and other required context are already shared or accounted separately.
+These percentages are conditional design examples for that future payload profile. They are valid only when the element set, rule version, and other required context are already shared or accounted separately; they are not Sudoku-v1 benchmark results.
 
 For the selected family itself, 76 bits is already the information-theoretic minimum needed to distinguish all 2^76 selector states. HexDoku's gain is therefore mainly the replacement of a verbose explicit ordering/address list with a shared deterministic selector.
 
