@@ -34,6 +34,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [HDE Minimum Packet](docs/HDE_MIN_PACKET.md)
 - [One-Board Derived Information Model](docs/ONE_BOARD_DERIVED_INFORMATION.md)
 - [Order-Bearing Sudoku Profile v0](docs/ORDER_BEARING_PROFILE_V0.md)
+- [500-board Order / HR Corpus Benchmark](docs/ORDER_HR_CORPUS_500.md)
 - [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [HR Branch Reference Channel](docs/HR_BRANCH_REFERENCES.md)
@@ -181,6 +182,25 @@ To test order as a derived information channel, the separate experimental `sudok
 For one fixed ParityGrid and the current 36-mask `9+9+7` family, the hard upper bound is only `K <= 36`, or at most **5.17 bits** of order capacity. The current single-Parity reference sample accepted 27 masks with 27 distinct orders: `K=27`, `log2(K)≈4.755 bits`.
 
 The often-mentioned `log2(25!)≈83.68 bits` remains only the absolute ceiling for an unrestricted 25-element permutation family; it is not a measured capacity of the current 36-mask profile.
+A 500-completed-board corpus benchmark now gives a stronger result for the fixed 36-mask family:
+
+~~~text
+500 completed boards
+18,000 mask evaluations
+3,780 exact-round-trip masks (21.0%)
+367 boards with >=1 valid mask (73.4%)
+133 boards with NO_MASK (26.6%)
+K mean over all boards = 7.56
+K max = 30
+mean log2(K), successful boards = 2.928 bits
+guaranteed order capacity over this corpus = 0 bits
+~~~
+
+The zero guarantee is important: the fixed family still has `NO_MASK` boards and some successful boards have `K=1`. The next HDC step must improve **minimum coverage and minimum K**, not merely average K.
+
+Across accepted masks, target-only `sum(HR)` averaged 2.222 alternative-reference slots; full-DNA `sum(HR)` averaged 357.613 structural slots. These are slot counts, not independent payload bits.
+
+See [500-board Order / HR Corpus Benchmark](docs/ORDER_HR_CORPUS_500.md).
 
 
 ---
