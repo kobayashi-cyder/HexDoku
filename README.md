@@ -4366,3 +4366,321 @@ Only if the same compact principles later derive known domain laws and produce n
 
 This boundary keeps the framework ambitious without confusing a powerful meta-language with a demonstrated theory of nature.
 
+---
+
+## Candidate unified-theory hypothesis: relational inertia, derived time, and emergent gravity
+
+The current HexDoku development has reached a point where a **candidate unification hypothesis can be stated clearly enough to test**, even though it is not yet a demonstrated unified physical theory.
+
+The hypothesis is:
+
+> **Time, inertia, geometry, and gravity may be effective structures emerging from a deeper relational state system rather than four independent fundamental primitives.**
+
+A minimal schematic form is:
+
+~~~text
+Deep relational state
+        |
+        +--> persistence / inertial structure
+        |
+        +--> ordering / change accumulation
+        |        |
+        |        +--> derived time
+        |
+        +--> comparison between local inertial descriptions
+                 |
+                 +--> connection
+                          |
+                          +--> curvature
+                                   |
+                                   +--> effective gravity
+~~~
+
+### 1. Fundamental layer
+
+Do not assume spacetime at the deepest level.
+
+Start instead from:
+
+~~~text
+R = relations between states
+I = persistence / inertial structure
+Delta = admissible change
+P = uncertainty / amplitude structure where required
+C = causal / ordering structure where required
+~~~
+
+The fundamental object is therefore not initially:
+
+~~~text
+X(x,y,z,t)
+~~~
+
+but a relational system:
+
+~~~text
+{states, relations, admissible transformations}
+~~~
+
+### 2. Derived time
+
+Time is treated as a reconstructed ordering / accumulation parameter rather than an assumed primitive coordinate.
+
+Conceptually:
+
+~~~text
+relations
++ distinguishable change
++ persistent identity
++ ordering
++ clock construction
+    ->
+effective time
+~~~
+
+Write:
+
+~~~text
+tau = T(R, I, Delta, O, memory / ordering structure)
+~~~
+
+where tau is an effective or observed temporal coordinate.
+
+This does not yet prove that physical time is emergent; it defines a testable route for attempting to reconstruct time from deeper variables.
+
+### 3. Local inertial nulling
+
+A key requirement is that a local description can exist in which the observer's proper acceleration is zero.
+
+Conceptually:
+
+~~~text
+local inertial evaluation = 0
+~~~
+
+while the global gravitational structure need not vanish.
+
+This mirrors the equivalence-principle structure of general relativity: a freely falling observer can locally recover gravity-free special-relativistic physics, while tidal effects remain across a finite region.
+
+Reference:
+- Einstein Online, "equivalence principle": https://www.einstein-online.info/en/explandict/equivalence-principle/
+- Einstein Online, "Gravity: from weightlessness to curvature": https://www.einstein-online.info/en/spotlight/geometry_force/
+
+### 4. Bridge / connection between local inertial descriptions
+
+If each local region has its own inertial description, comparing neighboring descriptions requires a transport rule.
+
+Introduce a connection:
+
+~~~text
+D_a = partial_a + Gamma_a
+~~~
+
+where Gamma_a describes how a local state / frame is compared across the underlying relational space.
+
+The important quantity is then not Gamma alone, but failure of successive transports to commute:
+
+~~~text
+Omega_ab = [D_a, D_b]
+~~~
+
+If:
+
+~~~text
+Omega_ab = 0
+~~~
+
+then a globally consistent inertial comparison may be possible over that region.
+
+If:
+
+~~~text
+Omega_ab != 0
+~~~
+
+then transport depends on path / ordering, producing effective curvature.
+
+The hypothesis identifies this nontrivial curvature with the structure that appears macroscopically as gravity.
+
+### 5. Gravity as emergent relational curvature
+
+The strongest current candidate statement is:
+
+~~~text
+Gravity
+  != necessarily a fundamental force field
+
+Gravity
+  ~ curvature of the relational / inertial connection
+    after coarse-graining into effective spacetime
+~~~
+
+This is deliberately compatible with the successful geometric content of general relativity.
+
+It does not replace Einstein gravity unless the low-energy limit recovers the Einstein field equations.
+
+### 6. Time and gravity as co-emergent structures
+
+Rather than:
+
+~~~text
+fundamental time
++ fundamental gravity
+~~~
+
+the proposed hierarchy is:
+
+~~~text
+deeper relational structure
+       |
+       +--> persistence / inertia
+       |
+       +--> ordering / clock structure
+       |         |
+       |         +--> effective time
+       |
+       +--> local-frame comparison
+                 |
+                 +--> effective geometry
+                           |
+                           +--> effective gravity
+~~~
+
+Thus the current hypothesis is:
+
+> **time and gravity are co-emergent manifestations of deeper relational-inertial structure.**
+
+### 7. Role of the graviton
+
+The hypothesis does **not** require a fundamental graviton.
+
+However, it also does not imply that graviton-like excitations cannot exist.
+
+A possible hierarchy is:
+
+~~~text
+fundamental relational degrees of freedom
+        |
+        v
+coarse-grained effective geometry
+        |
+        v
+small gravitational perturbation
+        |
+        v
+quantized effective excitation
+        |
+        v
+graviton-like mode
+~~~
+
+Therefore the distinguishable claims are:
+
+~~~text
+A. fundamental graviton exists
+B. no fundamental graviton exists, but an effective spin-2 excitation emerges
+C. no graviton-like quantum excitation exists
+~~~
+
+The current hypothesis favors investigating B, but does not yet establish it.
+
+### 8. Candidate unified structure
+
+A compact form is:
+
+~~~text
+Fundamental:
+  (R, I, Delta, P, C)
+
+Derived:
+  tau      = TimeMap(R, I, Delta, ...)
+  Gamma    = Connection(R, I, ...)
+  Omega    = Curvature(Gamma)
+  g_eff    = GeometryMap(Omega, ...)
+  gravity  = EffectiveDynamics(g_eff, matter, ...)
+~~~
+
+The central derivation target is therefore:
+
+~~~text
+(R, I, Delta, P, C)
+    ->
+(tau, Gamma, Omega)
+    ->
+effective spacetime
+    ->
+general-relativistic limit
+~~~
+
+### 9. What would make this a real unified theory?
+
+The hypothesis becomes physically serious only if it passes explicit tests.
+
+At minimum it must:
+
+1. recover local Lorentz symmetry to experimental accuracy,
+2. recover the equivalence principle,
+3. recover gravitational redshift and proper-time behavior,
+4. recover geodesic motion,
+5. recover tidal gravity / curvature,
+6. recover the Einstein field equations or a quantitatively equivalent low-energy limit,
+7. reproduce gravitational-wave propagation,
+8. connect consistently to quantum theory,
+9. explain how matter / gauge fields inhabit the same underlying relational system,
+10. produce at least one falsifiable prediction not inserted by construction.
+
+Failure of these requirements is evidence against the hypothesis.
+
+### 10. Stronger falsification criteria
+
+The hypothesis should be rejected or substantially revised if it cannot derive, without ad hoc insertion:
+
+~~~text
+universality of free fall
+local Lorentz invariance
+inverse-square Newtonian limit
+observed gravitational redshift
+light deflection
+perihelion / orbital relativistic corrections
+gravitational-wave speed and polarization constraints
+known quantum interference results
+known gauge symmetries / Standard Model structure
+~~~
+
+A framework that merely re-labels these known laws after inserting them manually is a representation language, not a unified physical theory.
+
+### 11. Current status
+
+The project should therefore describe the result as:
+
+> **a candidate relational-inertia unification hypothesis embedded in the HexDoku / Unified Reconstruction Algebra, not a completed Theory of Everything.**
+
+What has been achieved conceptually:
+
+~~~text
+time can be moved from input variable to reconstruction target
+gravity can be represented as curvature of inter-frame comparison
+local inertial nulling and global curvature can coexist
+BridgeDoku can be interpreted as a connection
+Doku non-commutativity can represent curvature
+scale / coarse-graining can generate effective spacetime descriptions
+a fundamental graviton is no longer logically mandatory
+~~~
+
+What remains open:
+
+~~~text
+derive the actual connection from microscopic rules
+derive the effective metric
+derive Einstein dynamics
+derive quantum structure
+derive matter and gauge sectors
+establish uniqueness
+produce new falsifiable predictions
+compare quantitatively with observation
+~~~
+
+The correct current claim is therefore:
+
+> **A plausible unification hypothesis may have emerged, but its status now depends entirely on derivation and falsification rather than further naming or analogy.**
+
