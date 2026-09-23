@@ -585,32 +585,51 @@ ParityGrid
  -> exact HDE replay
  -> exact-Parity filter
  -> canonical ease/compression score
- -> 6-bit mask rank
+ -> selected 25-hole board
 ~~~
+
+In the current received-board baseline, the selected mask is embodied by the hole positions in the 81-cell board; the six-bit `mask_rank` is therefore analysis/internal metadata and need not be transmitted.
 
 The baseline fixes digits 1 and 2 as fully removed and removes seven instances of digit 3.
 
 The generalized mode may choose the two fully removed digits and the partially removed digit, creating 9,072 configurations, which fit in a 14-bit rank. That generalized mode remains secondary to the reproducible 36-mask baseline.
 
-## 27. HDE simplicity versus packet size
+## 27. Current HDE input and simplicity
 
-For one 9×9 board, the architecture recognizes a deliberate tradeoff:
+The current practical point is the **received 25-hole 9×9 board itself**.
 
-~~~text
-more transmitted bits -> simpler HDE
-fewer transmitted bits -> more shared structure / decoding machinery
-~~~
+HDE scans the 81-cell board once, derives the 25 hole coordinates, builds row/column/box masks, and reconstructs the values under the pinned deterministic rule.
 
-The current practical point is a shared canonical Parity plus a 41-bit Sudoku-preserving transform Seed.
+No separate coordinate list, solve-order field, HR list, or HR branch-slot-position map is required when those fields are reproducible from the board.
 
-HDE work is then only parameter decode plus deterministic permutations; no backtracking is needed to regenerate Parity itself.
-
-At the extremes:
+For a no-backtracking path, the simple repeated-scan upper count is:
 
 ~~~text
-324-bit full Parity -> trivial HDE
-41-bit transform Seed -> low/moderate HDE, restricted board family
-0-bit Parity update -> trivial only when exact Parity is already shared
+25 + 24 + ... + 1 = 325 candidate-cell evaluations
 ~~~
 
-The ~73-bit arbitrary-Sudoku rank option is smaller than direct board transmission but is not currently preferred because a complete canonical rank/unrank implementation is much more complex.
+plus one board scan, mask construction, 25 commits, and final verification. The intended implementation cost is a few thousand simple integer/bit operations; exact CPU instructions must be measured.
+
+Alternative transports such as the 41-bit canonical-transform Seed or ~73-bit Sudoku rank remain separate research comparisons, not the current baseline.
+
+## 28. Derived structural metadata
+
+The 81-cell received board is both data and structure.
+
+From it, HDE can derive:
+
+~~~text
+25 hole coordinates
+25 solved values
+deterministic solve/commit order
+HR trajectory
+canonical HR branch-reference positions
+~~~
+
+without separate wire fields.
+
+A standalone 81-way coordinate would need 7 fixed bits; `3-bit row + 3-bit column` cannot cover a 9×9 axis. In the current architecture this standalone coordinate encoding is unnecessary because cell position is already represented by array index.
+
+For 25 distinct holes, the absolute arbitrary-order space is `25!`, or about 83.6815 bits. Actual order-channel capacity is `log2(K)` where K is the number of valid solve orders HDC can deliberately realize and HDE can reproduce.
+
+See `docs/ONE_BOARD_DERIVED_INFORMATION.md`.
