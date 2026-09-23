@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Current phase
 
@@ -11,6 +11,7 @@ The architecture has a defined direction, but performance and scaling claims rem
 ## Defined concepts
 
 - HDC-Lite v1 9+9+7 Parity-first mask search (36 masks / 6-bit rank)
+- HR branch-reference channel: one implicit anchor plus HR alternative reference slots
 
 - Seed Cell as a minimal bootstrap descriptor
 - HexDoku ID / serial
@@ -70,6 +71,9 @@ From completed Sudoku ParityGrids, enumerate the 36 fixed `9+9+7` masks, replay 
 
 ### M1D — Minimum HDE packet benchmark
 Compare the one-board packet modes: 324-bit full Parity, 243-bit masked board, ~73-bit arbitrary-Sudoku rank reference, 41-bit canonical-transform Seed, and optional 46-bit coordinate-bearing Seed. Measure HDE code size, working memory, and latency in addition to packet bits.
+
+### M1E — HR branch-reference benchmark
+Measure `sum_hr_targets`, `sum_hr_commits`, and `sum_hr_dna` on the 25-hole corpus; record HR histograms, deduplicated reference-slot counts, dictionary overhead, HDE regeneration operations, and the reachable complete-assignment count K where feasible. Report `log2(K)` separately from raw slot width.
 
 ### M2 — Bit-perfect cross-process reconstruction
 Prove exact reconstruction in a fresh process.
