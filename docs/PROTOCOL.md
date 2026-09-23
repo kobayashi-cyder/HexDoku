@@ -391,3 +391,34 @@ T76  = Q72 || 0000
 T76 is not an independently selectable 76-bit payload in this profile.
 
 Any protocol that uses T76 as a free permutation selector must negotiate a future Payload Profile explicitly.
+
+## 19. HDC-Lite mask profile
+
+Reference profile identifier:
+
+~~~text
+sudoku-v1/hdc-lite-9-9-7-v1
+~~~
+
+Baseline mask rule:
+
+~~~text
+all digit-1 cells are holes
+all digit-2 cells are holes
+seven digit-3 cells are holes
+two digit-3 cells remain visible
+~~~
+
+The nine digit-3 coordinates are ordered row-major and the visible pair is combination-ranked into `mask_rank` 0..35.
+
+Wire field:
+
+~~~text
+mask_rank: 6 bits
+~~~
+
+Values 36..63 are invalid.
+
+The six-bit rank identifies the hole pattern only. It does not encode the unknown completed Sudoku board.
+
+The decoder reconstructs using Sudoku Profile v1 and must not repeat the encoder mask search.
