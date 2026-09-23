@@ -68,6 +68,9 @@ Do not freeze a payload-specific terminal/permutation rule until the Sudoku v1 b
 ### M1C — HDC-Lite 36-mask benchmark
 From completed Sudoku ParityGrids, enumerate the 36 fixed `9+9+7` masks, replay HDE exactly, reject non-round-tripping masks, select the canonical best mask, and measure HDC search/HDE decode time plus q-trajectory compression.
 
+### M1D — Minimum HDE packet benchmark
+Compare the one-board packet modes: 324-bit full Parity, 243-bit masked board, ~73-bit arbitrary-Sudoku rank reference, 41-bit canonical-transform Seed, and optional 46-bit coordinate-bearing Seed. Measure HDE code size, working memory, and latency in addition to packet bits.
+
 ### M2 — Bit-perfect cross-process reconstruction
 Prove exact reconstruction in a fresh process.
 
