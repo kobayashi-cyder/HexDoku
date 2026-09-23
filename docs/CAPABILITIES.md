@@ -825,3 +825,35 @@ It only:
 5. optionally applies/reconstructs the 9+9+7 hole profile and verifies it.
 
 This is substantially simpler than a general Sudoku solver or a complete Sudoku rank/unrank decoder.
+
+## 37. HR as a branch-reference structure
+
+HR can describe more than local ambiguity.
+
+Because `HR = candidates - 1`, one canonical candidate can remain implicit while each additional branch receives one reference slot:
+
+~~~text
+HR0 -> 0 extra references
+HR1 -> 1
+HR2 -> 2
+...
+HR8 -> 8
+~~~
+
+This lets a deterministic HDE reconstruct where hash/object/reference metadata belongs without separately transmitting branch-position metadata.
+
+## 38. Structural slot capacity versus information capacity
+
+Across the 325 evaluated coordinate states, generic HR<=8 gives an absolute structural ceiling of 2,600 alternative-reference slots.
+
+If the fixed `9+9+7` profile truly limits every active candidate set to at most three legal values, HR<=2 and the corresponding ceiling is 650 slots.
+
+Neither number is automatically payload capacity.
+
+The real independent information represented by the branch structure is bounded by the number K of distinct complete assignments that HDC can deliberately produce and HDE can reproduce:
+
+~~~text
+capacity <= log2(K) bits
+~~~
+
+This distinction prevents repeated, deterministic, or shared references from being counted as newly compressed source information.
