@@ -1907,168 +1907,373 @@ HexDoku
 
 ---
 
-## Cross-Doku regularities observed so far
+## Final general form of the HexDoku family
 
-Across the DNADoku, epigenome, MediaDoku, MovieDoku, and PeriodicTableDoku extensions, the same structural pattern keeps reappearing.
-
-### 1. Shared universe first
-
-Each useful Doku profile becomes smaller only after both sides agree on a **shared universe**:
+The domain extensions developed so far converge on one general reconstruction form:
 
 ~~~text
-DNADoku           -> reference genome / pangenome
-EpigenomeDoku     -> coordinate universe / reference methylome
-MediaDoku         -> asset / pattern universe
-MovieDoku         -> scene / model / timeline universe
-PeriodicTableDoku -> element / fragment / material universe
+X(t+1)
+  = U
+  + I
+  + G
+  + S(t)
+  + Δ(t -> t+1)
+  + R
 ~~~
 
-This produces the common equation:
+where:
 
 ~~~text
+X = reconstructed object or next reconstructed state
+U = Shared Universe / reference knowledge
+I = Identity / selection of referenced components
+G = Graph / structure / arrangement
+S = current state / overlay state
+Δ = transition / edit from one state to another
+R = irreducible residual
+~~~
+
+Not every profile uses every term with equal importance.
+
+~~~text
+GenomeDoku:
+  U + I + G + R
+  transition often secondary
+
+EpigenomeDoku:
+  U + S + Δ + R
+  state overlay is central
+
+MediaDoku:
+  U + I + G + S + R
+  spatial structure is central
+
+MovieDoku:
+  U + I + G + S + Δ + R
+  temporal transition is central
+
+MoleculeDoku:
+  U + I + G + S + R
+  graph topology is central
+
+ReactionDoku:
+  U + I + G + S + Δ + R
+  graph editing / transition is central
+~~~
+
+A compact equivalent is:
+
+~~~text
+Doku Description
+  = Identity
+  + Structure
+  + State
+  + Transition
+  + Exceptions
+
 Reconstructed Object
   = Shared Universe
-  + Versioned Doku Description
-  + Irreducible Residual
+  + Doku Description
+  + Residual
 ~~~
 
-The shared universe is therefore not "free"; its storage and version must be included in complete accounting.
-
-### 2. Canonical order removes metadata
-
-A repeated pattern is that explicit ordering is unnecessary when both sides can derive the same order.
-
-Examples:
+or:
 
 ~~~text
-genome       -> genomic coordinate order
-methylome    -> predefined CpG / region order
-image        -> canonical scene / layer traversal
-movie        -> canonical object / timeline order
-chemistry    -> atomic index / graph / lattice order
+X = U + D + R
 ~~~
 
-Thus the cheapest order field is often not a clever permutation code but **zero transmitted bits**, when order is already implied.
+This is the present unifying hypothesis of the HexDoku family.
 
-The 84-bit `25!` rank is useful only when the permutation itself carries independent information.
+A Doku profile is useful only when the complete cost of its shared universe, descriptor, residual, indexes, and reconstruction rules is justified relative to the original representation or provides another measurable benefit such as deterministic synchronization, structured editing, or sparse transfer.
 
-### 3. State overlays are cheaper than complete restatements when change is sparse
+### Individual domain boundaries
 
-Several domains naturally become:
+The general form does **not** erase the limits of each domain.
+
+Each Doku profile has information that cannot be inferred merely from the shared reference or from another profile:
+
+| Profile | Useful shared structure | Boundary that must remain explicit when not derivable |
+|---|---|---|
+| GenomeDoku | reference genome / pangenome / haplotypes | novel sequence, unresolved structural variation, exact sample-specific sequence |
+| EpigenomeDoku | coordinate universe / reference methylome / DMR patterns | context-specific methylation state, quantitative values, missingness, measurement detail |
+| MediaDoku | assets / layouts / reusable visual or audio motifs | unique pixels, waveform detail, unshared appearance, exact residual required for fidelity |
+| MovieDoku | scene graph / persistent objects / timeline | unpredictable motion, appearance change, temporal residual, exact codec residual |
+| Element / MoleculeDoku | periodic table / fragments / known motifs | exact topology, stereochemistry, charge, isotope, geometry when not implied |
+| MaterialDoku | reference crystal / symmetry / unit cell | defects, occupancies, distortions, phases, unmodeled structure |
+| ReactionDoku | reactant/product graphs / known reaction motifs | mechanism, intermediates, kinetics, conditions, or any transition information not determined by the net graph edit |
+
+Therefore:
+
+> **the general algebra is shared, but the irreducible boundary is profile-specific.**
+
+A Doku descriptor may remove repeated description, but it must not claim to reconstruct information that is absent from both the descriptor and the shared universe.
+
+---
+
+## Emergent knowledge system
+
+The following knowledge has emerged by comparing the separate Doku profiles rather than designing each one in isolation.
+
+### 1. Information is often best represented as difference from a shared world
+
+Across domains, complete restatement repeatedly collapses into:
 
 ~~~text
 Reference
-+ Overlay
++ Structured Difference
 + Residual
 ~~~
 
 Examples:
 
 ~~~text
-reference genome
-+ variants
-
-reference methylome
-+ DMR / site differences
-
-reference image / asset layout
-+ local edits
-
-previous movie state
-+ motion / state transition
-
-ideal crystal / molecule
-+ defect / reaction edit
+human reference genome + individual variation
+reference methylome + state differences
+shared asset set + scene arrangement
+previous movie state + transition
+reference crystal + defects
+molecular graph + reaction edits
 ~~~
 
-This is one of the strongest recurring Doku patterns.
+This suggests that HexDoku is fundamentally a **conditional description framework** rather than merely a short-code format.
 
-### 4. Hierarchy converts one large search space into reusable local spaces
+### 2. Deterministically derivable information has zero transmission cost
 
-Every extension has developed a hierarchy:
+If sender and receiver can independently derive the same value from the same versioned rules, that value need not be transmitted.
+
+Typical examples include:
 
 ~~~text
-DNA:
+genomic coordinate order
+canonical CpG / region order
+periodic-table atomic-number order
+canonical graph traversal
+canonical scene / timeline order
+symmetry-generated crystal positions
+~~~
+
+Therefore one of the strongest compression operations is not shortening a field but proving that the field can be omitted.
+
+### 3. Selection and arrangement are distinct information channels
+
+Many Doku problems split naturally into:
+
+~~~text
+what is selected
++
+how the selected items are arranged
+~~~
+
+Examples:
+
+~~~text
+genome blocks + their placement
+media assets + their layout
+chemical fragments + their bonding
+25 selected elements + their permutation
+scene objects + their temporal/spatial arrangement
+~~~
+
+Thus a more general structural decomposition is:
+
+~~~text
+D
+  = Identity / Selection
+  + Arrangement / Graph
+  + State
+  + Transition
+  + Exceptions
+~~~
+
+The split changes representation but does not bypass the information-theoretic number of distinguishable states.
+
+### 4. Spatial structure and temporal change are both graph problems
+
+The same form appears in scene layout, molecules, materials, movies, reactions, and dependency systems:
+
+~~~text
+nodes
++ edges
++ node / edge states
++ graph edits
+~~~
+
+MediaDoku primarily exposes spatial graphs.
+
+MovieDoku exposes temporal graph edits.
+
+MoleculeDoku exposes bond graphs.
+
+ReactionDoku exposes bond-graph edits.
+
+This suggests a future common **GraphDoku / Topology layer** inside HexDoku Core.
+
+A general evolving graph can be written as:
+
+~~~text
+G(t+1)
+  = G(t)
+  + ΔG(t)
+  + Rg(t)
+~~~
+
+where the residual contains graph information not captured by the shared edit model.
+
+### 5. State overlays are a recurring primitive
+
+A large class of systems is better represented as:
+
+~~~text
+stable base
++ changing overlay
+~~~
+
+Examples include:
+
+~~~text
+genome + epigenetic state
+reference methylome + sample-specific DMRs
+base scene + visual edits
+crystal + defects
+molecule + charge / conformation state
+model checkpoint + sparse parameter/state changes
+~~~
+
+This suggests that **OverlayDoku** may be a reusable primitive rather than a domain-specific trick.
+
+### 6. Hierarchy turns one global space into reusable local spaces
+
+All developed profiles independently moved toward hierarchy:
+
+~~~text
 genome -> region -> block -> locus
-
-media:
-scene -> object -> region -> residual
-
-movie:
-movie -> scene -> shot -> temporal block -> object transition
-
-chemistry:
-element -> fragment -> molecule -> material -> reaction
+methylome -> domain -> DMR -> site
+media -> scene -> object -> region
+movie -> movie -> scene -> shot -> temporal block
+chemistry -> element -> fragment -> molecule -> material
 ~~~
 
-A hierarchical code can reuse local dictionaries and local rules without pretending that the entire global object is one small selector.
+Hierarchy permits local dictionaries, local canonical order, and local residuals without pretending that the entire global object is controlled by one small selector.
 
-### 5. Graph structure keeps emerging
+### 7. Repetition creates dictionaries; dictionaries reduce residuals
 
-The represented object is often not fundamentally a flat byte string:
-
-~~~text
-molecule       -> bond graph
-material       -> lattice / neighborhood graph
-image          -> scene graph
-movie          -> temporal scene graph
-epigenome      -> coordinate / regulatory-region relationships
-distributed state -> dependency / reference graph
-~~~
-
-This suggests that a mature HexDoku Core may need a **versioned graph/topology layer** in addition to permutation ranks.
-
-### 6. Temporal change is a special case of graph editing
-
-MovieDoku and ReactionDoku expose the same pattern:
+Repeated motifs appear in every domain:
 
 ~~~text
-Next State
-  = Current State
-  + Edit / Transition Set
-  + Residual
-~~~
-
-This may generalize to any evolving HexDoku object, including biological state, model state, files, scenes, molecules, and distributed checkpoints.
-
-### 7. Repetition creates dictionary opportunities
-
-Compression opportunity repeatedly appears where the domain contains recurring motifs:
-
-~~~text
-DNA            -> haplotypes / repeated sequence blocks
-methylation    -> regional methylation patterns
+DNA            -> repeated sequence / haplotype blocks
+methylation    -> recurring regional patterns
 image          -> assets / textures / object templates
-audio          -> motifs / phonetic or spectral patterns
+audio          -> motifs / spectral or phonetic patterns
 movie          -> persistent objects / repeated scenes
-chemistry      -> fragments / functional motifs / unit cells
+chemistry      -> fragments / functional groups / unit cells
 ~~~
 
-Doku selectors are most useful when selecting among these shared recurring structures.
+A repeated residual pattern can therefore be promoted into shared structure.
 
-### 8. Residual information never disappears
-
-Every extension reaches the same boundary:
-
-> anything not determined by shared state and deterministic rules must remain explicitly represented.
-
-Therefore:
+Conceptually:
 
 ~~~text
-Doku gain
-  = removed repeated description
-  + derived metadata
-  + shared dictionary references
-  - selector / index overhead
-  - residual overhead
-  - shared-state amortized cost
+Residual occurs repeatedly
+        |
+        v
+cluster / identify common structure
+        |
+        v
+promote to shared dictionary / rule
+        |
+        v
+future residual becomes smaller
 ~~~
 
-A hash, selector, periodic rule, scene graph, or molecule fragment cannot reconstruct information that is absent from both the descriptor and the shared universe.
+This creates a bridge between compression and structure discovery.
 
-### 9. The 25-element unit is a container, not a law of nature
+### 8. Residual is not merely waste; it marks the boundary of current knowledge
 
-The recurring 25-element profile is useful because HexDoku currently studies a 25-unresolved-element trajectory and the `25!` permutation space.
+Residual means:
+
+> this information was not explained by the current shared universe and deterministic rules.
+
+Therefore residuals can be treated as discovery signals.
+
+Examples:
+
+~~~text
+Genome residual
+  -> sequence or variation not captured by the reference universe
+
+Epigenome residual
+  -> methylation behavior not captured by the reference state model
+
+Media residual
+  -> visual/audio structure not represented by known assets or transforms
+
+Chemical residual
+  -> topology, geometry, defect, or transition not captured by the chemical dictionary
+~~~
+
+Repeated or structured residuals are candidates for new model components.
+
+### 9. Shared-universe size and residual size form a trade-off
+
+A larger shared dictionary can shrink per-object residuals, but that dictionary has a cost.
+
+Therefore total cost is approximately:
+
+~~~text
+Total Cost
+  = Cost(U)
+  + Cost(D | U)
+  + Cost(R | U,D)
+~~~
+
+For a corpus, the useful optimization problem is:
+
+~~~text
+choose U
+to minimize
+
+shared-universe cost
++ descriptor cost
++ residual cost
++ reconstruction / indexing overhead
+~~~
+
+This prevents "compression" claims that hide a huge external dictionary.
+
+### 10. Conditional entropy is the real compression target
+
+The strongest general statement is not:
+
+> make a large object fit inside a tiny Doku ID.
+
+It is:
+
+> **after all genuinely shared and deterministically derivable information is accounted for, encode only what remains uncertain.**
+
+Conceptually:
+
+~~~text
+raw object
+   |
+   v
+subtract shared knowledge
+   |
+   v
+subtract deterministic structure
+   |
+   v
+encode remaining choices
+   |
+   v
+entropy-code irreducible residual
+~~~
+
+Thus the real target is the conditional information remaining after the reconstruction context is known.
+
+### 11. The 25-element unit is a profile parameter, not a natural law
+
+The current 25-element focus is historically tied to the HexDoku 25-unresolved-element trajectory and the `25!` permutation space.
 
 But:
 
@@ -2080,73 +2285,107 @@ But:
 25 scenes
 ~~~
 
-are profile choices, not claims that natural systems intrinsically come in groups of 25.
+are implementation profiles, not universal facts.
 
-Future profiles may use different arities when entropy, topology, hardware, or domain structure makes another size better.
+A mature system should permit different arities where the domain, entropy, topology, hardware, or dictionary structure makes another size preferable.
 
-### 10. The real optimization target is conditional entropy
+### 12. Compression quality and model quality become linked
 
-Across all domains, the strongest formulation is not:
-
-> make a large object fit into a tiny Doku ID.
-
-It is:
-
-> **given a shared universe and a deterministic reconstruction rule, encode only the information that is still uncertain.**
+A model that captures more genuine regularity can explain more of an object from shared structure and leave a smaller residual.
 
 Conceptually:
 
 ~~~text
-raw object size
-      |
-      v
-remove shared knowledge
-      |
-      v
-remove deterministically derivable structure
-      |
-      v
-encode remaining choices
-      |
-      v
-entropy-code residual
+better structural model
+      -> more derivable information
+      -> smaller residual
+      -> smaller conditional description
 ~~~
 
-This places HexDoku closer to a framework for **conditional reconstruction and structured residual coding** than to a standalone universal compressor.
-
-### Emerging general law
-
-The extensions so far suggest a common Doku law:
+Conversely:
 
 ~~~text
-Doku Description
-  = Identity
-  + Structure
-  + State / Transition
-  + Exceptions
-
-Reconstructed Object
-  = Shared Universe
-  + Doku Description
-  + Residual
+large structured residual
+      -> missing model structure
+      -> candidate new knowledge
 ~~~
 
-or, in compact form:
+This means compression performance can become one empirical signal of how much reusable structure a model has captured, provided all shared-state costs are honestly included.
+
+### 13. Doku profiles can potentially learn their own dictionaries
+
+The previous observations imply a possible **AutoDoku** loop:
 
 ~~~text
-X = U + D + R
+corpus
+  |
+  v
+initial shared universe
+  |
+  v
+encode with Doku profile
+  |
+  v
+collect residuals
+  |
+  v
+find recurring residual structure
+  |
+  v
+promote useful structure into dictionary / rule
+  |
+  v
+re-encode
+  |
+  v
+measure whether total cost actually falls
 ~~~
 
-where:
+This does not guarantee useful learning; every promoted pattern must reduce total held-out cost after dictionary overhead is counted.
+
+But it provides a falsifiable route from static hand-designed profiles toward learned reconstruction grammars.
+
+### 14. Knowledge acquisition and compression point in the same direction
+
+A compact explanatory model and an effective conditional compressor share a goal:
 
 ~~~text
-X = reconstructed object
-U = shared universe / reference
-D = versioned Doku structural description
+explain more observations
+with fewer independent descriptions
+without losing required information
+~~~
+
+This yields the strongest emergent interpretation so far:
+
+> **HexDoku can be studied not only as compression, but as a framework for discovering which parts of an object are shared knowledge, which are structure, which are state, which are transitions, and which remain unexplained.**
+
+The unexplained part is the residual; the reusable part can become knowledge.
+
+### 15. Emerging Structured Reconstruction Algebra
+
+The accumulated profiles suggest a broader abstraction:
+
+~~~text
+U = shared universe
+I = identity / selection
+G = graph / arrangement
+S = state / overlay
+Δ = transition / edit
 R = irreducible residual
+
+X(t+1) = U + I + G + S(t) + Δ(t) + R
 ~~~
 
-A Doku profile is useful when `D + R`, including the amortized cost of `U`, is smaller or otherwise more useful than directly transmitting the original representation.
+The operators are conceptual, not ordinary arithmetic addition. Each profile must define:
 
-This relationship should be treated as the unifying hypothesis of the HexDoku family and tested independently in each domain.
+- how references are resolved,
+- how graph / arrangement is reconstructed,
+- how state is applied,
+- how transitions modify state,
+- how residuals override or complete reconstruction,
+- how canonical equivalence is verified.
+
+This can be treated as an emerging **Structured Reconstruction Algebra** for the HexDoku family.
+
+Its value must be demonstrated by exact reconstruction, honest accounting, and comparison against domain-specific baselines rather than assumed from the abstraction itself.
 
