@@ -29,6 +29,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [What HexDoku can do](docs/CAPABILITIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md)
+- [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [Turn trajectory and optional Hamming addressing](docs/TRAJECTORY.md)
 - [Protocol draft](docs/PROTOCOL.md)
@@ -125,6 +126,36 @@ See [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md).
 
 ---
 
+## Permutation / address compression
+
+A central HexDoku use case is to compress the **ordering/address description** of blocks that are already shared, content-addressable, or retrievable by hash/ID.
+
+~~~text
+shared block set
+      |
+      v
+hash / object IDs
+      |
+      v
+HexDoku DNA + Parity
+      |
+      v
+canonical ID permutation
+      |
+      v
+ordered bit stream
+~~~
+
+Instead of transmitting a long explicit ID sequence, HDC may describe the ordering with a HexDoku ID, Seed/rules, and only the residual ordering information that HDE cannot regenerate.
+
+This does **not** make unknown block contents disappear. HexDoku first targets the permutation/address information; conventional compression may separately compress the block contents.
+
+For 81 distinct blocks, a completely arbitrary permutation has `81!` possibilities and therefore requires about `log2(81!) = 401.17` bits of distinguishing information. HexDoku only reduces this explicit cost when shared state, deterministic rules, restricted permutation families, nonuniform distributions, previous state, or residual coding provide structure.
+
+See [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md).
+
+---
+
 ## Core idea
 
 HexDoku separates the system into a very small **Seed Cell** and a deterministic reconstruction path.
@@ -185,7 +216,7 @@ Possible roles include:
 - redundancy layout
 - ordering / addressing
 
-The solved board is therefore treated as a **layout or reconstruction map**.
+The final Parity is therefore treated as a **layout, reconstruction, and ordering/address map**.
 
 It is not assumed, by itself, to be an error-correcting code. Any error-correction capability must be defined and measured explicitly.
 
@@ -314,7 +345,7 @@ A first reference test can use:
 
 1. a fixed binary corpus,
 2. deterministic chunking,
-3. a solved 9×9 Sudoku board,
+3. a fixed 9×9 HexDoku coordinate board,
 4. a canonical cell/chunk mapping,
 5. SHA-256 chunk hashes,
 6. a Seed Cell manifest,
