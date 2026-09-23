@@ -28,6 +28,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [Origin of the idea](docs/ORIGIN.md)
 - [What HexDoku can do](docs/CAPABILITIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Turn trajectory and Hamming addressing](docs/TRAJECTORY.md)
 - [Protocol draft](docs/PROTOCOL.md)
 - [Project status and milestones](docs/STATUS.md)
 - [Contributing](CONTRIBUTING.md)
@@ -85,6 +86,26 @@ canonical reconstructed bytes
 ```
 
 HDC may be computationally expensive. HDE is intended to be deterministic, reproducible, and simpler to execute.
+
+## 25-turn evaluation trajectory
+
+For a board with 25 unresolved cells, HexDoku currently defines the HDE trajectory as **25 pre-fix turns**. One cell becomes fixed per turn, while HDE evaluates every still-unresolved coordinate before that fixation.
+
+```text
+25 + 24 + ... + 1 = 325 evaluated cell states
+```
+
+If each unresolved cell deterministically produces nine 8-bit candidate values, the raw trajectory contains:
+
+```text
+325 × 9 × 8 = 23,400 bits = 2,925 bytes
+```
+
+These calculated values may themselves be used as canonical immediate bit values. A 72-bit cell state can additionally serve as the base of a Hamming-addressed space, where an exact derived value is selected directly by **Hamming distance + combination rank**, without exhaustively enumerating the space.
+
+See [Turn trajectory and Hamming addressing](docs/TRAJECTORY.md).
+
+---
 
 ## Core idea
 
