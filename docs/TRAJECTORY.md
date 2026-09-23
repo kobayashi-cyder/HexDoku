@@ -1,4 +1,4 @@
-# Turn Trajectory and Hamming Addressing
+# Turn Trajectory, Hamming Rank, and Optional Hamming Addressing
 
 Status: **Draft / experimental**
 
@@ -87,6 +87,37 @@ digit:value
 
 The ordered table is deterministic only if equal values have a fixed tie-break, for example by digit number.
 
+## 3A. HexDoku Hamming Rank
+
+For every unresolved coordinate, HexDoku assigns a project-specific Hamming Rank:
+
+```text
+HR = number of still-unresolved candidate digits - 1
+```
+
+The range is 0 through 8.
+
+```text
+HR0 -> one candidate remains; logically determined, possibly still unfilled
+HR1 -> two candidates remain
+...
+HR8 -> nine candidates remain; maximum unresolved multiplicity
+```
+
+This HR is the primary ordering rank for compression and expansion.
+
+It is not the standard bitwise Hamming distance.
+
+Within each turn, unresolved cells are canonically ordered by:
+
+```text
+HR ascending
+-> Canonical Candidate Table lexicographic ascending
+-> coordinate ID ascending
+```
+
+See `CANONICAL_ORDER.md` for the normative ordering rule.
+
 ## 4. Canonical trajectory bit string
 
 With 25 pre-fix turns and 8-bit values:
@@ -154,9 +185,9 @@ immediate bit vector
 
 No separate semantic translation is required between the evaluated number and its canonical bit representation.
 
-## 6. Hamming-space addressing
+## 6. Optional standard Hamming-distance addressing
 
-For a 72-bit cell-state vector B, a vector at Hamming distance d differs in exactly d bit positions.
+Separately from HexDoku HR, a 72-bit cell-state vector B may optionally be used with the **standard bitwise Hamming distance (HD)**. A vector at HD=d differs in exactly d bit positions.
 
 The number of vectors at distance d is:
 
@@ -167,7 +198,7 @@ C(72, d)
 Rather than materializing all candidates, HexDoku can identify one candidate with:
 
 ```text
-(base state B, Hamming distance d, combination rank k)
+(base state B, standard Hamming distance HD=d, combination rank CR=k)
 ```
 
 where:
@@ -195,7 +226,7 @@ one exact 72-bit derived value
 
 This is intended as **direct addressing**, not literal exhaustive enumeration.
 
-## 7. Full Hamming space
+## 7. Optional standard Hamming space
 
 Across all Hamming distances:
 
@@ -267,7 +298,7 @@ same Seed
 + same rule version
 + same numeric rules
 + same turn/fix order
-+ same Hamming rank
++ same HexDoku HR and, when used, same HD/CR address
 =
 same canonical bit vector
 ```
