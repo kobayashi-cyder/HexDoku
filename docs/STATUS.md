@@ -12,7 +12,8 @@ The architecture has a defined direction, but performance and scaling claims rem
 
 - HDC-Lite v1 9+9+7 Parity-first mask search (36 masks / 6-bit rank)
 - HR branch-reference channel: one implicit anchor plus HR alternative reference slots
-- One-board derived-information model: received 25-hole board; coordinates/values/order/HR/slot positions are decoder-derived when reproducible
+- One-board derived-information model: received 25-hole board; coordinates/values/HR/slot positions are decoder-derived when reproducible
+- Experimental order-bearing profile: dynamic minimum-HR target order, separate from fixed row-major sudoku-v1
 
 - Seed Cell as a minimal bootstrap descriptor
 - HexDoku ID / serial
@@ -23,6 +24,10 @@ The architecture has a defined direction, but performance and scaling claims rem
 - rollback-first recovery
 - regeneration when rollback and source recovery are impossible
 - bit-perfect reconstruction as the first acceptance criterion
+
+## Current reference sample
+
+Single-Parity sample: 36 masks tested under the experimental order-bearing `9+9+7` profile; 27 exact round trips, 27 distinct derived orders (`K=27`, `log2(K)≈4.7549` bits), 325 candidate-cell evaluations per accepted board, `sum_hr_dna=331..418`. This is not yet a corpus-level result.
 
 ## Not yet established
 
