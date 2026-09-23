@@ -180,3 +180,33 @@ For every tested 9×9 / 25-hole board, record:
 - HDE instruction/operation count needed to regenerate the same slot ordering.
 
 These measurements separate structural slot count from real information capacity.
+## 11. 500-board measured HR structure
+
+In the 500-board fixed `9+9+7` corpus, 3,780 masks reconstructed their source Parity exactly.
+
+Target-stage HR over those accepted masks:
+
+~~~text
+HR0 = 86,101
+HR1 =  8,399
+sum(HR_target) per accepted mask:
+  min  = 1
+  mean = 2.22196
+  max  = 7
+~~~
+
+Full-DNA HR over the 325 evaluated states:
+
+~~~text
+HR0 = 241,908
+HR1 = 621,408
+HR2 = 365,184
+sum(HR_DNA) per accepted mask:
+  min  = 258
+  mean = 357.61270
+  max  = 467
+~~~
+
+Thus the measured structure offers many deterministic **reference positions**, especially in the full-DNA view. These counts remain structural slot counts. They do not establish hundreds of independent payload bits because branch states and references may be correlated, repeated, or derivable.
+
+See [ORDER_HR_CORPUS_500.md](ORDER_HR_CORPUS_500.md).
