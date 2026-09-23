@@ -3798,3 +3798,571 @@ Its broader research target is becoming:
 
 The purpose of adding these terms is not to make the equation larger for its own sake. Each term should remain first-class only when treating it separately improves reconstruction fidelity, explanatory power, compression accounting, prediction, intervention, or validation.
 
+---
+
+## Toward a unified theory: scope, missing structure, and BridgeDoku
+
+The current HexDoku family is broad enough to act as a **unified representation / reconstruction framework**, but it is not yet a physical "theory of everything."
+
+The distinction is important.
+
+At present, HexDoku can increasingly provide a common typed language for describing:
+
+~~~text
+what exists
+how it is structured
+what state it is in
+how uncertain it is
+how it changes
+what causes what
+how it is observed
+what gets selected
+what actions are taken
+what objectives are optimized
+what remains unexplained
+how the representation itself changes
+~~~
+
+This is already a strong form of unification at the **meta-theory / representation level**.
+
+However, a true domain law must do more than provide a container. It must constrain the possible dynamics and ideally derive or predict observable consequences.
+
+### Current status by level
+
+~~~text
+Level 0
+  domain-specific profiles
+  DNA / media / chemistry / cancer / agents / etc.
+
+Level 1
+  shared vocabulary
+  U, I, G, S, Delta, Sigma, R
+
+Level 2
+  typed reconstruction algebra
+  Phi, P, C, O, Pi, A, J, Meta
+
+Level 3
+  common dynamics
+  explicit state-update, observation, selection, control,
+  and uncertainty semantics
+
+Level 4
+  law generator
+  symmetry, invariants, conservation,
+  scale transformations, composition rules,
+  dimensional consistency, variational / generative principles
+
+Level 5
+  domain-unifying predictive theory
+  existing laws reproduced,
+  new testable predictions generated,
+  competing theories distinguishable
+~~~
+
+The current HexDoku work is best understood as entering **Level 2 and beginning Level 3**.
+
+It should not yet be described as Level 5.
+
+### Concrete cross-domain examples
+
+The value of the common algebra can be tested by mapping different domains into the same typed structure.
+
+#### Classical mechanics
+
+~~~text
+I = bodies / particles
+G = relations / constraints
+S = position and momentum
+Phi = external or interaction fields
+Delta = equations of motion
+O = measurement
+R = unmodeled force / error
+~~~
+
+#### Electromagnetism
+
+~~~text
+I = charges / currents
+Phi = electric and magnetic fields
+S = current field / matter state
+Delta = field and particle evolution
+C = causal interaction structure
+O = instruments / observations
+~~~
+
+#### General-relativistic description
+
+~~~text
+G = manifold / geometric relations
+Phi = metric field
+S = matter / energy state
+Delta = spacetime and matter evolution
+O = clocks, light propagation, free-fall observations
+~~~
+
+#### Quantum description
+
+~~~text
+S = state vector or density operator
+P = measurement probabilities
+Delta = quantum state evolution
+O = measurement operator / basis / outcome
+R = model mismatch / unresolved environment
+~~~
+
+#### Thermodynamics / statistical mechanics
+
+~~~text
+S = macroscopic state
+P = distribution over microscopic states
+Phi = temperature / density / flow fields
+Delta = transport / relaxation
+R = unresolved microscopic detail
+~~~
+
+#### Evolution
+
+~~~text
+I = genotype / phenotype / lineage
+G = population or ancestry structure
+P = frequencies / uncertainties
+Delta = variation / mutation / recombination
+Sigma = differential persistence / reproduction
+Phi = environmental fields / gradients where relevant
+R = unexplained variation
+~~~
+
+#### Cancer / OncoDoku
+
+~~~text
+I = clones / altered components
+G = clonal and tissue graph
+S = genome + epigenome + expression + immune state
+Delta = acquired alteration / state change
+Sigma = tissue / immune / treatment selection
+O = sequencing / imaging / biopsy
+P = uncertainty / sampling
+R = unobserved clone / unexplained mechanism
+~~~
+
+#### Media / video
+
+~~~text
+U = shared asset universe
+I = selected objects / assets
+G = scene graph
+S = pose / appearance / audio state
+Delta = motion / edit / state transition
+O = rendered or decoded output
+R = irreducible codec residual
+~~~
+
+#### Chemistry
+
+~~~text
+I = atoms / fragments
+G = bond graph / lattice
+S = charge / conformation / phase
+Phi = concentration / field / environment
+Delta = reaction / structural edit
+P = uncertainty / thermal distribution
+R = unmodeled topology / geometry / residual
+~~~
+
+#### AI / agent systems
+
+~~~text
+U = knowledge universe
+I = active models / tools / skills
+G = world model / dependency / tool graph
+S = belief / memory / context / goal state
+P = uncertainty
+C = causal model
+O = observations
+Pi = policy
+A = action
+J = objective / evaluation
+Delta = inference / learning / planning
+Sigma = retention / selection of candidate updates
+R = unexplained evidence / failure
+Meta = modification of the above rules
+~~~
+
+These examples show that the algebra is broad enough to provide a common vocabulary, but they do not prove that one law governs all of these domains.
+
+---
+
+## Missing ingredients for stronger unification
+
+Several structures should become first-class before HexDoku can claim a more serious unifying role.
+
+### SymmetryDoku / invariance
+
+Many physical and mathematical laws are characterized by transformations under which relevant observables remain invariant.
+
+Introduce:
+
+~~~text
+Gamma = symmetry / invariance structure
+~~~
+
+Examples include:
+
+~~~text
+translation invariance
+rotation invariance
+coordinate invariance
+gauge-like redundancy
+permutation symmetry
+representation equivalence
+~~~
+
+A Doku profile should distinguish:
+
+~~~text
+different encoding
+same physical / semantic state
+~~~
+
+when a symmetry identifies them.
+
+### ConservationDoku
+
+Some quantities are constrained to remain conserved or to satisfy continuity laws.
+
+Examples:
+
+~~~text
+energy
+momentum
+charge
+probability normalization
+mass / species amount in closed models
+information-preserving constraints where explicitly defined
+~~~
+
+Conservation constraints should not be hidden inside a generic transition rule when they are central to the domain.
+
+### ScaleDoku
+
+Different scales can require different effective descriptions.
+
+~~~text
+microscopic
+  -> mesoscopic
+  -> macroscopic
+~~~
+
+Examples:
+
+~~~text
+quarks -> nuclei -> atoms -> molecules -> materials
+molecules -> cells -> tissues -> organisms
+pixels -> objects -> scenes
+tokens -> concepts -> plans
+~~~
+
+ScaleDoku should encode:
+
+~~~text
+coarse-graining
+effective variables
+renormalized parameters
+loss of microscopic detail
+validity range
+bridge to finer / coarser description
+~~~
+
+This is necessary because one universal representation at one fixed scale is usually inefficient or misleading.
+
+### CompositionDoku
+
+A unified algebra needs explicit rules for combining subsystems.
+
+If A and B are represented separately, the framework must define how to construct:
+
+~~~text
+A composed with B
+~~~
+
+including:
+
+~~~text
+shared interfaces
+cross-boundary interactions
+coupled constraints
+emergent states
+compositional residuals
+~~~
+
+Without this, local profiles cannot reliably scale into larger systems.
+
+### DimensionDoku / units
+
+Variables need semantic and dimensional type.
+
+Examples:
+
+~~~text
+length
+time
+mass
+energy
+temperature
+probability
+information
+currency
+utility
+~~~
+
+Operations that are syntactically valid but dimensionally meaningless must be rejectable.
+
+### LawGeneratorDoku
+
+The largest missing piece is not another state variable but a way to derive the state-update rule itself.
+
+The current notation assumes:
+
+~~~text
+X(t+1) = F(...)
+~~~
+
+but a stronger theory needs to ask:
+
+> why this F?
+
+A LawGeneratorDoku would represent principles from which dynamics are generated or constrained, for example:
+
+~~~text
+symmetry
+invariants
+variational principles
+optimization principles
+causal structure
+boundary conditions
+validity domain
+conservation constraints
+~~~
+
+Conceptually:
+
+~~~text
+F
+  = Derive(
+      law principle,
+      Gamma,
+      conservation constraints,
+      boundary conditions,
+      scale,
+      dimensional types
+    )
+~~~
+
+A unifying framework becomes much stronger when the dynamics are derived from compact principles instead of inserted separately for every domain.
+
+---
+
+## BridgeDoku — mapping between valid representations
+
+One of the most important consequences of the current work is that **a single real object can have several simultaneously valid Doku representations**.
+
+For example, one volume of water may be represented as:
+
+~~~text
+QuantumDoku
+  -> molecular quantum state
+
+PeriodicTableDoku / MoleculeDoku
+  -> H2O molecular structure
+
+ProbDoku / ThermoDoku
+  -> statistical ensemble / thermodynamic state
+
+FieldDoku
+  -> density, velocity, pressure, temperature fields
+
+MeasurementDoku
+  -> thermometer or spectrometer observation
+
+SemanticDoku
+  -> "drinkable water" or another context-dependent meaning
+
+InstitutionDoku
+  -> ownership / regulatory / contractual state
+~~~
+
+The object is the same; the useful representation changes with scale, question, observer, and task.
+
+Therefore HexDoku should not require one unique universal encoding.
+
+Instead define:
+
+~~~text
+D_i(X) = representation of object X in profile i
+~~~
+
+and introduce a bridge:
+
+~~~text
+B_ij:
+  D_i(X) -> D_j(X)
+~~~
+
+A **BridgeDoku** must declare whether the mapping is:
+
+~~~text
+exact
+lossless but many-to-one in reverse
+approximate
+probabilistic
+scale-changing
+measurement-derived
+causal / interventional
+semantic
+non-invertible
+~~~
+
+Examples:
+
+~~~text
+QuantumDoku
+  -> Bridge
+MoleculeDoku
+
+MoleculeDoku
+  -> Bridge
+ThermoDoku
+
+ThermoDoku
+  -> Bridge
+FieldDoku
+
+GenomeDoku
+  -> Bridge
+ExpressionDoku
+
+ExpressionDoku
+  -> Bridge
+Phenotype / OncoDoku
+
+SceneDoku
+  -> Bridge
+Rendered MediaDoku
+~~~
+
+BridgeDoku is therefore a candidate core component of any serious unified HexDoku framework.
+
+---
+
+## A more appropriate unified object
+
+Rather than forcing every domain into one giant flat equation, the current work suggests representing the framework itself as a typed system:
+
+~~~text
+D = (
+  Types,
+  Identities,
+  States,
+  Relations,
+  Fields,
+  Distributions,
+  Causes,
+  Observations,
+  Dynamics,
+  Selection,
+  Policies,
+  Actions,
+  Objectives,
+  Symmetries,
+  Conserved Quantities,
+  Scales,
+  Composition Rules,
+  Dimensions,
+  Residuals
+)
+~~~
+
+Each domain defines a profile:
+
+~~~text
+D_k:
+  Reality / data
+    ->
+  typed Doku representation
+~~~
+
+Profiles are connected by:
+
+~~~text
+B_ij:
+  D_i
+    ->
+  D_j
+~~~
+
+and MetaDoku can operate on:
+
+~~~text
+representations
+bridges
+law generators
+selection rules
+validation rules
+~~~
+
+Conceptually:
+
+~~~text
+Meta:
+  {D, B, F}
+    ->
+  {D', B', F'}
+~~~
+
+This architecture is a better candidate for a **Unified Representation Algebra** or **Unified Reconstruction Framework** than a single universal state vector.
+
+---
+
+## Answer to the unification question
+
+The current evidence supports the following position:
+
+> **Yes, many of the developed Doku forms can be integrated into one coherent meta-framework. No, this does not yet constitute a unified physical theory.**
+
+What is already plausibly unified:
+
+~~~text
+representation
+reconstruction
+state
+structure
+uncertainty
+observation
+transition
+selection
+control
+residual
+meta-update
+cross-profile translation
+~~~
+
+What is not yet unified:
+
+~~~text
+the actual fundamental laws governing all domains
+a single derivation of quantum and gravitational dynamics
+universal scale transitions
+universal composition laws
+a proven law generator
+new experimentally verified predictions
+~~~
+
+The near-term target should therefore be:
+
+> **build and test a Unified Reconstruction / Representation Algebra first.**
+
+Only if the same compact principles later derive known domain laws and produce new falsifiable predictions should the project move toward stronger claims of a unified theory.
+
+This boundary keeps the framework ambitious without confusing a powerful meta-language with a demonstrated theory of nature.
+
