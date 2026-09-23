@@ -1017,6 +1017,179 @@ Until these are met, the framework is a unification research program rather than
 
 ---
 
+
+---
+
+## Higgs sector: vacuum geometry, degrees of freedom, and particle excitations
+
+The Standard Model Higgs field is a complex SU(2)_L doublet:
+
+~~~text
+H in C^2
+~~~
+
+so it contains four real field degrees of freedom.
+
+A convenient schematic decomposition is:
+
+~~~text
+4 real Higgs-field DOF
+    ->
+3 angular / broken-symmetry directions
++
+1 radial direction
+~~~
+
+After electroweak symmetry breaking:
+
+~~~text
+SU(2)_L x U(1)_Y
+    ->
+U(1)_EM
+~~~
+
+three generators are broken. Correspondingly, three Goldstone directions are absorbed into the longitudinal polarizations of:
+
+~~~text
+W+
+W-
+Z
+~~~
+
+The remaining independent scalar excitation is the physical Higgs boson.
+
+Thus the physical reorganization is:
+
+~~~text
+4 Higgs-field DOF
+    ->
+3 Goldstone DOF + 1 radial DOF
+    ->
+W_L+, W_L-, Z_L + h
+~~~
+
+The useful geometric picture is not a literal tetrahedron. The Higgs vacuum manifold is continuous.
+
+For fixed Higgs magnitude:
+
+~~~text
+H^dagger H = v^2 / 2
+~~~
+
+the raw four-real-dimensional field space contains an S^3-type constant-radius surface before gauge identifications are accounted for.
+
+The radial fluctuation:
+
+~~~text
+H = <H> + h + ...
+~~~
+
+moves away from the vacuum radius and corresponds to the physical Higgs excitation.
+
+The Higgs mass is determined by local curvature of the scalar potential in the radial direction:
+
+~~~text
+m_h^2
+=
+d^2 V / d h^2
+evaluated at the vacuum
+~~~
+
+while symmetry directions are flat before gauge fields reorganize them.
+
+This supports the structural language:
+
+~~~text
+tangent / symmetry directions
+    ->
+Goldstone directions
+    ->
+longitudinal gauge modes
+
+normal / radial direction
+    ->
+Higgs scalar mode
+~~~
+
+### What a Higgs quantum can and cannot do
+
+Quantizing the radial Higgs-field excitation produces Higgs bosons.
+
+Thus:
+
+~~~text
+Higgs-field oscillation
+    ->
+one Higgs quantum
+~~~
+
+A Higgs quantum can transfer its energy into excitations of other coupled fields and decay into allowed final states such as fermion pairs or massive gauge bosons when kinematics permit.
+
+However:
+
+~~~text
+ordinary particles do not exist because the Higgs field continually vibrates them into existence
+~~~
+
+Instead:
+
+~~~text
+electron field excitation -> electron
+quark-field excitation     -> quark
+photon-field excitation    -> photon
+Higgs-field excitation     -> Higgs boson
+~~~
+
+The Higgs vacuum expectation value modifies the dynamics of several of those fields through gauge and Yukawa couplings, giving masses after electroweak symmetry breaking.
+
+The unification hypothesis should therefore use the stronger statement:
+
+> Different observed particles may be distinct excitation modes of different effective field directions, while interactions allow energy to move between those modes.
+
+A deeper unification would require deriving the Higgs direction, gauge directions, and fermionic directions from one more primitive state structure rather than merely placing them next to one another.
+
+### Higgs as a possible effective order parameter
+
+The current framework may test, but must not assume, the possibility:
+
+~~~text
+deeper degrees of freedom
+    ->
+coarse-graining / condensation
+    ->
+effective Higgs order parameter
+~~~
+
+If this branch is pursued, the theory must derive rather than fit:
+
+~~~text
+why the Higgs is a complex doublet
+why its hypercharge is Y = 1/2
+why its potential has the observed form
+why electroweak symmetry breaks at the observed scale
+why Yukawa couplings take their observed values
+why the observed Higgs behaves so nearly like the Standard Model scalar
+~~~
+
+At present, the Standard Model description of the Higgs as an elementary scalar field remains the validated baseline.
+
+### Next structural question
+
+The next useful question is no longer merely:
+
+~~~text
+Can the Higgs create other particles?
+~~~
+
+but:
+
+~~~text
+Can Higgs, gauge, and fermion modes be obtained as different tangent,
+normal, and spinorial excitations of one deeper state space?
+~~~
+
+If so, that deeper structure must reproduce the Standard Model representation content and interactions quantitatively.
+
 ## Canonical current map
 
 The current physically disciplined map is:
