@@ -29,6 +29,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [What HexDoku can do](docs/CAPABILITIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md)
+- [Sudoku Profile v1](docs/SUDOKU_PROFILE_V1.md)
 - [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [Turn trajectory and optional Hamming addressing](docs/TRAJECTORY.md)
@@ -90,6 +91,23 @@ canonical reconstructed bytes
 
 HDC may be computationally expensive. HDE is intended to be deterministic, reproducible, and simpler to execute.
 
+## First reference rule: Sudoku Profile v1
+
+The first runnable HexDoku baseline is intentionally ordinary Sudoku.
+
+~~~text
+HexDoku Core
+├─ Sudoku Profile v1   <- baseline now
+└─ Payload Profile vN  <- later
+~~~
+
+Sudoku Profile v1 fixes 9×9 geometry, digits 1..9, row/column/3×3 constraints, the 25 unresolved coordinates, deterministic integer q-distributions, and a validity-preserving commit resolver.
+
+This gives a clean baseline for measuring the 2,925-byte raw DNA trajectory, HCT compression, repeated q values, and HDC/HDE equality before payload-specific rules are introduced.
+
+See [Sudoku Profile v1](docs/SUDOKU_PROFILE_V1.md).
+
+---
 ## DNA / Parity trajectory
 
 For the current 25-unresolved-coordinate profile, HexDoku defines **25 canonical evaluation tables but only 24 normal commits**.
@@ -116,9 +134,9 @@ With nine 8-bit candidate values per coordinate, the raw q-only DNA trajectory i
 325 × 9 × 8 = 23,400 bits = 2,925 bytes
 ~~~
 
-The first 24 transitions use a versioned deterministic resolver. Standard Sudoku row/column/box rules are **not required**.
+The HexDoku Core can support non-Sudoku profiles, but the **first reference implementation is Sudoku Profile v1**: standard row, column, and 3×3 box constraints are used for candidate generation and baseline reconstruction.
 
-The final coordinate is a **Terminal Reference**. Under the 8-bit-q terminal profile, its nine q values contribute 72 bits and a terminal-only 4-bit extension contributes another 4 bits, giving a **76-bit Terminal Selector (T76)**. The terminal extension is not HR; HR remains derived state. T76 can select one member of a versioned permutation family while the final **Parity** remains the fully materialized 81-cell table.
+The final coordinate remains part of the 25th evaluation table. In Sudoku Profile v1, its 72-bit q vector is **derived from Sudoku state**, not free payload. The structural 4-bit terminal extension is reserved as `0000`. A future Payload Profile may redefine terminal payload/selector behavior without changing the Sudoku baseline.
 
 The 25-table evaluation trajectory is **DNA**. The completed 81-cell reference table is **Parity**.
 
@@ -126,7 +144,7 @@ See [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md).
 
 ---
 
-## 76-bit Terminal Selector
+## T76 research container
 
 For the 25th evaluation table, the current 8-bit-q profile defines:
 
@@ -137,7 +155,7 @@ Terminal Extension              = 4 bits
 T76                             = 76 bits
 ~~~
 
-T76 is a **selector-width**, not automatically a claim of 76-bit cryptographic security.
+T76 is a **76-bit structural container** in the general research model. Under Sudoku Profile v1 it is not a 76-bit free selector: Q72 is derived and the four-bit extension is reserved.
 
 Its nominal selector space is:
 
@@ -145,7 +163,7 @@ Its nominal selector space is:
 2^76 = 75,557,863,725,914,323,419,136 states
 ~~~
 
-For an 81-block universe, a rule may use T76 to choose up to 2^76 unique permutations from the much larger 81! permutation space. It does not encode all 81! permutations; the complete arbitrary 81-element permutation still requires about 401.17 bits of distinguishing information.
+A future Payload Profile may define a T76-based selector family of up to 2^76 states. That capacity is **not claimed by Sudoku Profile v1**, because its q bits are constrained by Sudoku evaluation. Any payload-selector profile must be separately versioned and benchmarked.
 
 A canonical 13-symbol text form may use the Base64url alphabet as a **radix-64 integer alphabet**, with the first symbol restricted to 16 values. This is not standard byte-oriented Base64url encoding. Standard Base64url of a 10-byte container would require 14 unpadded characters.
 
@@ -271,7 +289,7 @@ The design goal is that two compatible nodes given the same Seed Cell and the sa
 
 ## DNA / Parity topology
 
-The current HexDoku model uses a 9×9 board as a deterministic coordinate topology. Standard Sudoku constraints are optional rather than normative. The fully materialized 81-cell final table is called **Parity**, while the 25-stage evaluation-table trajectory is called **DNA**.
+HexDoku Core uses a 9×9 board as a deterministic coordinate topology. **Sudoku Profile v1**, the first reference profile, additionally requires standard Sudoku constraints. Future profiles may replace those constraints without changing the Core. The fully materialized 81-cell final table is called **Parity**, while the 25-stage evaluation-table trajectory is called **DNA**.
 
 Possible roles include:
 
