@@ -764,3 +764,239 @@ The objective is:
 > **given the same versioned reference universe, encode the identity, arrangement, known differences, and irreducible novel sequence of an individual genome with the smallest deterministic reconstruction descriptor that still reproduces the exact canonical sequence.**
 
 In this role, DNADoku is best understood as a **genome reconstruction seed language layered on top of shared-reference and entropy-compression systems**, rather than as a standalone biological compression algorithm.
+
+---
+
+## DNADoku epigenome extension: methylation-state decomposition
+
+The genome and the epigenome should be represented as different layers.
+
+~~~text
+Genome      = reference sequence / structural identity
+Epigenome   = state overlay on that sequence
+DNADoku     = compact description of overlay state and exceptions
+HexDoku     = deterministic reconstruction / verification framework
+~~~
+
+For DNA methylation, the principal engineering target is not to re-encode the underlying genome repeatedly. The target is to encode **which genomic sites or regions carry which methylation state under a specified biological and measurement context**.
+
+In human methylome work, CpG sites are the main methylation context, although WGBS pipelines can also report CHG and CHH methylation. A representative human genome contains on the order of tens of millions of CpG positions (commonly described as roughly 28 million, depending on assembly and counting convention). Therefore a purely idealized one-bit state vector over 28 million predefined CpG loci would require about:
+
+~~~text
+28,000,000 × 1 bit
+= 28,000,000 bits
+≈ 3.5 MB
+~~~
+
+This is only a structural lower-level baseline. Real methylation datasets also need locus identity or an agreed coordinate universe, missing/unknown states, measurement confidence, coverage, strand/genotype context where relevant, and often a **fractional methylation value** rather than a single binary state.
+
+For bulk sequencing, a value such as `0.82` usually represents the observed fraction of molecules/read evidence methylated at that locus, not an intrinsic eight-tenths methylation of one DNA molecule. Therefore DNADoku profiles must distinguish at least:
+
+- single-molecule / single-cell discrete state,
+- aggregated fractional methylation,
+- unknown or insufficient-coverage state,
+- optional non-CpG methylation contexts.
+
+### Reference-overlay decomposition
+
+The proposed decomposition is:
+
+~~~text
+Genome reference
+      |
+      v
+CpG / methylation-coordinate universe
+      |
+      v
+tissue / cell-type / developmental reference methylome
+      |
+      v
+regional methylation-pattern dictionary
+      |
+      v
+DNADoku region selectors / state transitions
+      |
+      v
+DMR and exceptional-site residuals
+      |
+      v
+exact reconstructed methylation state
+~~~
+
+Rather than transmitting an independent value for every locus when large regions follow already shared patterns, a DNADoku methylome descriptor can encode the **reference pattern plus deviations**.
+
+A conceptual reconstruction equation is:
+
+~~~text
+Methylome
+  = Reference(cell/tissue/context)
+  + DNADoku(regional-state selectors)
+  + DMR residuals
+  + site-level residuals
+  + measurement metadata
+~~~
+
+and a larger cellular state descriptor becomes:
+
+~~~text
+Cell State
+  = Genome Seed
+  + Genome Residual
+  + Epigenome Seed
+  + Epigenome Residual
+~~~
+
+### 25-locus / 25-region blocks
+
+DNADoku may group loci or, preferably, already-coherent genomic regions into 25-element blocks.
+
+A naive 25-CpG binary block has `2^25` possible methylation patterns and therefore requires 25 bits when no structure is known.
+
+A shared pattern dictionary can instead map frequently recurring patterns to compact IDs:
+
+~~~text
+25-site block
+      |
+      +--> shared canonical pattern ID
+      +--> optional DNADoku arrangement / region selector
+      +--> exceptional loci
+      +--> residual quantitative values
+~~~
+
+DNADoku-14 must **not** automatically be attached to every 25-locus block. An 84-bit permutation field would be larger than the naive 25-bit binary state and would make compression worse when genomic order is already known.
+
+Therefore the canonical rule is:
+
+- genomic coordinate order is implicit and costs zero extra ordering bits when shared,
+- DNADoku permutation/routing fields are emitted only when they describe information not already implied by the coordinate universe,
+- common methylation patterns use compact dictionary selectors,
+- unusual or quantitative state is left to residual coding.
+
+### DMR-first representation
+
+Differentially methylated regions (DMRs) are a natural higher-level unit because methylation differences often occur regionally rather than as completely independent random bits.
+
+A practical hierarchy is therefore:
+
+~~~text
+chromosome
+  -> methylation domain
+     -> DMR / regulatory region
+        -> DNADoku state selector
+           -> exceptional CpG residual
+~~~
+
+Possible region states may include, for a versioned profile:
+
+~~~text
+reference
+hypomethylated
+hypermethylated
+mixed / partially methylated
+unknown
+quantitative residual follows
+~~~
+
+The exact state alphabet must be profile-specific and must not discard quantitative information required for exact reconstruction.
+
+### State inheritance and transition layer
+
+DNA methylation is also interesting as a state-transition problem.
+
+DNMT1 is primarily associated with maintenance of pre-existing DNA methylation patterns, while DNMT3A and DNMT3B are major de-novo methyltransferases. This motivates an optional DNADoku transition model:
+
+~~~text
+previous methylation state
+        |
+        +--> maintenance rule
+        +--> de-novo / erasure / context-dependent transition
+        |
+        v
+next methylation state
+        |
+        +--> measured residual
+        v
+verified state
+~~~
+
+This is an engineering analogy, not a claim that a real methylome is deterministically derivable from DNA sequence or a small Seed Cell. Actual methylation depends on biological context including cell type, developmental state, chromatin environment, environmental/history effects, stochasticity, and measurement conditions.
+
+Therefore an epigenome Seed can only reconstruct a methylome exactly when the required **reference state, rule version, context, and irreducible residual information** are supplied or shared.
+
+### Compression objective
+
+The useful compression target is not:
+
+> encode every methylated cytosine independently.
+
+It is:
+
+> **factor the methylome into shared biological/reference structure, reusable regional patterns, DNADoku selectors, and the smallest residual needed for exact reconstruction.**
+
+This changes the storage problem from:
+
+~~~text
+millions of independent locus records
+~~~
+
+toward:
+
+~~~text
+reference methylome ID
++ regional pattern IDs
++ DNADoku structural selectors
++ DMR deltas
++ exceptional-site / quantitative residuals
++ measurement metadata
+~~~
+
+The degree of compression depends on the actual entropy of the dataset and the amount of genuinely shared context. It must be measured, not assumed.
+
+### Required benchmark accounting
+
+Every DNADoku methylome benchmark should report separately:
+
+| Component | Required measurement |
+|---|---|
+| Coordinate universe | assembly and methylation contexts |
+| Reference methylome | bytes and version |
+| Pattern / DMR dictionary | bytes and version |
+| DNADoku descriptors | bytes |
+| Site-level residuals | bytes |
+| Quantitative values | bytes / precision |
+| Missingness / coverage metadata | bytes |
+| Integrity metadata | bytes |
+| Incremental sample size | bytes |
+| Amortized shared-state size | bytes per sample |
+| Self-contained equivalent | bytes |
+| Reconstruction equality | exact match to canonical source representation |
+
+Compression claims are invalid if the reference methylome, pattern dictionary, coordinate universe, or required precision is omitted from accounting.
+
+### Research interpretation
+
+This extension makes the original HexDoku intuition more concrete:
+
+~~~text
+DNA sequence
+  = relatively stable reference information
+
+Epigenetic methylation
+  = context-dependent state overlay
+
+DNADoku
+  = compressed / structured overlay descriptor
+
+HexDoku
+  = reconstruction, addressing, and verification framework
+~~~
+
+The central research question is therefore whether a methylome can be represented efficiently as a **versioned reference overlay plus sparse or structured residual**, and whether DNADoku contributes useful selector / topology / reconstruction semantics beyond ordinary reference and entropy coding.
+
+### Scientific references
+
+- [NHGRI: Methylation](https://www.genome.gov/genetics-glossary/Methylation)
+- [ENCODE: Whole-Genome Bisulfite Sequencing data standards](https://www.encodeproject.org/data-standards/wgbs/)
+- [Moore et al., DNA Methylation and Its Basic Function](https://pmc.ncbi.nlm.nih.gov/articles/PMC3521964/)
+- [Yang et al., DNMT3A in haematological malignancies](https://pmc.ncbi.nlm.nih.gov/articles/PMC5814392/)
+
