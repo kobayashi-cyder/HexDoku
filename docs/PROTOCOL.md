@@ -353,3 +353,41 @@ Example reductions when all non-order context is already shared:
 The protocol must not report those values as total-object compression unless the block universe and block contents are intentionally excluded and that exclusion is clearly stated.
 
 For comparison with optimal permutation coding, a 25-element arbitrary permutation has 25! states and needs approximately 83.68 bits of information. T76 does not cover all of that state space.
+
+## 17. Reference rule profile negotiation
+
+The first protocol profile is:
+
+~~~text
+rule_profile = sudoku-v1
+~~~
+
+Both HDC and HDE must load the exact Sudoku Profile v1 rules before generating or consuming the 25-stage trajectory.
+
+The profile fixes:
+
+- 9×9 board geometry;
+- symbols 1..9;
+- ordinary row/column/3×3 Sudoku constraints;
+- candidate-set derivation;
+- integer q-distribution calculation;
+- HR derivation;
+- target coordinate schedule E0..E24;
+- validity-preserving commit resolver;
+- final Sudoku ParityGrid verification.
+
+A future payload profile must use a different profile identifier.
+
+## 18. Terminal field in sudoku-v1
+
+For `sudoku-v1`:
+
+~~~text
+Q72  = deterministic Sudoku-derived final q vector
+ext4 = 0000
+T76  = Q72 || 0000
+~~~
+
+T76 is not an independently selectable 76-bit payload in this profile.
+
+Any protocol that uses T76 as a free permutation selector must negotiate a future Payload Profile explicitly.
