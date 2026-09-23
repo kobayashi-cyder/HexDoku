@@ -1190,6 +1190,130 @@ normal, and spinorial excitations of one deeper state space?
 
 If so, that deeper structure must reproduce the Standard Model representation content and interactions quantitatively.
 
+
+---
+
+## Higgs as an internal connection between left and right sectors
+
+A stronger unification branch is to treat the Higgs not as a completely independent primitive scalar, but as an internal-direction component of a more general connection.
+
+Write the fermionic state schematically as:
+
+~~~text
+Psi = (psi_L, psi_R)^T
+~~~
+
+and define a generalized Dirac / connection operator:
+
+~~~text
+D_gen =
+[ i D_L      Y H       ]
+[ Y^dag H^dag  i D_R   ]
+~~~
+
+The diagonal blocks propagate left- and right-handed sectors through spacetime and gauge connections.
+
+The off-diagonal block connects:
+
+~~~text
+psi_L <-> psi_R
+~~~
+
+and has the transformation structure of the Higgs-Yukawa sector.
+
+Expanding:
+
+~~~text
+bar(Psi) D_gen Psi
+~~~
+
+produces the ordinary kinetic / gauge pieces together with terms of the schematic form:
+
+~~~text
+bar(psi_L) Y H psi_R + h.c.
+~~~
+
+Thus the Yukawa interaction can be interpreted geometrically as motion / connection in an internal left-right direction.
+
+This is a candidate structural explanation for why the Higgs couples left- and right-chiral fermions.
+
+### Generalized connection and curvature
+
+A minimal block connection can be written schematically as:
+
+~~~text
+A_gen =
+[ A_L      H       ]
+[ H^dag    A_R     ]
+~~~
+
+with generalized curvature:
+
+~~~text
+F_gen = d A_gen + A_gen^2
+~~~
+
+which contains schematic components:
+
+~~~text
+F_L
+F_R
+D H
+H H^dag
+H^dag H
+~~~
+
+Therefore one generalized curvature can, in principle, contain structures corresponding to:
+
+~~~text
+gauge kinetic terms
+Higgs covariant kinetic terms
+Higgs self-interaction terms
+~~~
+
+This is not yet a derivation of the Standard Model, but it is stronger than simply placing a gauge field and an unrelated scalar side by side.
+
+### Relation to gauge-Higgs unification
+
+A distinct but related route appears in higher-dimensional gauge theories:
+
+~~~text
+A_M = (A_mu, A_extra)
+~~~
+
+where the extra-dimensional component can appear as a scalar from a four-dimensional viewpoint.
+
+In that language:
+
+~~~text
+gauge field in the full space
+    ->
+4D gauge component + 4D scalar component
+~~~
+
+so a Higgs-like scalar can be reinterpreted as another directional component of one higher-dimensional gauge connection.
+
+The current framework does not choose between higher-dimensional and discrete/internal-direction realizations yet.
+
+### What must be derived
+
+The internal-connection picture only becomes physically significant if it explains, rather than assumes:
+
+~~~text
+H ~ (1, 2, +1/2)
+why left and right fermions occupy their observed representations
+why quarks and leptons carry their observed hypercharges
+why one Higgs doublet is sufficient at low energy
+why Yukawa matrices have their observed structure
+why the Higgs potential and electroweak scale take their observed values
+~~~
+
+The next test is therefore representation-theoretic:
+
+> Given the observed left/right fermion representation mismatch, how much of the Higgs representation is forced by the requirement that an internal connection map one sector into the other?
+
+This test is useful because it distinguishes a genuine structural consequence from merely inserting a Higgs field by hand.
+
 ## Canonical current map
 
 The current physically disciplined map is:
