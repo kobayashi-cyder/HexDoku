@@ -232,3 +232,40 @@ Benchmarks must distinguish:
 - shared decoder state;
 - address-space size;
 - actual independent source information represented.
+
+
+## 14. Permutation / address reconstruction
+
+A permutation profile may define a block universe by stable IDs/hashes and use final Parity cells as canonical ordering references.
+
+A logical descriptor may contain:
+
+~~~text
+hexdoku_id
+rule_version
+seed/reference
+block_universe_id or manifest_hash
+residual_order_data
+parity/root verification hash
+~~~
+
+HDE procedure:
+
+1. resolve the exact block universe/manifest;
+2. reconstruct the DNA/Parity state;
+3. map Parity cells to canonical block IDs;
+4. apply any residual order data;
+5. resolve blocks by ID/hash;
+6. concatenate them in canonical order;
+7. verify the final object digest.
+
+A missing block cannot be reconstructed from its hash alone.
+
+The protocol must distinguish:
+
+- bytes needed to identify the permutation;
+- bytes needed to identify/retrieve blocks;
+- bytes used for residual order information;
+- bytes used for the block contents themselves.
+
+For arbitrary n-element permutations, compression claims must be compared with the information requirement `log2(n!)`, not only with a naive fixed-width ID list.
