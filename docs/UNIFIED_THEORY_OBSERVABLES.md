@@ -1,5 +1,7 @@
 # Unified-Theory Research Target: What Must Be Explained
 
+Canonical framework: [UNIFIED_THEORY.md](UNIFIED_THEORY.md)
+
 This document defines the next research target for the candidate unified-theory branch of HexDoku.
 
 The goal is **not** to force every domain into one microscopic equation.
