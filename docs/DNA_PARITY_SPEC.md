@@ -235,23 +235,70 @@ Resolve_HDC(t) == Resolve_HDE(t)
 
 for every one of the 24 normal commits.
 
-## 9. Terminal stage
+## 9. Terminal stage and 76-bit selector
 
 P24 contains the final active coordinate E24.
 
-Its evaluation row may still be generated and retained as part of the 25-table DNA trajectory, but it does not have to force a digit 1..9 into the final cell.
-
-Instead:
+The 25th probability/evaluation row remains meaningful. Under the baseline 8-bit-q terminal profile, pack the nine finalized q values in fixed candidate identity order:
 
 ~~~text
-E24 := ResolveTerminal(ParityReference, rule_version)
+Q76_base =
+Encode8(q1) || Encode8(q2) || ... || Encode8(q9)
 ~~~
 
-The terminal value may be a canonical number, character, byte string, hash/reference fragment, object ID, Seed reference, or typed protocol symbol.
+This contributes:
 
-A type/length rule is required so that the representation remains unambiguous.
+~~~text
+9 × 8 = 72 bits
+~~~
 
-A hash alone can verify a known Parity but cannot reconstruct unknown Parity content. If the terminal value must be recovered, the referenced Parity or an equivalent deterministic source must be available.
+P24 then adds a terminal-only 4-bit field:
+
+~~~text
+TerminalExtension4 = 0..15
+~~~
+
+The resulting terminal word is:
+
+~~~text
+T76 = Q76_base || TerminalExtension4
+width(T76) = 76 bits
+~~~
+
+The 4-bit TerminalExtension4 is **not HexDoku HR**. HR remains an optional derived state quantity with semantic range 0..8. Reusing an HR nibble would restrict the reachable terminal state count and would not provide a full 76-bit selector field.
+
+The terminal coordinate is therefore not required to force a digit 1..9 into the final cell. Instead, T76 may serve as a typed terminal payload or a selector into a versioned Parity/permutation family.
+
+Nominal field capacity:
+
+~~~text
+2^76 = 75,557,863,725,914,323,419,136 selector values
+~~~
+
+This is representation capacity. Actual reachable entropy may be lower if the evaluator cannot produce all possible 72-bit q combinations.
+
+A profile claiming the full 76-bit selector domain must specify how every T76 value can be produced or supplied.
+
+### 9.1 Canonical 13-symbol text form
+
+A fixed 76-bit integer can be displayed in 13 symbols using the Base64url alphabet as a radix-64 digit alphabet:
+
+~~~text
+13 radix-64 symbols = 78 container bits
+76 payload bits
+2 high-order states are constrained
+~~~
+
+Canonical rule:
+
+- interpret T76 as an unsigned 76-bit big-endian integer;
+- encode it as exactly 13 radix-64 digits;
+- use the Base64url alphabet `A-Z a-z 0-9 - _`;
+- the first digit is restricted to indices 0..15.
+
+This is **not standard byte-oriented Base64url encoding**.
+
+If an implementation instead stores T76 in a 10-byte container and uses standard unpadded Base64url, four container bits must be canonicalized and the text requires 14 characters.
 
 ## 10. Canonical DNA serialization
 
@@ -371,7 +418,7 @@ For every stage and every active coordinate:
 
 ~~~text
 Q_HDC(t,c) == Q_HDE(t,c)
-HR_HDC(t,c) == HR_HDE(t,c)
+HR_HDC(t,c) == HR_HDE(t,c) for HR-bearing states
 ~~~
 
 For the 24 normal commits:
@@ -465,3 +512,49 @@ HexDoku gains arise when the selected Parity/order is implied partly by:
 The block contents themselves remain separate information unless already shared, retrievable, or compressed by another codec.
 
 See [PERMUTATION_ADDRESSING.md](PERMUTATION_ADDRESSING.md).
+
+
+## 19. T76 permutation selection
+
+For a shared block universe U with n distinct blocks, T76 may be interpreted as an integer:
+
+~~~text
+s = UInt76(T76)
+0 <= s < 2^76
+~~~
+
+When n! >= 2^76, a versioned permutation profile can map every selector to a distinct permutation.
+
+One simple normative construction for experimentation is:
+
+~~~text
+N      = n!
+offset = ContextRank(rule_version, Seed, DNA_prefix, universe_id) mod N
+rank   = (offset + s) mod N
+Pi     = FactoradicUnrank(n, rank)
+~~~
+
+For fixed context, this mapping is injective in s whenever 2^76 <= n!.
+
+For n=81:
+
+~~~text
+log2(81!) ≈ 401.17
+81! >> 2^76
+~~~
+
+so all 2^76 T76 selector values can map to distinct 81-element permutations.
+
+T76 selects a **2^76-sized subset/contextual window** of the complete 81! permutation space. It does not by itself encode all possible 81-element orders.
+
+ContextRank must be deterministic and versioned. If a cryptographic keyed profile is used, its PRF/hash construction must be specified separately.
+
+## 20. Security interpretation of T76
+
+T76 is primarily a selector/address field.
+
+If all 2^76 values are uniformly secret, exhaustive selector search has at most a 76-bit search space. That is below the 128-bit security level normally targeted by modern cryptographic systems.
+
+Therefore T76 should not be advertised as a standalone modern encryption key.
+
+For confidentiality/authentication, use a standard cryptographic construction and treat T76 as a selector, nonce/reference component, truncated tag only where appropriate, or one part of a larger keyed state.
