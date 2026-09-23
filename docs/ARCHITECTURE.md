@@ -414,7 +414,18 @@ Thus HR is always in the range 0..8.
 
 This is not standard Hamming distance.
 
-For each pre-fix turn, all unresolved cells are ordered by:
+For each pre-fix turn, **calculation positions are always evaluated in row-major board order**:
+
+```text
+r1c1 -> r1c2 -> ... -> r1c9
+-> r2c1 -> ... -> r2c9
+-> ...
+-> r9c1 -> ... -> r9c9
+```
+
+Filled cells are skipped.
+
+Only after the turn's unresolved cells have been calculated may a separate commit/compression priority be formed:
 
 ```text
 HR ascending
@@ -422,7 +433,7 @@ HR ascending
 -> row-major coordinate ID ascending
 ```
 
-The first coordinate in that order is the next commit position, with its digit determined by the versioned unique-solution rule.
+The first coordinate in that post-calculation priority is the next commit position, with its digit determined by the versioned unique-solution rule.
 
 Both HDC and HDE use this same logical order.
 
