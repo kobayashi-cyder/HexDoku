@@ -771,3 +771,28 @@ Its 72 q bits are determined by Sudoku state and its four-bit extension is reser
 The earlier 39.20% to 98.81% T76 ordering examples therefore describe a **conditional future Payload Profile**, not measured Sudoku-v1 compression.
 
 The Sudoku-v1 compression result must come from actual 325-state q trajectories.
+
+## 33. Parity-first hole selection
+
+HDC can exploit information that HDE does not initially possess: the encoder starts from the completed ParityGrid.
+
+In the first Sudoku baseline it does not search arbitrary 25-cell subsets. It uses:
+
+~~~text
+9 holes of digit 1
++ 9 holes of digit 2
++ 7 holes of digit 3
+= 25 holes
+~~~
+
+Only 36 masks remain because only the two visible digit-3 positions vary.
+
+This makes exhaustive mask evaluation small enough to use as the first reference encoder strategy.
+
+## 34. Six-bit hole-mask descriptor
+
+The 36 baseline masks require six fixed bits to rank.
+
+This six-bit value describes **which 25 positions were hidden under the known 9+9+7 rule**. It does not contain the missing 25 Sudoku values themselves.
+
+The real compression/reconstruction result depends on whether Sudoku-v1 HDE can reproduce the exact original ParityGrid from the resulting masked board. HDC therefore verifies exact round trip before accepting a mask.
