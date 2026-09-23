@@ -278,7 +278,7 @@ Compression ratio should be reported both with and without shared-state accounti
 
 ## 12. T76 selector profile
 
-The 25th HexDoku evaluation stage may expose a 76-bit Terminal Selector:
+A future Payload Profile may expose a 76-bit Terminal Selector:
 
 ~~~text
 T76 = q1||q2||...||q9||ext4
@@ -287,7 +287,7 @@ T76 = q1||q2||...||q9||ext4
 
 The q fields use fixed candidate identity order 1..9 for T76 packing. `ext4` is a terminal extension nibble, not HR.
 
-The nominal selector domain contains exactly:
+If all 76 bits are genuinely free in that future profile, the nominal selector domain contains:
 
 ~~~text
 2^76 = 75,557,863,725,914,323,419,136 values
@@ -452,3 +452,19 @@ same block set on both sides
 In that case, a verbose sequence of IDs/hashes can be replaced by a 76-bit selector if the target order belongs to the negotiated T76 family.
 
 The weaker case is a cold receiver with none of the block universe or context. In that case, T76 alone is insufficient and the apparent percentage reduction can disappear after all required data is counted.
+
+## 21. Profile status
+
+The T76 permutation-selector construction in this document is a **future Payload Profile design**, not the active Sudoku Profile v1 terminal semantics.
+
+In `sudoku-v1`:
+
+~~~text
+Q72 = derived from Sudoku state
+ext4 = 0000
+free T76 payload entropy = not claimed
+~~~
+
+Therefore the 39.20%, 90.50%, 95.25%, and 98.81% examples are conditional order-description examples for a future profile in which a free selector is actually available and the relevant universe/context is already shared.
+
+The first empirical HexDoku compression result must instead come from the measured Sudoku-v1 DNA trajectory.
