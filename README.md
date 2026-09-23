@@ -153,6 +153,46 @@ See [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md).
 
 ---
 
+## T76 compression accounting
+
+T76 can identify one order from a versioned family containing at most 2^76 orders.
+
+For **25 distinct elements**, the complete arbitrary permutation space is larger:
+
+~~~text
+log2(25!) ≈ 83.68 bits
+fixed-width rank for every 25! order = 84 bits
+~~~
+
+Therefore T76 does **not** encode every possible 25-element permutation. It encodes a restricted/shared family of at most 2^76 permutations.
+
+When comparing against a naive explicit list of 25 IDs, the reduction can be substantial:
+
+| Baseline representation | Baseline bits | T76 bits | Incremental reduction |
+|---|---:|---:|---:|
+| 25 × 5-bit local IDs | 125 | 76 | 39.20% |
+| 25 × 32-bit IDs | 800 | 76 | 90.50% |
+| 25 × 64-bit IDs | 1,600 | 76 | 95.25% |
+| 25 × 256-bit hashes | 6,400 | 76 | 98.81% |
+
+These percentages are valid only when the element set, rule version, and other required context are already shared or accounted separately.
+
+For the selected family itself, 76 bits is already the information-theoretic minimum needed to distinguish all 2^76 selector states. HexDoku's gain is therefore mainly the replacement of a verbose explicit ordering/address list with a shared deterministic selector.
+
+The complete transmitted size is:
+
+~~~text
+T76
++ any Seed bytes not already shared
++ rule/profile identifiers
++ universe/manifest reference
++ residual ordering data
++ verification/authentication fields
+~~~
+
+Benchmarks must report both the 76-bit incremental-selector case and the complete descriptor size.
+
+---
 ## Permutation / address compression
 
 A central HexDoku use case is to compress the **ordering/address description** of blocks that are already shared, content-addressable, or retrievable by hash/ID.
