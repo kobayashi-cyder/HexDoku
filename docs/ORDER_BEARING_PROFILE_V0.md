@@ -146,3 +146,37 @@ For every ParityGrid and HDC family report:
 The repository reference benchmark includes one canonical solved Sudoku and enumerates all 36 fixed `9+9+7` masks.
 
 Those results are a **single-board sample**, not a general HexDoku performance claim.
+## 10. Current single-Parity reference result
+
+The reference implementation in `reference/one_board_benchmark.py` was evaluated against its one built-in canonical solved Sudoku.
+
+For the 36 fixed `9+9+7` masks:
+
+~~~text
+masks tested                 = 36
+exact round-trip accepted    = 27
+rejected                     = 9
+distinct derived orders K    = 27
+log2(K)                      = 4.754887502... bits
+family theoretical maximum   = log2(36) = 5.169925001... bits
+candidate-cell evaluations   = 325 per accepted board
+sum_hr_targets range         = 1..3
+sum_hr_dna range             = 331..418
+~~~
+
+Aggregate target HR observations across the 27 accepted boards:
+
+~~~text
+HR0 = 628
+HR1 = 47
+~~~
+
+Aggregate full-DNA HR observations across the same boards:
+
+~~~text
+HR0 = 2,151
+HR1 = 3,185
+HR2 = 3,439
+~~~
+
+This is a single canonical-Parity sample only. It demonstrates that the dynamic profile can produce multiple derived orders, but it does not establish a guaranteed minimum K or general compression ratio.
