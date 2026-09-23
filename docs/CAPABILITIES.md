@@ -605,13 +605,19 @@ HDE must either receive the HCT first or regenerate it exactly from shared state
 
 This enables frequency coding without a circular decoder dependency.
 
-## 21. Terminal Reference
+## 21. Terminal Reference / T76
 
 The final E24 coordinate does not have to be a digit.
 
-It may hold a canonical typed number, character, byte string, reference, ID, Seed reference, or other protocol symbol.
+In the baseline 8-bit-q profile, its nine q values provide 72 bits. A terminal-only four-bit extension creates a 76-bit Terminal Selector:
 
-Its final content is resolved or checked against the Parity reference/source.
+~~~text
+T76 = 72-bit final q table + 4-bit terminal extension
+~~~
+
+The extension is not HR.
+
+T76 can address up to 2^76 selector states when the generating profile actually permits all bit patterns.
 
 ## 22. Cryptographic interpretation
 
@@ -667,3 +673,30 @@ If that happens, conventional delta/dictionary/entropy codecs may compress the r
 This is a secondary hypothesis and requires measured benchmarks.
 
 See [Permutation / Address Compression](PERMUTATION_ADDRESSING.md).
+
+
+## 26. T76-selected order family
+
+For a fixed 81-block context, T76 can select up to:
+
+~~~text
+2^76 = 75,557,863,725,914,323,419,136
+~~~
+
+distinct block permutations.
+
+This is a large restricted family inside the full 81! order space.
+
+A deterministic factoradic-unranking profile can turn the 76-bit selector into one exact 81-block order.
+
+The advantage is that the sender can identify one order in that shared family with a 76-bit selector rather than sending a naive 81-entry ID sequence.
+
+This is only a compression gain relative to representations that contain more information than the selected family requires; it is not a universal replacement for the approximately 401.17 bits needed to distinguish every arbitrary 81-element permutation.
+
+## 27. T76 text and security
+
+A compact 13-character form is possible with a custom fixed-width radix-64 encoding using the Base64url alphabet.
+
+Standard byte-oriented Base64url of a 10-byte container is 14 unpadded characters.
+
+T76 should be described as a 76-bit selector width, not automatically as 76-bit cryptographic strength. Modern confidentiality/authentication should use standard cryptographic primitives.
