@@ -538,67 +538,89 @@ It is:
 That is the central capability HexDoku is intended to test.
 
 
-## 17. Twenty-five-turn trajectory
+## 17. DNA / Parity trajectory
 
-For the current 25-empty-cell interpretation, HDE evaluates the complete unresolved state before fixing one cell on every turn.
+With 25 initial unresolved coordinates, HexDoku uses 25 canonical evaluation tables:
 
-```text
-Turn 1 -> 25 unresolved cells
-Turn 2 -> 24
-...
-Turn 25 -> 1
-```
+~~~text
+25, 24, 23, ... , 2, 1 active coordinates
+~~~
 
-This produces 325 unresolved-cell evaluation states.
+This gives 325 evaluated coordinate states.
 
-If each state contains nine canonical 8-bit candidate values, the raw evaluated trajectory is 23,400 bits (2,925 bytes).
+There are only 24 normal commits. The last active coordinate is a Terminal Reference.
 
-The calculated numerical values are themselves usable as immediate bit vectors after canonical numeric encoding.
+The 25-table evaluation history is **DNA**. The fully materialized final 81-cell table is **Parity**.
 
-## 18. Hamming direct addressing
+Standard Sudoku solving constraints are not required. The required property is deterministic, versioned reconstruction.
 
-Each 72-bit cell-state vector may be treated as a base vector for Hamming addressing.
+With nine 8-bit q values per evaluated coordinate:
 
-An exact derived vector is identified by:
+~~~text
+325 × 9 × 8 = 23,400 bits = 2,925 bytes
+~~~
 
-```text
-base state
-+ Hamming distance d
-+ combination rank k
-```
+before HCT, prediction, delta, or entropy coding.
 
-rather than by enumerating all candidates.
+## 18. Fixed coordinate order
 
-A deterministic unranking operation converts k into the exact d positions to flip.
+The initial 25 unresolved coordinates are fixed once in row-major order:
 
-This lets the same HDE-generated state act as an address base for hashes, bus values, lookup keys, or later reconstruction stages.
+~~~text
+top -> bottom
+left -> right within each row
+~~~
 
-The full Hamming space of a 72-bit base contains 2^72 possible vectors, but that address space is not 2^72 bits of independent information. It is a deterministic space generated from the base and addressing rule.
+This gives E0..E24.
 
-See [Turn trajectory and Hamming addressing](TRAJECTORY.md).
+At stage t, active coordinates are Et..E24.
 
+HR does not choose the coordinate.
 
-## 19. HexDoku Hamming Rank
+## 19. Hamming Rank
 
-HexDoku's primary rank is now defined as an uncertainty/multiplicity rank from 0 through 8:
+HexDoku HR is:
 
-```text
-HR0 -> one candidate remains; already determined logically, even if not yet written
-HR1 -> two candidates remain
-...
-HR8 -> all nine candidates remain
-```
+~~~text
+HR = unresolved candidate multiplicity - 1
+~~~
 
-Every turn evaluates all unresolved cells first. Cells are then sorted deterministically by:
+with range 0..8.
 
-```text
-HR
--> canonical candidate-value table
--> coordinate
-```
+HR0 includes a logically determined but still-unfilled coordinate.
 
-This gives HDC and HDE the same compression/reconstruction order even when evaluation is parallel.
+HR8 is maximum unresolved multiplicity.
 
-The term **Hamming Rank** is project-specific here. Standard bitwise Hamming distance is written **HD** and remains only an optional derived-bit addressing layer.
+HR is state metadata; it does not define the board traversal.
 
-See [Canonical Order v0.1](CANONICAL_ORDER.md).
+## 20. HCT / most-frequent-value prepass
+
+HDC may scan the complete canonical DNA q stream before encoding it.
+
+It builds the HCT by frequency descending and q-value ascending on ties.
+
+This fixes the most-frequent value before payload encoding.
+
+HDE must either receive the HCT first or regenerate it exactly from shared state.
+
+This enables frequency coding without a circular decoder dependency.
+
+## 21. Terminal Reference
+
+The final E24 coordinate does not have to be a digit.
+
+It may hold a canonical typed number, character, byte string, reference, ID, Seed reference, or other protocol symbol.
+
+Its final content is resolved or checked against the Parity reference/source.
+
+## 22. Cryptographic interpretation
+
+The public board geometry, coordinate order, and algorithm version need not be secret.
+
+If confidentiality is required, HexDoku should use standard cryptographic primitives in a separately specified keyed profile.
+
+The relevant security question is how much uncertainty about the final Parity remains after a defined subset of coordinates/tables is revealed.
+
+HexDoku v0.2 does not claim proven cryptographic security.
+
+See [DNA / Parity Model v0.2](DNA_PARITY_SPEC.md).
