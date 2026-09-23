@@ -2168,6 +2168,268 @@ The strongest version of the present program is therefore:
 
 This turns the "ask today's conserved quantities" intuition into a concrete inverse problem rather than a metaphor.
 
+
+---
+
+## Conservation, conversion, information loss, and constraint reconstruction
+
+The reverse-inference program must distinguish three different questions:
+
+~~~text
+1. What quantity is conserved?
+2. Into what form can that quantity be converted?
+3. What information is lost when the conversion is coarse-grained?
+~~~
+
+A conserved quantity may survive while its carrier changes.
+
+Schematically:
+
+~~~text
+Q_total = Q_A + Q_B + Q_C + ...
+~~~
+
+and a transition may perform:
+
+~~~text
+Q_A -> Q_B + Q_C
+~~~
+
+while still satisfying:
+
+~~~text
+Delta Q_total = 0
+~~~
+
+Energy redistribution is one example:
+
+~~~text
+vacuum / constraint energy
+    ->
+radiation
++ matter excitations
++ kinetic energy
++ internal excitations
++ residual vacuum energy
+~~~
+
+Therefore conservation alone does not imply that the pre-transition state can be uniquely reconstructed.
+
+### Invertible versus many-to-one evolution
+
+If the effective transformation is:
+
+~~~text
+X_after = F(X_before)
+~~~
+
+and F is invertible, then:
+
+~~~text
+X_before = F^-1(X_after)
+~~~
+
+and the previous state can, in principle, be reconstructed.
+
+If instead:
+
+~~~text
+F(X_1) = F(X_2)
+~~~
+
+for distinct earlier states X_1 and X_2, the present state does not uniquely determine the past.
+
+This is the generic coarse-graining problem:
+
+~~~text
+many microscopic histories
+    ->
+same macroscopic observables
+~~~
+
+The inverse program must therefore use as many independent surviving invariants and correlations as possible.
+
+### Three-layer reconstruction model
+
+For the present project, organize the surviving information into three layers.
+
+Layer A: conserved or continuity-constrained quantities
+
+~~~text
+Q = {
+stress-energy flow,
+exact or approximate conserved charges,
+topological invariants where applicable
+}
+~~~
+
+Layer B: transformed but traceable quantities
+
+~~~text
+T = {
+energy partition among sectors,
+particle abundances,
+entropy distribution,
+radiation temperatures,
+spectral distortions,
+relic populations
+}
+~~~
+
+Layer C: reconstructed constraints
+
+~~~text
+K = {
+coupling relations,
+symmetry restrictions,
+selection rules,
+allowed transitions,
+gap structure,
+effective dimensionality
+}
+~~~
+
+The working inverse problem is then:
+
+~~~text
+(Q_now, T_now, correlations_now)
+    ->
+candidate transformation history
+    ->
+K_before
+    ->
+candidate C_before
+~~~
+
+The goal is not to reconstruct one arbitrary microscopic state, but the smallest pre-transition constraint structure consistent with all surviving data.
+
+---
+
+## Freedom release is not sufficient: emergence also requires constraint formation
+
+The previous discussion emphasized that a phase transition may release previously frozen or gapped degrees of freedom.
+
+That is only half of a stable emergence process.
+
+A long-lived structured phase generally requires new constraints to appear as old ones are relaxed.
+
+The preferred schematic is therefore:
+
+~~~text
+old constraints
+    ->
+instability / transition
+    ->
+degree release
+    +
+new constraint formation
+    ->
+stable higher-level organization
+~~~
+
+This suggests a useful distinction:
+
+~~~text
+stable emergence
+=
+increase or reorganization of accessible freedom
++
+formation of compatible higher-level constraints
+~~~
+
+versus:
+
+~~~text
+runaway local release
+=
+loss of higher-level constraints
++
+self-amplifying local dynamics
+~~~
+
+### Biological analogy and its limit
+
+Cancer provides a useful analogy for the second pattern.
+
+In a multicellular organism, cellular proliferation and survival are constrained by:
+
+~~~text
+growth-control signaling
+apoptosis
+tissue architecture
+resource allocation
+immune surveillance
+~~~
+
+Cancer can involve partial escape from these higher-level constraints, followed by local self-amplifying growth.
+
+Structurally:
+
+~~~text
+loss of organism-level constraints
+    ->
+increased local proliferative freedom
+    ->
+self-reinforcing expansion
+~~~
+
+This resembles the abstract pattern of constraint loss plus local freedom release.
+
+However:
+
+> Similar dynamical structure does not imply physical identity.
+
+A tumor, a phase transition, a vacuum bubble, a civilization, and an expanding universe are not the same physical system merely because some coarse-grained equations may share growth, threshold, or constraint-release motifs.
+
+The analogy is retained only as a test of the abstract framework.
+
+### Stronger unification criterion
+
+The theory should not classify two systems as manifestations of one mechanism merely because they both show:
+
+~~~text
+boundaries
+growth
+energy intake
+instability
+expansion
+~~~
+
+A stronger claim requires some combination of:
+
+~~~text
+same governing variables
+same transformation law
+same dimensionless control parameters
+same critical scaling
+same conserved quantities
+same residual prediction
+~~~
+
+Without those, the relationship remains analogy rather than unification.
+
+### Updated emergence principle
+
+The current framework therefore upgrades:
+
+~~~text
+emergence = release of effective freedom
+~~~
+
+to:
+
+~~~text
+emergence
+=
+reorganization of conserved quantities
++
+release / suppression of effective degrees of freedom
++
+reconstruction of constraints
+~~~
+
+This three-part structure is now the preferred general template.
+
 ## Canonical current map
 
 The current physically disciplined map is:
