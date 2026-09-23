@@ -27,7 +27,9 @@ The architecture has a defined direction, but performance and scaling claims rem
 
 ## Current reference sample
 
-Single-Parity sample: 36 masks tested under the experimental order-bearing `9+9+7` profile; 27 exact round trips, 27 distinct derived orders (`K=27`, `log2(K)≈4.7549` bits), 325 candidate-cell evaluations per accepted board, `sum_hr_dna=331..418`. This is not yet a corpus-level result.
+Single-Parity sample: 36 masks tested under the experimental order-bearing `9+9+7` profile; 27 exact round trips and `K=27`.
+
+500-board corpus: 18,000 fixed-mask evaluations; 3,780 exact round trips (21.0%); 367/500 boards had at least one valid mask; 133/500 were `NO_MASK`. `K=0..30`, all-board mean K=7.56, successful-board mean `log2(K)=2.928` bits. Current guaranteed independent order capacity is therefore 0 bits. Accepted masks used 325 candidate-cell evaluations; full-DNA `sum(HR)=258..467`, mean 357.613.
 
 ## Not yet established
 
@@ -83,6 +85,9 @@ Measure `sum_hr_targets`, `sum_hr_commits`, and `sum_hr_dna` on the 25-hole corp
 
 ### M1F — Reachable-order and instruction benchmark
 Use the received 25-hole board as the only board input. Measure the number K of distinct valid deterministic solve orders HDC can deliberately realize, report `log2(K)`, and instrument HDE candidate-cell evaluations plus actual CPU instructions/cycles. Compare against a conventional 84-bit factoradic order field.
+
+### M1G — Expand HDC family for minimum-K coverage
+Benchmark the generalized 9+9+7 family (9,072 configurations) and/or another larger deterministic mask family. Primary acceptance objectives are: eliminate `NO_MASK`, raise minimum K above 1, preserve exact round trip, and keep HDE cheap. Report descriptor overhead so increased HDC choice is not mistaken for free compression.
 
 ### M2 — Bit-perfect cross-process reconstruction
 Prove exact reconstruction in a fresh process.
