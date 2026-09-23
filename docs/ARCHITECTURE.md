@@ -397,3 +397,49 @@ Across all d, the generated address space has 2^72 possible 72-bit vectors. This
 Different base states' Hamming spaces overlap and must not be summed as if they were disjoint information stores.
 
 The detailed definition is in `docs/TRAJECTORY.md`.
+
+
+## 18. HexDoku Hamming Rank and canonical order
+
+HexDoku defines **Hamming Rank (HR)** as a project-specific unresolved-multiplicity rank:
+
+```text
+HR(t,c) = number_of_remaining_candidates(t,c) - 1
+```
+
+Thus HR is always in the range 0..8.
+
+- HR0: one candidate remains; logically determined, including pending/unfilled commit state.
+- HR8: all nine candidates remain; maximum unresolved multiplicity.
+
+This is not standard Hamming distance.
+
+For each pre-fix turn, all unresolved cells are ordered by:
+
+```text
+HR ascending
+-> canonical candidate table lexicographic ascending
+-> row-major coordinate ID ascending
+```
+
+The first coordinate in that order is the next commit position, with its digit determined by the versioned unique-solution rule.
+
+Both HDC and HDE use this same logical order.
+
+Parallel execution may calculate values in any physical order, but no state transition is committed until the complete turn has been canonically ordered.
+
+The normative definition is in `docs/CANONICAL_ORDER.md`.
+
+## 19. Optional standard Hamming-distance layer
+
+Standard bitwise Hamming distance remains a separate optional mechanism for deriving/addressing a bit vector relative to a canonical base state.
+
+To avoid ambiguity:
+
+```text
+HR = HexDoku unresolved-multiplicity rank (0..8)
+HD = standard bitwise Hamming distance
+CR = combination rank used with HD
+```
+
+HR is part of the primary HDC/HDE ordering. HD/CR is not required for the primary turn order.
