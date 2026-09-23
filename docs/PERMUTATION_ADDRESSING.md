@@ -274,3 +274,91 @@ A permutation/address benchmark should report at least:
 - final object hash equality.
 
 Compression ratio should be reported both with and without shared-state accounting.
+
+
+## 12. T76 selector profile
+
+The 25th HexDoku evaluation stage may expose a 76-bit Terminal Selector:
+
+~~~text
+T76 = q1||q2||...||q9||ext4
+      72 q bits       4 bits
+~~~
+
+The q fields use fixed candidate identity order 1..9 for T76 packing. `ext4` is a terminal extension nibble, not HR.
+
+The nominal selector domain contains exactly:
+
+~~~text
+2^76 = 75,557,863,725,914,323,419,136 values
+~~~
+
+The field width must not be confused with measured entropy. If q generation only reaches a subset of 72-bit patterns, the effective selector entropy is smaller.
+
+## 13. Mapping T76 to an 81-element order
+
+For 81 distinct blocks, define:
+
+~~~text
+N = 81!
+s = UInt76(T76)
+~~~
+
+A simple deterministic mapping is:
+
+~~~text
+offset = ContextRank(context) mod N
+rank   = (offset + s) mod N
+order  = FactoradicUnrank(81, rank)
+~~~
+
+where context includes the exact rule version, Seed/DNA context, and block-universe identity.
+
+Because:
+
+~~~text
+2^76 < 81!
+~~~
+
+distinct s values remain distinct permutation ranks for a fixed context.
+
+Therefore one context can expose up to 2^76 unique 81-block orders selected by T76.
+
+This is not the whole 81! space. The full arbitrary 81-element order still carries approximately 401.17 bits of permutation information.
+
+## 14. Minimum universe size for a full T76 selector
+
+To map all 2^76 selector values injectively to permutations, n must satisfy:
+
+~~~text
+n! >= 2^76
+~~~
+
+23! is smaller than 2^76, while 24! is larger.
+
+Therefore a full 76-bit permutation selector first fits at n=24.
+
+For smaller n, the selector must either use fewer effective bits or map multiple T76 values to the same order, in which case it is not a unique 76-bit permutation selector.
+
+## 15. Thirteen-character display
+
+T76 may be rendered as 13 characters with a custom fixed-width radix-64 representation using the Base64url alphabet.
+
+This is a display/transport encoding of a 76-bit integer, **not standard Base64url over a byte string**.
+
+Canonical 13-symbol form:
+
+- exactly 13 characters;
+- Base64url alphabet;
+- big-endian radix-64 integer digits;
+- first character restricted to alphabet indices 0..15.
+
+If interoperability requires standard Base64url bytes, store T76 in a canonical 10-byte container and use 14 unpadded Base64url characters.
+
+## 16. Cryptographic boundary
+
+A 76-bit selector is not equivalent to 128-bit cryptographic security.
+
+If T76 is secret and uniformly distributed, it exposes at most a 2^76 brute-force selector space.
+
+HexDoku should use established cryptographic primitives for confidentiality and authentication. T76 can participate as a selector or derived field, but should not be treated as a standalone modern encryption key.
