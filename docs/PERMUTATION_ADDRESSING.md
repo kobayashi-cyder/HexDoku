@@ -362,3 +362,93 @@ A 76-bit selector is not equivalent to 128-bit cryptographic security.
 If T76 is secret and uniformly distributed, it exposes at most a 2^76 brute-force selector space.
 
 HexDoku should use established cryptographic primitives for confidentiality and authentication. T76 can participate as a selector or derived field, but should not be treated as a standalone modern encryption key.
+
+## 17. Compression accounting examples
+
+T76 is most useful when the block universe and rule context are already shared and only the ordering choice must be communicated.
+
+For 25 distinct elements, a naive explicit list has the following sizes:
+
+| Explicit representation | Raw order bits | T76 selector | Reduction |
+|---|---:|---:|---:|
+| 25 local IDs at 5 bits each | 125 | 76 | 39.20% |
+| 25 IDs at 32 bits each | 800 | 76 | 90.50% |
+| 25 IDs at 64 bits each | 1,600 | 76 | 95.25% |
+| 25 SHA-256-style 256-bit identifiers | 6,400 | 76 | 98.81% |
+
+The reduction formula is:
+
+~~~text
+reduction = 1 - 76 / baseline_bits
+~~~
+
+These are **ordering-description reductions**, not claims that the underlying block contents or hashes have disappeared.
+
+If the 25 identifiers themselves must also be transmitted because the receiver does not already know the universe, their bytes must be added back.
+
+## 18. Comparison with an optimal permutation rank
+
+A list of 25 distinct items has:
+
+~~~text
+25! possible complete permutations
+log2(25!) ≈ 83.68 bits
+~~~
+
+An optimal fixed-width rank capable of representing **every** 25-item permutation therefore requires 84 bits.
+
+T76 is smaller only because it covers at most 2^76 orders, not all 25!.
+
+It is invalid to claim that 84 -> 76 bits is lossless compression of the complete 25! permutation universe.
+
+The correct comparison is:
+
+~~~text
+full arbitrary 25-item order:
+    25! states -> at least ~83.68 bits
+
+T76 family:
+    at most 2^76 states -> exactly 76 selector bits
+~~~
+
+Within a full 2^76-size T76 family, the 76-bit selector itself is already optimal before protocol overhead.
+
+## 19. Complete descriptor accounting
+
+In a favorable persistent session, the receiver may already know the block-universe/manifest ID, Seed and DNA context, permutation-rule version, Factoradic/ContextRank convention, and verification policy.
+
+Then the incremental order message can approach:
+
+~~~text
+76 bits
+~~~
+
+In a self-contained or cold-start transfer, the real size is:
+
+~~~text
+76-bit T76
++ Seed
++ rule/profile version
++ universe/manifest reference
++ residuals
++ integrity/authentication material
+~~~
+
+Therefore every benchmark must publish two ratios:
+
+1. **incremental order ratio** — shared context excluded but explicitly declared;
+2. **full descriptor ratio** — every required descriptor byte included.
+
+## 20. Interpretation
+
+The strongest HexDoku permutation-compression case is:
+
+~~~text
+same block set on both sides
++ same rule/Seed context
++ only order differs
+~~~
+
+In that case, a verbose sequence of IDs/hashes can be replaced by a 76-bit selector if the target order belongs to the negotiated T76 family.
+
+The weaker case is a cold receiver with none of the block universe or context. In that case, T76 alone is insufficient and the apparent percentage reduction can disappear after all required data is counted.
