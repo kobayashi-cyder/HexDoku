@@ -4369,8 +4369,6 @@ This boundary keeps the framework ambitious without confusing a powerful meta-la
 
 ---
 
----
-
 ## Unified-theory research direction
 
 The extended unified-theory notes have been moved into dedicated documents:
