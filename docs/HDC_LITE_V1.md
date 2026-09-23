@@ -254,3 +254,31 @@ From that board, HDE derives the 25 coordinates, solved values, deterministic or
 A 41-bit canonical-transform Seed remains an alternate restricted transport experiment and is not the current baseline.
 
 See [HDE_MIN_PACKET.md](HDE_MIN_PACKET.md) and [ONE_BOARD_DERIVED_INFORMATION.md](ONE_BOARD_DERIVED_INFORMATION.md).
+
+## 14. Coverage result of fixed 36-mask family
+
+The 500-board order-bearing corpus benchmark evaluated all 36 fixed `9+9+7` masks for every completed board:
+
+~~~text
+500 boards
+18,000 masks
+3,780 exact-round-trip masks
+367 boards with >=1 valid mask
+133 boards with NO_MASK
+~~~
+
+Therefore the fixed 36-mask family is **not a complete coverage profile** for the tested corpus.
+
+For information-bearing derived order, the same corpus measured `K=0..30`. Some successful boards had only `K=1`, so the current fixed family guarantees zero independent order bits.
+
+The next HDC experiment should expand the candidate family and optimize lexicographically for:
+
+1. exact round-trip coverage;
+2. minimum number of distinct derived orders K;
+3. low HDE cost;
+4. HR/reference structure;
+5. descriptor overhead.
+
+The generalized 9+9+7 family of 9,072 configurations is the next documented candidate for this test.
+
+See [ORDER_HR_CORPUS_500.md](ORDER_HR_CORPUS_500.md).
