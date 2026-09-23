@@ -655,6 +655,8 @@ Until a license is added, publication of the source repository does **not** auto
 
 ---
 
+---
+
 ## DNADoku extension: genome reconstruction / reference-compression profile
 
 **DNADoku** is an experimental HexDoku extension that treats DNA-like symbols as a compact representation layer for **selectors, permutation ranks, reconstruction rules, and references**.
@@ -764,6 +766,8 @@ The objective is:
 > **given the same versioned reference universe, encode the identity, arrangement, known differences, and irreducible novel sequence of an individual genome with the smallest deterministic reconstruction descriptor that still reproduces the exact canonical sequence.**
 
 In this role, DNADoku is best understood as a **genome reconstruction seed language layered on top of shared-reference and entropy-compression systems**, rather than as a standalone biological compression algorithm.
+
+---
 
 ---
 
@@ -999,6 +1003,368 @@ The central research question is therefore whether a methylome can be represente
 - [ENCODE: Whole-Genome Bisulfite Sequencing data standards](https://www.encodeproject.org/data-standards/wgbs/)
 - [Moore et al., DNA Methylation and Its Basic Function](https://pmc.ncbi.nlm.nih.gov/articles/PMC3521964/)
 - [Yang et al., DNMT3A in haematological malignancies](https://pmc.ncbi.nlm.nih.gov/articles/PMC5814392/)
+
+---
+
+---
+
+## PeriodicTableDoku extension
+
+**PeriodicTableDoku** treats the periodic table and a versioned chemical knowledge universe as shared reconstruction context.
+
+It is not merely "placing 118 elements into a Sudoku-like board." The intended abstraction is hierarchical:
+
+~~~text
+PeriodicTableDoku
+├─ ElementDoku
+├─ IsotopeDoku
+├─ MoleculeDoku
+├─ MaterialDoku
+└─ ReactionDoku
+~~~
+
+The common chemical reconstruction equation is:
+
+~~~text
+Chemical Object
+  = Shared Chemical Universe
+  + Composition
+  + Structure / Topology
+  + State
+  + Residual
+~~~
+
+The periodic table itself supplies a canonical elemental namespace. With 118 named elements, an atomic-number identifier needs:
+
+~~~text
+log2(118) ≈ 6.883 bits
+~~~
+
+so a simple fixed-width element ID needs 7 bits.
+
+If the sender and receiver agree on the periodic-table version and elemental property tables, data such as symbol, group, period, and other reference properties do not need to be repeated with every occurrence of an element.
+
+### ElementDoku
+
+ElementDoku is the lowest chemical selection layer.
+
+For 25 independent ordered element slots:
+
+~~~text
+25 × log2(118)
+≈ 172.066 bits of ideal identifying information
+
+simple fixed width:
+25 × 7 = 175 bits
+~~~
+
+If order is irrelevant and only a 25-atom elemental multiset matters, the number of possible compositions is:
+
+~~~text
+C(118 + 25 - 1, 25)
+= C(142, 25)
+~~~
+
+with:
+
+~~~text
+log2 C(142,25)
+≈ 91.822 bits
+~~~
+
+This large difference is not free compression. It comes from changing the represented object from an **ordered sequence** to an **unordered composition**.
+
+If exactly 25 distinct elements are selected from the 118-element universe, selection alone requires:
+
+~~~text
+log2 C(118,25)
+≈ 84.433 bits
+~~~
+
+and ordering those selected 25 elements arbitrarily requires:
+
+~~~text
+log2(25!)
+≈ 83.682 bits
+~~~
+
+Together this gives roughly:
+
+~~~text
+84.433 + 83.682
+≈ 168.114 bits
+~~~
+
+which approaches the information needed for 25 ordered draws without replacement.
+
+This illustrates a core HexDoku rule: splitting information into **selection + arrangement** changes representation, but does not bypass the information-theoretic requirement to distinguish all valid states.
+
+### IsotopeDoku
+
+An element ID does not uniquely identify an isotope or ion.
+
+A more specific atomic state may require:
+
+~~~text
+Atomic State
+  = atomic number Z
+  + isotope / mass-number information
+  + charge
+  + optional electronic-state information
+~~~
+
+The exact representation should be profile-specific. Common or naturally abundant isotopes may be compact dictionary states, while rare isotope, charge, or excitation information becomes an explicit residual.
+
+### MoleculeDoku
+
+Molecular composition is not enough to identify molecular structure.
+
+For example, the same elemental formula can correspond to multiple constitutional isomers, stereoisomers, charge states, or conformations. Therefore MoleculeDoku must distinguish at least:
+
+~~~text
+Molecule
+  = Composition
+  + Bond Graph
+  + Bond Order / Charge
+  + Stereochemistry where required
+  + Geometry / Conformation where required
+  + Residual
+~~~
+
+A conceptual pipeline is:
+
+~~~text
+Periodic Table ID
+      |
+      v
+atom / fragment selection
+      |
+      v
+bond topology
+      |
+      v
+bond order / formal charge
+      |
+      v
+stereochemical state
+      |
+      v
+geometry / conformation residual
+~~~
+
+Repeated chemical motifs can be moved into a shared fragment dictionary:
+
+~~~text
+fragment #17 = reusable ring motif
+fragment #52 = reusable functional group
+fragment #81 = reusable ligand / side-group motif
+~~~
+
+Then a molecule can be represented as:
+
+~~~text
+Molecule Seed
+  + fragment IDs
+  + attachment points
+  + bond rules
+  + unmatched atoms / bonds
+  + residual
+~~~
+
+The gain comes only when those fragments and rules are genuinely shared or amortized across many objects.
+
+### MaterialDoku
+
+MaterialDoku extends the same idea from molecules to extended solids and materials.
+
+A general material descriptor may contain:
+
+~~~text
+Material
+  = Composition
+  + Unit Cell / Lattice
+  + Symmetry
+  + Atomic Positions
+  + Occupancy
+  + Defects
+  + State / Phase
+  + Residual
+~~~
+
+For a highly regular crystal, repeated atom positions can often be regenerated from a smaller asymmetric description plus symmetry operations. Therefore a useful decomposition is:
+
+~~~text
+Ideal / reference crystal
+        +
+MaterialDoku structural selector
+        +
+defect overlay
+        +
+residual
+~~~
+
+Defect overlays may describe:
+
+~~~text
+vacancy
+substitution
+interstitial
+dopant
+site occupancy change
+local distortion
+~~~
+
+This mirrors the DNADoku pattern of:
+
+~~~text
+shared reference
++ structured overlay
++ exceptional residual
+~~~
+
+### ReactionDoku
+
+ReactionDoku describes a chemical transformation as a state transition rather than as two unrelated complete objects.
+
+~~~text
+Reactant State
+      |
+      v
+Reaction Transition
+      |
+      v
+Product State
+~~~
+
+A compact structural description may contain:
+
+~~~text
+initial molecular graph
++ atom mapping
++ bond deletions
++ bond additions
++ bond-order changes
++ stoichiometry
++ conditions / state identifiers
++ residual
+~~~
+
+This is analogous to MovieDoku temporal coding:
+
+~~~text
+State(t+1)
+  = State(t)
+  + Transition
+  + Residual
+~~~
+
+If a profile aims to reconstruct reaction mechanisms rather than only net reactant/product changes, intermediates, transition-state information, kinetics, and other required data must be represented separately. A net reaction equation does not determine a unique microscopic mechanism.
+
+### 25-element chemical blocks
+
+A 25-element Doku container may represent:
+
+~~~text
+25 atoms
+25 fragments
+25 lattice sites
+25 coordination nodes
+25 reaction events
+25 material regions
+~~~
+
+but the same rule used throughout HexDoku applies:
+
+- do not transmit an 84-bit permutation merely because the block contains 25 elements,
+- derive canonical ordering from atomic index, graph traversal, lattice coordinates, or another shared convention whenever possible,
+- use a Doku rank only when the choice among arrangements is independently informative,
+- use compact dictionary states for recurring motifs,
+- leave irreducible topology, geometry, and measurement detail to residual coding.
+
+### Periodic-table regularities available to the profile
+
+The periodic table is especially interesting because the reference universe already contains strong recurring structure.
+
+Useful regularities include:
+
+1. **Atomic-number order**  
+   Every element has a canonical integer identity `Z`, giving a stable primary order.
+
+2. **Periodicity**  
+   Chemical behavior recurs in structured ways across periods and groups rather than behaving as 118 unrelated labels.
+
+3. **Group / valence similarity**  
+   Elements within the same group often share related outer-electron patterns and recurring chemical behavior.
+
+4. **Block structure**  
+   The s-, p-, d-, and f-block organization provides another compact categorical partition of the element universe.
+
+5. **Local chemical motifs**  
+   Molecules repeatedly reuse bond environments, rings, functional groups, coordination motifs, and larger fragments.
+
+6. **Crystallographic repetition**  
+   Extended materials can exhibit unit-cell repetition and symmetry, allowing many positions to be generated from a much smaller structural description.
+
+7. **Sparse deviation from a reference**  
+   Defects, substitutions, dopants, isotope changes, and reaction edits are frequently describable as local changes relative to a larger unchanged structure.
+
+These regularities are candidates for shared-reference coding. They are not assumptions that every chemical system is predictable from the periodic table alone.
+
+### Proposed PeriodicTableDoku reconstruction hierarchy
+
+~~~text
+Periodic Table version
+        |
+        v
+Element / isotope dictionary
+        |
+        v
+Fragment / motif dictionary
+        |
+        v
+Molecule / material reference
+        |
+        v
+PeriodicTableDoku selectors
+        |
+        v
+graph / lattice / reaction topology
+        |
+        v
+state overlays / defects / transitions
+        |
+        v
+irreducible residual
+        |
+        v
+verified chemical object
+~~~
+
+A practical long-term family is therefore:
+
+~~~text
+HexDoku
+├─ DNADoku
+│  ├─ GenomeDoku
+│  └─ EpigenomeDoku
+├─ MediaDoku
+│  ├─ ImageDoku
+│  ├─ AudioDoku
+│  └─ LayoutDoku
+├─ MovieDoku
+│  ├─ SceneDoku
+│  ├─ MotionDoku
+│  ├─ TimelineDoku
+│  └─ AV-SyncDoku
+└─ PeriodicTableDoku
+   ├─ ElementDoku
+   ├─ IsotopeDoku
+   ├─ MoleculeDoku
+   ├─ MaterialDoku
+   └─ ReactionDoku
+~~~
+
+---
 
 ---
 
@@ -1549,361 +1915,350 @@ The useful research question is not whether Doku metadata can replace entropy co
 
 ---
 
-## PeriodicTableDoku extension
+---
 
-**PeriodicTableDoku** treats the periodic table and a versioned chemical knowledge universe as shared reconstruction context.
+## OncoDoku / EvolutionDoku extension
 
-It is not merely "placing 118 elements into a Sudoku-like board." The intended abstraction is hierarchical:
+**OncoDoku** models carcinogenesis and tumor evolution as a layered, evolving state rather than as a single mutation or single cause.
+
+The intended decomposition is:
 
 ~~~text
-PeriodicTableDoku
-├─ ElementDoku
-├─ IsotopeDoku
-├─ MoleculeDoku
-├─ MaterialDoku
-└─ ReactionDoku
+OncoDoku
+├─ GermlineDoku
+├─ SomaticDoku
+├─ EpigenomeDoku
+├─ RepairDoku
+├─ ExposureDoku
+├─ InfectionDoku
+├─ ExpressionDoku
+├─ MicroenvironmentDoku
+├─ ImmuneDoku
+├─ CloneDoku
+├─ MetastasisDoku
+└─ TherapyDoku
 ~~~
 
-The common chemical reconstruction equation is:
+The central idea is that cancer state emerges from interacting inherited predisposition, acquired genomic alterations, epigenetic state, DNA-damage/repair processes, exposure history, infection, expression/signaling, tissue context, immune interaction, clonal competition, and treatment.
+
+A useful state equation is:
 
 ~~~text
-Chemical Object
-  = Shared Chemical Universe
-  + Composition
-  + Structure / Topology
-  + State
-  + Residual
+CancerState(t+1)
+  = F(
+      U,
+      I,
+      G(t),
+      S(t),
+      Δ(t),
+      Σ(t),
+      R(t)
+    )
 ~~~
 
-The periodic table itself supplies a canonical elemental namespace. With 118 named elements, an atomic-number identifier needs:
+where:
 
 ~~~text
-log2(118) ≈ 6.883 bits
+U = shared biological reference universe
+I = selected inherited / acquired factors and identities
+G = genome, clone, cell-cell, and tissue graph structure
+S = current molecular / epigenetic / immune / metabolic state
+Δ = mutations, edits, state changes, treatment effects, and other transitions
+Σ = selection pressure acting on competing states / clones
+R = irreducible or currently unexplained residual
 ~~~
 
-so a simple fixed-width element ID needs 7 bits.
+### GermlineDoku
 
-If the sender and receiver agree on the periodic-table version and elemental property tables, data such as symbol, group, period, and other reference properties do not need to be repeated with every occurrence of an element.
-
-### ElementDoku
-
-ElementDoku is the lowest chemical selection layer.
-
-For 25 independent ordered element slots:
+GermlineDoku represents inherited predisposition relative to a reference genome or pangenome.
 
 ~~~text
-25 × log2(118)
-≈ 172.066 bits of ideal identifying information
-
-simple fixed width:
-25 × 7 = 175 bits
-~~~
-
-If order is irrelevant and only a 25-atom elemental multiset matters, the number of possible compositions is:
-
-~~~text
-C(118 + 25 - 1, 25)
-= C(142, 25)
-~~~
-
-with:
-
-~~~text
-log2 C(142,25)
-≈ 91.822 bits
-~~~
-
-This large difference is not free compression. It comes from changing the represented object from an **ordered sequence** to an **unordered composition**.
-
-If exactly 25 distinct elements are selected from the 118-element universe, selection alone requires:
-
-~~~text
-log2 C(118,25)
-≈ 84.433 bits
-~~~
-
-and ordering those selected 25 elements arbitrarily requires:
-
-~~~text
-log2(25!)
-≈ 83.682 bits
-~~~
-
-Together this gives roughly:
-
-~~~text
-84.433 + 83.682
-≈ 168.114 bits
-~~~
-
-which approaches the information needed for 25 ordered draws without replacement.
-
-This illustrates a core HexDoku rule: splitting information into **selection + arrangement** changes representation, but does not bypass the information-theoretic requirement to distinguish all valid states.
-
-### IsotopeDoku
-
-An element ID does not uniquely identify an isotope or ion.
-
-A more specific atomic state may require:
-
-~~~text
-Atomic State
-  = atomic number Z
-  + isotope / mass-number information
-  + charge
-  + optional electronic-state information
-~~~
-
-The exact representation should be profile-specific. Common or naturally abundant isotopes may be compact dictionary states, while rare isotope, charge, or excitation information becomes an explicit residual.
-
-### MoleculeDoku
-
-Molecular composition is not enough to identify molecular structure.
-
-For example, the same elemental formula can correspond to multiple constitutional isomers, stereoisomers, charge states, or conformations. Therefore MoleculeDoku must distinguish at least:
-
-~~~text
-Molecule
-  = Composition
-  + Bond Graph
-  + Bond Order / Charge
-  + Stereochemistry where required
-  + Geometry / Conformation where required
-  + Residual
-~~~
-
-A conceptual pipeline is:
-
-~~~text
-Periodic Table ID
-      |
-      v
-atom / fragment selection
-      |
-      v
-bond topology
-      |
-      v
-bond order / formal charge
-      |
-      v
-stereochemical state
-      |
-      v
-geometry / conformation residual
-~~~
-
-Repeated chemical motifs can be moved into a shared fragment dictionary:
-
-~~~text
-fragment #17 = reusable ring motif
-fragment #52 = reusable functional group
-fragment #81 = reusable ligand / side-group motif
-~~~
-
-Then a molecule can be represented as:
-
-~~~text
-Molecule Seed
-  + fragment IDs
-  + attachment points
-  + bond rules
-  + unmatched atoms / bonds
-  + residual
-~~~
-
-The gain comes only when those fragments and rules are genuinely shared or amortized across many objects.
-
-### MaterialDoku
-
-MaterialDoku extends the same idea from molecules to extended solids and materials.
-
-A general material descriptor may contain:
-
-~~~text
-Material
-  = Composition
-  + Unit Cell / Lattice
-  + Symmetry
-  + Atomic Positions
-  + Occupancy
-  + Defects
-  + State / Phase
-  + Residual
-~~~
-
-For a highly regular crystal, repeated atom positions can often be regenerated from a smaller asymmetric description plus symmetry operations. Therefore a useful decomposition is:
-
-~~~text
-Ideal / reference crystal
-        +
-MaterialDoku structural selector
-        +
-defect overlay
-        +
-residual
-~~~
-
-Defect overlays may describe:
-
-~~~text
-vacancy
-substitution
-interstitial
-dopant
-site occupancy change
-local distortion
-~~~
-
-This mirrors the DNADoku pattern of:
-
-~~~text
-shared reference
-+ structured overlay
-+ exceptional residual
-~~~
-
-### ReactionDoku
-
-ReactionDoku describes a chemical transformation as a state transition rather than as two unrelated complete objects.
-
-~~~text
-Reactant State
-      |
-      v
-Reaction Transition
-      |
-      v
-Product State
-~~~
-
-A compact structural description may contain:
-
-~~~text
-initial molecular graph
-+ atom mapping
-+ bond deletions
-+ bond additions
-+ bond-order changes
-+ stoichiometry
-+ conditions / state identifiers
+reference genome
++ inherited variants
++ pathogenicity / evidence annotations
 + residual
 ~~~
 
-This is analogous to MovieDoku temporal coding:
+Inherited predisposition is not equivalent to a cancer diagnosis. It changes the prior risk landscape and the set of possible future trajectories.
+
+### SomaticDoku
+
+SomaticDoku represents acquired genomic change:
 
 ~~~text
-State(t+1)
-  = State(t)
-  + Transition
-  + Residual
+SNV
+indel
+copy-number change
+deletion
+amplification
+chromosomal rearrangement
+regulatory mutation
+other structural variation
 ~~~
 
-If a profile aims to reconstruct reaction mechanisms rather than only net reactant/product changes, intermediates, transition-state information, kinetics, and other required data must be represented separately. A net reaction equation does not determine a unique microscopic mechanism.
+The useful representation is not only a sequence delta but also a **genome-graph edit**.
 
-### 25-element chemical blocks
-
-A 25-element Doku container may represent:
+A tumor may therefore be described as:
 
 ~~~text
-25 atoms
-25 fragments
-25 lattice sites
-25 coordination nodes
-25 reaction events
-25 material regions
+reference genome
++ germline state
++ somatic graph edits
++ clone-specific residuals
 ~~~
 
-but the same rule used throughout HexDoku applies:
+### Driver / passenger / unknown evidence layer
 
-- do not transmit an 84-bit permutation merely because the block contains 25 elements,
-- derive canonical ordering from atomic index, graph traversal, lattice coordinates, or another shared convention whenever possible,
-- use a Doku rank only when the choice among arrangements is independently informative,
-- use compact dictionary states for recurring motifs,
-- leave irreducible topology, geometry, and measurement detail to residual coding.
+Observed alterations should not automatically be treated as equally causal.
 
-### Periodic-table regularities available to the profile
-
-The periodic table is especially interesting because the reference universe already contains strong recurring structure.
-
-Useful regularities include:
-
-1. **Atomic-number order**  
-   Every element has a canonical integer identity `Z`, giving a stable primary order.
-
-2. **Periodicity**  
-   Chemical behavior recurs in structured ways across periods and groups rather than behaving as 118 unrelated labels.
-
-3. **Group / valence similarity**  
-   Elements within the same group often share related outer-electron patterns and recurring chemical behavior.
-
-4. **Block structure**  
-   The s-, p-, d-, and f-block organization provides another compact categorical partition of the element universe.
-
-5. **Local chemical motifs**  
-   Molecules repeatedly reuse bond environments, rings, functional groups, coordination motifs, and larger fragments.
-
-6. **Crystallographic repetition**  
-   Extended materials can exhibit unit-cell repetition and symmetry, allowing many positions to be generated from a much smaller structural description.
-
-7. **Sparse deviation from a reference**  
-   Defects, substitutions, dopants, isotope changes, and reaction edits are frequently describable as local changes relative to a larger unchanged structure.
-
-These regularities are candidates for shared-reference coding. They are not assumptions that every chemical system is predictable from the periodic table alone.
-
-### Proposed PeriodicTableDoku reconstruction hierarchy
+A versioned evidence layer may classify or score alterations as:
 
 ~~~text
-Periodic Table version
-        |
-        v
-Element / isotope dictionary
-        |
-        v
-Fragment / motif dictionary
-        |
-        v
-Molecule / material reference
-        |
-        v
-PeriodicTableDoku selectors
-        |
-        v
-graph / lattice / reaction topology
-        |
-        v
-state overlays / defects / transitions
-        |
-        v
-irreducible residual
-        |
-        v
-verified chemical object
+driver-supported
+passenger-like
+unknown / uncertain significance
+context-dependent
 ~~~
 
-A practical long-term family is therefore:
+The profile must preserve provenance and uncertainty. OncoDoku must not infer clinical causality merely because an alteration is present.
+
+### EpigenomeDoku inside OncoDoku
+
+The existing methylation / epigenome layer attaches naturally:
 
 ~~~text
-HexDoku
-├─ DNADoku
-│  ├─ GenomeDoku
-│  └─ EpigenomeDoku
-├─ MediaDoku
-│  ├─ ImageDoku
-│  ├─ AudioDoku
-│  └─ LayoutDoku
-├─ MovieDoku
-│  ├─ SceneDoku
-│  ├─ MotionDoku
-│  ├─ TimelineDoku
-│  └─ AV-SyncDoku
-└─ PeriodicTableDoku
-   ├─ ElementDoku
-   ├─ IsotopeDoku
-   ├─ MoleculeDoku
-   ├─ MaterialDoku
-   └─ ReactionDoku
+genome state
++
+somatic alterations
++
+epigenetic overlay
++
+expression / signaling state
 ~~~
+
+Thus cancer-related state cannot be reduced to DNA sequence alone.
+
+### RepairDoku
+
+RepairDoku represents the mechanism between damage and fixed mutation:
+
+~~~text
+damage event
+   |
+   +--> repaired
+   |
+   +--> misrepaired / unrepaired
+             |
+             v
+        persistent alteration
+~~~
+
+This distinguishes the **generation process of alterations** from the alterations themselves.
+
+### ExposureDoku and InfectionDoku
+
+External and biological exposures become state inputs rather than direct deterministic causes.
+
+~~~text
+ExposureDoku:
+  tobacco / radiation / chemicals / other exposures
+  + dose / duration / timing where known
+  + uncertainty
+
+InfectionDoku:
+  pathogen identity
+  + host context
+  + persistence / state
+  + immune interaction
+~~~
+
+These inputs modify probabilities and biological state; they do not uniquely determine a future tumor trajectory.
+
+### ExpressionDoku
+
+ExpressionDoku represents downstream cellular state:
+
+~~~text
+genome
+  -> epigenome
+  -> RNA expression
+  -> protein / signaling
+  -> metabolism
+  -> phenotype
+~~~
+
+This is part of the `S(t)` term of the general algebra.
+
+### MicroenvironmentDoku and ImmuneDoku
+
+A tumor is not only a collection of transformed cells.
+
+The relevant graph may include:
+
+~~~text
+tumor cells
+immune cells
+fibroblasts
+blood vessels
+extracellular matrix
+nutrient / oxygen state
+paracrine / endocrine signals
+microbiome-related signals where relevant
+~~~
+
+ImmuneDoku can represent:
+
+~~~text
+antigen / recognition state
++ immune-cell state
++ attack / suppression
++ escape mechanisms
++ residual
+~~~
+
+These layers make the cancer representation explicitly multi-agent and graph-based.
+
+### CloneDoku
+
+CloneDoku is the clearest evolutionary component.
+
+~~~text
+normal cell
+   |
+   +-- alteration A --> clone A
+                         |
+                         +-- alteration B --> clone AB
+                         |
+                         +-- alteration C --> clone AC
+                                               |
+                                               +-- alteration D --> clone ACD
+~~~
+
+The tumor becomes a time-varying clone graph:
+
+~~~text
+G(t+1)
+  = G(t)
+  + ΔG(t)
+  + Rg(t)
+~~~
+
+but the abundance of each branch also depends on **selection**.
+
+### Selection pressure as a new general term
+
+OncoDoku exposes a term that was only implicit in earlier profiles:
+
+~~~text
+Σ = selection pressure
+~~~
+
+Examples include:
+
+~~~text
+resource limitation
+immune pressure
+tissue environment
+competition between clones
+therapy
+drug exposure
+metastatic niche
+other survival / reproduction constraints
+~~~
+
+A change can occur without becoming dominant. Therefore:
+
+> transition describes what changes; selection describes which changed states persist or expand.
+
+This distinction is important enough to promote `Σ` into the general HexDoku algebra.
+
+### TherapyDoku
+
+Treatment becomes an external perturbation plus selection pressure:
+
+~~~text
+TumorState(t)
+  + therapy
+      |
+      v
+cell death / state change / selection
+      |
+      v
+clone-frequency shift
+      |
+      v
+TumorState(t+1)
+~~~
+
+Thus resistance can be represented as a trajectory of state transition plus selection rather than as a single static attribute.
+
+### MetastasisDoku
+
+Metastasis is another hierarchical graph transition:
+
+~~~text
+primary clone
+  -> invasion
+  -> dissemination
+  -> bottleneck / selection
+  -> colonization
+  -> local evolution at secondary site
+~~~
+
+A metastatic site therefore becomes a descendant state with its own clone graph, environment, and residual.
+
+### Individual boundary of OncoDoku
+
+OncoDoku can structure known evidence and measured state, but it cannot deterministically predict whether a specific person will develop cancer or uniquely reconstruct every future tumor trajectory from a compact Seed.
+
+The irreducible boundary includes:
+
+~~~text
+unmeasured biological state
+stochastic mutation / cell events
+unknown causal mechanisms
+measurement noise / sampling limits
+future exposures
+future selection pressures
+treatment response uncertainty
+unobserved clone structure
+~~~
+
+This boundary must remain explicit in any benchmark or predictive extension.
+
+### EvolutionDoku
+
+The OncoDoku decomposition generalizes beyond cancer.
+
+A generic evolving population or state family can be described as:
+
+~~~text
+EvolutionState(t+1)
+  = F(
+      shared universe,
+      identities,
+      graph / population structure,
+      current state,
+      variation / transition,
+      selection pressure,
+      residual
+    )
+~~~
+
+Thus **EvolutionDoku** can be treated as the more general parent abstraction, with OncoDoku as one concrete biological profile.
+
+The conceptual sequence is:
+
+~~~text
+variation
+  -> competing states
+  -> selection
+  -> persistence / expansion
+  -> further variation
+  -> new population structure
+~~~
+
+This is the first HexDoku extension where **selection** becomes a first-class reconstruction term rather than a secondary annotation.
 
 ---
 
@@ -1913,12 +2268,15 @@ The domain extensions developed so far converge on one general reconstruction fo
 
 ~~~text
 X(t+1)
-  = U
-  + I
-  + G
-  + S(t)
-  + Δ(t -> t+1)
-  + R
+  = F(
+      U,
+      I,
+      G(t),
+      S(t),
+      Δ(t -> t+1),
+      Σ(t),
+      R(t)
+    )
 ~~~
 
 where:
@@ -1930,6 +2288,7 @@ I = Identity / selection of referenced components
 G = Graph / structure / arrangement
 S = current state / overlay state
 Δ = transition / edit from one state to another
+Σ = selection / persistence pressure acting on competing states
 R = irreducible residual
 ~~~
 
@@ -1959,6 +2318,10 @@ MoleculeDoku:
 ReactionDoku:
   U + I + G + S + Δ + R
   graph editing / transition is central
+
+OncoDoku / EvolutionDoku:
+  U + I + G + S + Δ + Σ + R
+  variation, state transition, clonal/population structure, and selection are central
 ~~~
 
 A compact equivalent is:
@@ -1969,6 +2332,7 @@ Doku Description
   + Structure
   + State
   + Transition
+  + Selection
   + Exceptions
 
 Reconstructed Object
@@ -2002,12 +2366,15 @@ Each Doku profile has information that cannot be inferred merely from the shared
 | Element / MoleculeDoku | periodic table / fragments / known motifs | exact topology, stereochemistry, charge, isotope, geometry when not implied |
 | MaterialDoku | reference crystal / symmetry / unit cell | defects, occupancies, distortions, phases, unmodeled structure |
 | ReactionDoku | reactant/product graphs / known reaction motifs | mechanism, intermediates, kinetics, conditions, or any transition information not determined by the net graph edit |
+| OncoDoku / EvolutionDoku | reference genome, known variants, clone/state models, measured environment | stochastic events, unmeasured state, future selection, causal uncertainty, future trajectory |
 
 Therefore:
 
 > **the general algebra is shared, but the irreducible boundary is profile-specific.**
 
 A Doku descriptor may remove repeated description, but it must not claim to reconstruct information that is absent from both the descriptor and the shared universe.
+
+---
 
 ---
 
@@ -2361,19 +2728,51 @@ This yields the strongest emergent interpretation so far:
 
 The unexplained part is the residual; the reusable part can become knowledge.
 
-### 15. Emerging Structured Reconstruction Algebra
+### 15. Selection is distinct from transition
+
+OncoDoku adds a new recurring distinction:
+
+~~~text
+variation / transition
+≠
+selection / persistence
+~~~
+
+A transition creates or changes a state. Selection changes the probability that one state persists, expands, or dominates relative to alternatives.
+
+This matters strongly in:
+
+~~~text
+cancer clone evolution
+population evolution
+therapy resistance
+competitive agent populations
+adaptive distributed systems
+~~~
+
+Therefore an evolving Doku system may require both:
+
+~~~text
+Δ = what changed
+Σ = what was favored / retained
+~~~
+
+This extends the earlier state-transition model into an evolutionary state model.
+
+### 16. Emerging Structured Reconstruction Algebra
 
 The accumulated profiles suggest a broader abstraction:
 
 ~~~text
 U = shared universe
-I = identity / selection
+I = identity / component selection
 G = graph / arrangement
 S = state / overlay
 Δ = transition / edit
+Σ = selection / persistence pressure
 R = irreducible residual
 
-X(t+1) = U + I + G + S(t) + Δ(t) + R
+X(t+1) = F(U, I, G(t), S(t), Δ(t), Σ(t), R(t))
 ~~~
 
 The operators are conceptual, not ordinary arithmetic addition. Each profile must define:
@@ -2382,10 +2781,10 @@ The operators are conceptual, not ordinary arithmetic addition. Each profile mus
 - how graph / arrangement is reconstructed,
 - how state is applied,
 - how transitions modify state,
+- how selection changes persistence / dominance among competing states where relevant,
 - how residuals override or complete reconstruction,
 - how canonical equivalence is verified.
 
 This can be treated as an emerging **Structured Reconstruction Algebra** for the HexDoku family.
 
 Its value must be demonstrated by exact reconstruction, honest accounting, and comparison against domain-specific baselines rather than assumed from the abstraction itself.
-
