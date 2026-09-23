@@ -34,6 +34,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [HDE Minimum Packet](docs/HDE_MIN_PACKET.md)
 - [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
+- [HR Branch Reference Channel](docs/HR_BRANCH_REFERENCES.md)
 - [Turn trajectory and optional Hamming addressing](docs/TRAJECTORY.md)
 - [Protocol draft](docs/PROTOCOL.md)
 - [Project status and milestones](docs/STATUS.md)
@@ -194,6 +195,32 @@ See [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md).
 
 ---
 
+## HR branch-reference channel
+
+HexDoku HR can also be interpreted as the number of **alternative candidate branches beyond one canonical anchor**.
+
+~~~text
+HR = candidate_count - 1
+alternative reference slots = HR
+~~~
+
+Thus HR0 has no extra branch reference, HR1 has one, HR2 has two, and HR8 has eight.
+
+A branch slot may carry or derive a content hash, chunk/object reference, manifest index, or another stable shared-state reference. The hash/reference identifies shared or retrievable state; it does not recreate unknown content.
+
+For the full 25-stage DNA trajectory:
+
+~~~text
+B_DNA = sum HR(t,c) over all 325 evaluated coordinate states
+~~~
+
+The generic structural maximum is `325 × 8 = 2,600` alternative-reference slots. In the fixed `9+9+7` case, when active candidates are restricted to `{1,2,3}`, `HR <= 2`, giving a structural bound of at most `650` slots.
+
+These are slot counts, **not proven independent payload capacity**. Real capacity is bounded by `log2(K)`, where K is the number of complete branch/reference assignments that HDC can actually choose while preserving deterministic reconstruction and exact Parity.
+
+See [HR Branch Reference Channel](docs/HR_BRANCH_REFERENCES.md).
+
+---
 ## T76 research container
 
 For the 25th evaluation table, the current 8-bit-q profile defines:
