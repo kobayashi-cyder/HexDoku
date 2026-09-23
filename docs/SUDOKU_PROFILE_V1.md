@@ -269,14 +269,14 @@ HDC MUST test candidate masks by running the same HDE reconstruction rules witho
 
 See [HDC_LITE_V1.md](HDC_LITE_V1.md) for the canonical scoring and generalized 9+9+7 mode.
 
-## 14. Minimal packet profile
+## 14. Received-board profile
 
-The current one-board experiment may use a shared canonical solved Sudoku plus a fixed-width 41-bit transform Seed.
+The current one-board baseline gives HDE the 9×9 board with exactly 25 holes.
 
-HDE reconstructs the completed Parity by deterministic digit/row/band/column/stack permutations and optional transpose.
+The 81 board positions make the hole coordinates implicit. HDE derives candidate sets, HR, solution values, and the deterministic reconstruction order from the received board and pinned profile.
 
-This path requires no Sudoku-wide rank/unrank and no transmission of q tables.
+For a generic `HOLE + 1..9` fixed-width representation this is 324 bits. For the fixed `9+9+7` subprofile, only `HOLE,3..9` appear on wire, allowing a simple 243-bit representation.
 
-If a coordinate-bearing channel is enabled and at least 32 reconstructible masks are available, add five payload bits for a 46-bit one-board descriptor.
+The earlier 41-bit canonical-transform Seed is retained only as an alternate restricted transport profile, not as the current Sudoku-v1 baseline.
 
-The transform-Seed profile is restricted to one canonical-grid orbit and is therefore not a universal representation of all Sudoku solutions.
+See [ONE_BOARD_DERIVED_INFORMATION.md](ONE_BOARD_DERIVED_INFORMATION.md).
