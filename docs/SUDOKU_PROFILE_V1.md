@@ -248,3 +248,23 @@ The first measurements SHOULD be:
 8. only after the baseline is stable, test a Payload Profile.
 
 This keeps Sudoku-derived compression effects separate from later payload-specific engineering.
+## 13. HDC-Lite 9+9+7 baseline
+
+The first encoder profile paired with Sudoku Profile v1 is `hdc-lite-9-9-7-v1`.
+
+Starting from a completed ParityGrid:
+
+~~~text
+digit 1: 9 holes
+digit 2: 9 holes
+digit 3: 7 holes
+total: 25 holes
+~~~
+
+The nine positions containing digit 3 are sorted row-major. The encoder chooses which two remain visible.
+
+Therefore only 36 hole masks exist and a six-bit rank is sufficient.
+
+HDC MUST test candidate masks by running the same HDE reconstruction rules without using the hidden ParityGrid to select digits. A mask is valid only when the HDE result exactly equals the source ParityGrid.
+
+See [HDC_LITE_V1.md](HDC_LITE_V1.md) for the canonical scoring and generalized 9+9+7 mode.
