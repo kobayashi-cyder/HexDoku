@@ -422,3 +422,27 @@ Values 36..63 are invalid.
 The six-bit rank identifies the hole pattern only. It does not encode the unknown completed Sudoku board.
 
 The decoder reconstructs using Sudoku Profile v1 and must not repeat the encoder mask search.
+
+## 20. One-board minimum packet modes
+
+Supported design targets for the current single-board experiment:
+
+~~~text
+mode = full-grid
+payload = 81 × 4 bits = 324 bits
+
+mode = masked-grid-9-9-7
+payload = 81 × 3 bits = 243 bits
+
+mode = canonical-transform
+payload = 41-bit transform Seed
+
+mode = canonical-transform-coordinate
+payload = 41-bit transform Seed + 5-bit coordinate value
+~~~
+
+The 5-bit coordinate value is valid only when the negotiated board/mask context exposes at least 32 reconstructible masks.
+
+The canonical-transform mode is valid only for ParityGrids belonging to the negotiated canonical board's Sudoku-preserving transformation orbit.
+
+Version/integrity/framing overhead must be reported separately from these logical payload widths.
