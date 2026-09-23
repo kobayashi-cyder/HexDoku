@@ -272,6 +272,61 @@ It does not reduce the information content of incompressible random data.
 
 HexDoku can use the solved board to define where these arithmetic or dependency relationships apply.
 
+## HDC and HDE
+
+The asymmetric codec is formally named:
+
+### HDC — HexDoku Compressor
+
+Input:
+
+```text
+source bytes
+shared universe
+HexDoku rules
+```
+
+Output:
+
+```text
+Seed Cell
+HexDoku / board identifiers
+rule and generator versions
+hashes / references
+arithmetic reconstruction description
+residual bits
+```
+
+HDC may perform expensive analysis or search in order to minimize the explicit representation.
+
+### HDE — HexDoku Expander
+
+Input:
+
+```text
+Seed Cell
+references
+residual bits
+pinned HexDoku rules
+shared universe
+```
+
+Output:
+
+```text
+one canonical reconstructed bit string
+```
+
+HDE must not guess. For a valid input, it should either reconstruct the exact canonical output or fail verification.
+
+The intended relation is:
+
+```text
+HDE(HDC(X), shared_universe) == X
+```
+
+for every supported source state X under the same versioned reconstruction universe.
+
 ## 10. Separate compressor and expander
 
 A HexDoku codec can deliberately separate the two sides.
