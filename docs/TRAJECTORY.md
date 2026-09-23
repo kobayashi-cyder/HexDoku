@@ -83,11 +83,16 @@ Then recompute the next table from the new state.
 
 After P24, do not require a conventional numeric commit for E24.
 
-Instead:
+Under the 8-bit-q terminal profile:
 
 ~~~text
-resolve/check E24 using Terminal Reference + Parity source
+Qbits24 = q1||q2||...||q9 = 72 bits
+T76     = Qbits24 || ext4  = 76 bits
 ~~~
+
+where q values are packed in fixed candidate identity order 1..9 and ext4 is a terminal-only nibble, not HR.
+
+T76 may then select the terminal Parity/permutation context.
 
 ## 5. HR
 
@@ -152,3 +157,18 @@ for every active t,c
 ~~~
 
 The final 81-cell Parity must also match bit-for-bit.
+
+
+## 11. Terminal selector capacity
+
+T76 has a nominal address space of 2^76 values.
+
+For an 81-element block universe, a versioned injective mapping can assign each T76 value to a distinct permutation because:
+
+~~~text
+2^76 < 81!
+~~~
+
+The full 81! permutation space remains much larger and is not represented by T76 alone.
+
+Actual selector entropy can be less than 76 bits if the terminal q evaluator cannot generate every 72-bit q pattern.
