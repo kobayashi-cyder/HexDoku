@@ -3240,3 +3240,561 @@ This produces the current highest-level HexDoku interpretation:
 
 > **HexDoku is evolving from a reconstruction code into a framework for separating what is known, how it is structured, what state it is in, how it changes, what gets selected, what remains unexplained, and how those rules themselves may be improved.**
 
+---
+
+## Additional representational forms not yet first-class
+
+The current HexDoku algebra already represents shared knowledge, identity, graph structure, state, transition, selection, residual, and meta-level rule change. However, several important forms of information are still only implicit.
+
+These should be treated as candidate first-class extensions rather than forced into existing terms.
+
+### 1. FieldDoku — continuous fields
+
+Some systems are not naturally described as a finite graph of discrete objects.
+
+Examples include:
+
+~~~text
+temperature fields
+electromagnetic fields
+fluid velocity / pressure fields
+stress / strain fields
+gravitational fields
+continuous concentration fields
+~~~
+
+A field-like state is better written as:
+
+~~~text
+Phi(x,t)
+~~~
+
+where value depends on spatial coordinate x and time t.
+
+A FieldDoku profile may therefore represent:
+
+~~~text
+Field
+  = reference field
+  + basis / discretization
+  + boundary conditions
+  + coefficients
+  + local corrections
+  + residual
+~~~
+
+GraphDoku may approximate such systems after discretization, but the continuous-field semantics should remain explicit when they matter.
+
+### 2. ProbDoku / DistributionDoku — uncertainty as a first-class object
+
+A value may be unknown not because information is missing, but because the correct representation is itself a probability distribution.
+
+Therefore:
+
+~~~text
+P(X | context)
+~~~
+
+should be distinguishable from:
+
+~~~text
+X + unknown residual
+~~~
+
+A probability-aware Doku profile may represent:
+
+~~~text
+distribution family
++ parameters
++ dependencies
++ calibration information
++ uncertainty residual
+~~~
+
+Possible states include:
+
+~~~text
+point estimate
+categorical distribution
+continuous density
+posterior distribution
+ensemble
+confidence / credible interval
+aleatoric uncertainty
+epistemic uncertainty
+~~~
+
+Probability is therefore not merely part of R. It can be a valid state representation in its own right.
+
+### 3. CausalDoku — intervention structure
+
+Graph structure alone does not distinguish:
+
+~~~text
+A correlated with B
+~~~
+
+from:
+
+~~~text
+changing A causes B to change
+~~~
+
+A causal profile therefore needs intervention semantics.
+
+Conceptually:
+
+~~~text
+C
+  = causal graph
+  + intervention model
+  + counterfactual / structural rules
+  + uncertainty
+~~~
+
+with interventions represented in a form analogous to:
+
+~~~text
+do(X = x)
+~~~
+
+CausalDoku should distinguish:
+
+~~~text
+association
+prediction
+intervention effect
+counterfactual claim
+~~~
+
+because these are not interchangeable.
+
+### 4. MeasurementDoku — latent state versus observation
+
+Many Doku profiles currently treat measured data and underlying state too closely.
+
+A more complete decomposition is:
+
+~~~text
+latent state
+    |
+    v
+measurement process
+    |
+    v
+observation
+~~~
+
+MeasurementDoku should therefore represent:
+
+~~~text
+O
+  = sensor / assay / observer model
+  + sampling process
+  + resolution
+  + noise model
+  + missingness
+  + calibration
+  + observed result
+~~~
+
+This is particularly important for:
+
+~~~text
+genomics
+epigenomics
+medical measurement
+physics
+astronomy
+AI evaluation
+sensor networks
+~~~
+
+The observed state is not automatically identical to the underlying state.
+
+### 5. ControlDoku — closed-loop action
+
+Transition alone describes change, but not necessarily intentional control.
+
+A control system has a loop:
+
+~~~text
+state
+  -> observation
+  -> policy
+  -> action
+  -> environment transition
+  -> new state
+~~~
+
+ControlDoku therefore introduces:
+
+~~~text
+Pi = policy
+A  = action
+~~~
+
+and a controlled transition may be written:
+
+~~~text
+X(t+1)
+  = F(
+      X(t),
+      A(t),
+      environment,
+      disturbance
+    )
+~~~
+
+This is useful for robotics, agents, process control, adaptive systems, and any Doku profile that acts on its environment.
+
+### 6. GameDoku — strategic interaction
+
+Selection pressure is not enough when other agents deliberately adapt to the focal system.
+
+GameDoku represents:
+
+~~~text
+multiple agents
++ beliefs
++ strategies
++ payoffs / constraints
++ observations
++ actions
++ mutual adaptation
+~~~
+
+The relevant state may depend on:
+
+~~~text
+Pi_A
+Pi_B
+...
+Pi_N
+~~~
+
+where each agent's policy changes in response to the others.
+
+This creates a reflexive strategic system rather than a passive selection environment.
+
+### 7. ProgramDoku — executable procedure
+
+Some information is fundamentally procedural rather than descriptive.
+
+ProgramDoku should represent:
+
+~~~text
+instructions
+control flow
+branching
+loops
+recursion
+state mutation
+termination conditions
+input/output contracts
+resource constraints
+~~~
+
+Two programs may generate the same output while having different computational structure.
+
+Therefore executable procedure should not always be collapsed into the final reconstructed data object.
+
+### 8. SemanticDoku — symbol, meaning, and context
+
+Text or symbols do not contain all of their meaning independently of context.
+
+A semantic representation may require:
+
+~~~text
+symbol
++ referent
++ context
++ relation to other concepts
++ pragmatic intent
++ uncertainty
+~~~
+
+Thus:
+
+~~~text
+surface form
+!=
+meaning
+~~~
+
+SemanticDoku should distinguish syntax, semantic content, reference, and context-dependent interpretation.
+
+### 9. ThermoDoku — irreversibility and dissipation
+
+The current transition term Delta does not explicitly encode whether a process is reversible.
+
+ThermoDoku introduces:
+
+~~~text
+energy state
+entropy state
+flux
+dissipation
+constraints
+boundary conditions
+irreversible production
+~~~
+
+A useful abstraction is:
+
+~~~text
+state transition
++ conserved quantities
++ dissipative terms
++ entropy production
+~~~
+
+This matters for physical processes where time reversal is not equivalent to forward evolution.
+
+### 10. GeometryDoku / TopologyDoku
+
+Graphs encode adjacency, but not all geometric or topological information.
+
+GeometryDoku may represent:
+
+~~~text
+distance
+angle
+metric
+curvature
+coordinate system
+shape
+embedding
+~~~
+
+TopologyDoku may represent:
+
+~~~text
+connectivity
+holes
+boundaries
+components
+genus
+continuity structure
+~~~
+
+These become important for continuous spaces, manifolds, materials, molecular geometry, physical fields, and spatial reasoning.
+
+### 11. QuantumDoku
+
+Classical state S is insufficient for systems requiring quantum-state semantics.
+
+A quantum profile may require:
+
+~~~text
+state vector / density operator
+phase
+superposition
+entanglement structure
+measurement basis
+measurement outcome
+decoherence model
+~~~
+
+The relevant state can be written conceptually as:
+
+~~~text
+|psi>
+or
+rho
+~~~
+
+and measurement itself changes what can be observed.
+
+QuantumDoku should therefore remain distinct from an ordinary probabilistic classical profile.
+
+### 12. InstitutionDoku — rule-created social state
+
+Some objects exist because a group shares institutional rules rather than because of a direct physical structure.
+
+Examples include:
+
+~~~text
+contracts
+ownership
+corporations
+currencies
+roles
+permissions
+laws
+organizational authority
+~~~
+
+InstitutionDoku may represent:
+
+~~~text
+agents
+roles
+rules
+rights
+obligations
+permissions
+state transitions
+enforcement / validation
+~~~
+
+This is a shared-rule world in which changing the rule can change the meaning of the state.
+
+### 13. ReflexiveDoku — self-modeling systems
+
+MetaDoku changes its own rules.
+
+ReflexiveDoku adds the case where the system contains a model of itself and that self-model affects future behavior.
+
+~~~text
+system
+  -> self-model
+  -> decision
+  -> system changes
+  -> self-model becomes stale or updated
+~~~
+
+This is relevant to advanced agents, institutions, strategic systems, and meta-learning.
+
+It introduces a special consistency problem:
+
+~~~text
+model of self
+and
+self being modeled
+~~~
+
+may recursively influence one another.
+
+---
+
+## Extended HexDoku algebra
+
+The largest remaining gaps can be summarized by four especially important terms:
+
+~~~text
+Phi = field / continuous spatial structure
+P   = probability / uncertainty representation
+C   = causal / intervention structure
+O   = observation / measurement process
+~~~
+
+For acting systems, three further terms become important:
+
+~~~text
+Pi = policy
+A  = action
+J  = objective / utility / evaluation criterion
+~~~
+
+A more expressive object-level form is therefore:
+
+~~~text
+X(t+1)
+  = F(
+      U(t),
+      I(t),
+      G(t),
+      Phi(t),
+      S(t),
+      P(t),
+      C(t),
+      O(t),
+      Delta(t),
+      Sigma(t),
+      Pi(t),
+      A(t),
+      J(t),
+      R(t)
+    )
+~~~
+
+These symbols have different roles:
+
+~~~text
+U     = shared universe / reference
+I     = identity / component selection
+G     = graph / discrete structure
+Phi   = continuous field / spatial distribution
+S     = current state / overlay
+P     = uncertainty / probability distribution
+C     = causal / intervention structure
+O     = observation / measurement operator
+Delta = transition / variation
+Sigma = selection / persistence pressure
+Pi    = policy / control rule
+A     = action
+J     = objective / evaluation criterion
+R     = irreducible or currently unexplained residual
+~~~
+
+The meta-level form remains:
+
+~~~text
+M(t+1)
+  = H(
+      M(t),
+      Evidence(t),
+      R(t),
+      Constraints(t),
+      Sigma_meta(t)
+    )
+~~~
+
+but M may now contain rules governing:
+
+~~~text
+representation
+field discretization
+probability model
+causal model
+measurement model
+policy
+objective
+selection
+validation
+residual interpretation
+meta-update
+~~~
+
+---
+
+## New boundary revealed by these extensions
+
+The previous HexDoku family mainly answered:
+
+~~~text
+what exists?
+how is it structured?
+what state is it in?
+how does it change?
+what gets selected?
+what remains unexplained?
+~~~
+
+The new extensions add:
+
+~~~text
+how is it distributed continuously?
+how uncertain is it?
+what actually causes what?
+how was it observed?
+what action changes it?
+how do multiple agents strategically interact?
+what procedure generates it?
+what does it mean in context?
+what processes are irreversible?
+what geometry / topology constrains it?
+does it require quantum-state semantics?
+what social rules make the state valid?
+how does a system's self-model affect itself?
+~~~
+
+This suggests that the HexDoku family is no longer only a structured reconstruction framework.
+
+Its broader research target is becoming:
+
+> **a typed reconstruction algebra in which different kinds of information — discrete structure, continuous fields, uncertainty, causality, observation, transition, selection, control, semantics, and meta-rules — remain explicitly separated so that each can be reconstructed, tested, and accounted for without hiding one form inside another.**
+
+The purpose of adding these terms is not to make the equation larger for its own sake. Each term should remain first-class only when treating it separately improves reconstruction fidelity, explanatory power, compression accounting, prediction, intervention, or validation.
+
