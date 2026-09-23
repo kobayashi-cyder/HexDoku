@@ -1547,3 +1547,606 @@ Reconstructed Object
 
 The useful research question is not whether Doku metadata can replace entropy coding, but whether **shared structure and deterministic reconstruction can remove repeated description before conventional entropy coding is applied**.
 
+---
+
+## PeriodicTableDoku extension
+
+**PeriodicTableDoku** treats the periodic table and a versioned chemical knowledge universe as shared reconstruction context.
+
+It is not merely "placing 118 elements into a Sudoku-like board." The intended abstraction is hierarchical:
+
+~~~text
+PeriodicTableDoku
+├─ ElementDoku
+├─ IsotopeDoku
+├─ MoleculeDoku
+├─ MaterialDoku
+└─ ReactionDoku
+~~~
+
+The common chemical reconstruction equation is:
+
+~~~text
+Chemical Object
+  = Shared Chemical Universe
+  + Composition
+  + Structure / Topology
+  + State
+  + Residual
+~~~
+
+The periodic table itself supplies a canonical elemental namespace. With 118 named elements, an atomic-number identifier needs:
+
+~~~text
+log2(118) ≈ 6.883 bits
+~~~
+
+so a simple fixed-width element ID needs 7 bits.
+
+If the sender and receiver agree on the periodic-table version and elemental property tables, data such as symbol, group, period, and other reference properties do not need to be repeated with every occurrence of an element.
+
+### ElementDoku
+
+ElementDoku is the lowest chemical selection layer.
+
+For 25 independent ordered element slots:
+
+~~~text
+25 × log2(118)
+≈ 172.066 bits of ideal identifying information
+
+simple fixed width:
+25 × 7 = 175 bits
+~~~
+
+If order is irrelevant and only a 25-atom elemental multiset matters, the number of possible compositions is:
+
+~~~text
+C(118 + 25 - 1, 25)
+= C(142, 25)
+~~~
+
+with:
+
+~~~text
+log2 C(142,25)
+≈ 91.822 bits
+~~~
+
+This large difference is not free compression. It comes from changing the represented object from an **ordered sequence** to an **unordered composition**.
+
+If exactly 25 distinct elements are selected from the 118-element universe, selection alone requires:
+
+~~~text
+log2 C(118,25)
+≈ 84.433 bits
+~~~
+
+and ordering those selected 25 elements arbitrarily requires:
+
+~~~text
+log2(25!)
+≈ 83.682 bits
+~~~
+
+Together this gives roughly:
+
+~~~text
+84.433 + 83.682
+≈ 168.114 bits
+~~~
+
+which approaches the information needed for 25 ordered draws without replacement.
+
+This illustrates a core HexDoku rule: splitting information into **selection + arrangement** changes representation, but does not bypass the information-theoretic requirement to distinguish all valid states.
+
+### IsotopeDoku
+
+An element ID does not uniquely identify an isotope or ion.
+
+A more specific atomic state may require:
+
+~~~text
+Atomic State
+  = atomic number Z
+  + isotope / mass-number information
+  + charge
+  + optional electronic-state information
+~~~
+
+The exact representation should be profile-specific. Common or naturally abundant isotopes may be compact dictionary states, while rare isotope, charge, or excitation information becomes an explicit residual.
+
+### MoleculeDoku
+
+Molecular composition is not enough to identify molecular structure.
+
+For example, the same elemental formula can correspond to multiple constitutional isomers, stereoisomers, charge states, or conformations. Therefore MoleculeDoku must distinguish at least:
+
+~~~text
+Molecule
+  = Composition
+  + Bond Graph
+  + Bond Order / Charge
+  + Stereochemistry where required
+  + Geometry / Conformation where required
+  + Residual
+~~~
+
+A conceptual pipeline is:
+
+~~~text
+Periodic Table ID
+      |
+      v
+atom / fragment selection
+      |
+      v
+bond topology
+      |
+      v
+bond order / formal charge
+      |
+      v
+stereochemical state
+      |
+      v
+geometry / conformation residual
+~~~
+
+Repeated chemical motifs can be moved into a shared fragment dictionary:
+
+~~~text
+fragment #17 = reusable ring motif
+fragment #52 = reusable functional group
+fragment #81 = reusable ligand / side-group motif
+~~~
+
+Then a molecule can be represented as:
+
+~~~text
+Molecule Seed
+  + fragment IDs
+  + attachment points
+  + bond rules
+  + unmatched atoms / bonds
+  + residual
+~~~
+
+The gain comes only when those fragments and rules are genuinely shared or amortized across many objects.
+
+### MaterialDoku
+
+MaterialDoku extends the same idea from molecules to extended solids and materials.
+
+A general material descriptor may contain:
+
+~~~text
+Material
+  = Composition
+  + Unit Cell / Lattice
+  + Symmetry
+  + Atomic Positions
+  + Occupancy
+  + Defects
+  + State / Phase
+  + Residual
+~~~
+
+For a highly regular crystal, repeated atom positions can often be regenerated from a smaller asymmetric description plus symmetry operations. Therefore a useful decomposition is:
+
+~~~text
+Ideal / reference crystal
+        +
+MaterialDoku structural selector
+        +
+defect overlay
+        +
+residual
+~~~
+
+Defect overlays may describe:
+
+~~~text
+vacancy
+substitution
+interstitial
+dopant
+site occupancy change
+local distortion
+~~~
+
+This mirrors the DNADoku pattern of:
+
+~~~text
+shared reference
++ structured overlay
++ exceptional residual
+~~~
+
+### ReactionDoku
+
+ReactionDoku describes a chemical transformation as a state transition rather than as two unrelated complete objects.
+
+~~~text
+Reactant State
+      |
+      v
+Reaction Transition
+      |
+      v
+Product State
+~~~
+
+A compact structural description may contain:
+
+~~~text
+initial molecular graph
++ atom mapping
++ bond deletions
++ bond additions
++ bond-order changes
++ stoichiometry
++ conditions / state identifiers
++ residual
+~~~
+
+This is analogous to MovieDoku temporal coding:
+
+~~~text
+State(t+1)
+  = State(t)
+  + Transition
+  + Residual
+~~~
+
+If a profile aims to reconstruct reaction mechanisms rather than only net reactant/product changes, intermediates, transition-state information, kinetics, and other required data must be represented separately. A net reaction equation does not determine a unique microscopic mechanism.
+
+### 25-element chemical blocks
+
+A 25-element Doku container may represent:
+
+~~~text
+25 atoms
+25 fragments
+25 lattice sites
+25 coordination nodes
+25 reaction events
+25 material regions
+~~~
+
+but the same rule used throughout HexDoku applies:
+
+- do not transmit an 84-bit permutation merely because the block contains 25 elements,
+- derive canonical ordering from atomic index, graph traversal, lattice coordinates, or another shared convention whenever possible,
+- use a Doku rank only when the choice among arrangements is independently informative,
+- use compact dictionary states for recurring motifs,
+- leave irreducible topology, geometry, and measurement detail to residual coding.
+
+### Periodic-table regularities available to the profile
+
+The periodic table is especially interesting because the reference universe already contains strong recurring structure.
+
+Useful regularities include:
+
+1. **Atomic-number order**  
+   Every element has a canonical integer identity `Z`, giving a stable primary order.
+
+2. **Periodicity**  
+   Chemical behavior recurs in structured ways across periods and groups rather than behaving as 118 unrelated labels.
+
+3. **Group / valence similarity**  
+   Elements within the same group often share related outer-electron patterns and recurring chemical behavior.
+
+4. **Block structure**  
+   The s-, p-, d-, and f-block organization provides another compact categorical partition of the element universe.
+
+5. **Local chemical motifs**  
+   Molecules repeatedly reuse bond environments, rings, functional groups, coordination motifs, and larger fragments.
+
+6. **Crystallographic repetition**  
+   Extended materials can exhibit unit-cell repetition and symmetry, allowing many positions to be generated from a much smaller structural description.
+
+7. **Sparse deviation from a reference**  
+   Defects, substitutions, dopants, isotope changes, and reaction edits are frequently describable as local changes relative to a larger unchanged structure.
+
+These regularities are candidates for shared-reference coding. They are not assumptions that every chemical system is predictable from the periodic table alone.
+
+### Proposed PeriodicTableDoku reconstruction hierarchy
+
+~~~text
+Periodic Table version
+        |
+        v
+Element / isotope dictionary
+        |
+        v
+Fragment / motif dictionary
+        |
+        v
+Molecule / material reference
+        |
+        v
+PeriodicTableDoku selectors
+        |
+        v
+graph / lattice / reaction topology
+        |
+        v
+state overlays / defects / transitions
+        |
+        v
+irreducible residual
+        |
+        v
+verified chemical object
+~~~
+
+A practical long-term family is therefore:
+
+~~~text
+HexDoku
+├─ DNADoku
+│  ├─ GenomeDoku
+│  └─ EpigenomeDoku
+├─ MediaDoku
+│  ├─ ImageDoku
+│  ├─ AudioDoku
+│  └─ LayoutDoku
+├─ MovieDoku
+│  ├─ SceneDoku
+│  ├─ MotionDoku
+│  ├─ TimelineDoku
+│  └─ AV-SyncDoku
+└─ PeriodicTableDoku
+   ├─ ElementDoku
+   ├─ IsotopeDoku
+   ├─ MoleculeDoku
+   ├─ MaterialDoku
+   └─ ReactionDoku
+~~~
+
+---
+
+## Cross-Doku regularities observed so far
+
+Across the DNADoku, epigenome, MediaDoku, MovieDoku, and PeriodicTableDoku extensions, the same structural pattern keeps reappearing.
+
+### 1. Shared universe first
+
+Each useful Doku profile becomes smaller only after both sides agree on a **shared universe**:
+
+~~~text
+DNADoku           -> reference genome / pangenome
+EpigenomeDoku     -> coordinate universe / reference methylome
+MediaDoku         -> asset / pattern universe
+MovieDoku         -> scene / model / timeline universe
+PeriodicTableDoku -> element / fragment / material universe
+~~~
+
+This produces the common equation:
+
+~~~text
+Reconstructed Object
+  = Shared Universe
+  + Versioned Doku Description
+  + Irreducible Residual
+~~~
+
+The shared universe is therefore not "free"; its storage and version must be included in complete accounting.
+
+### 2. Canonical order removes metadata
+
+A repeated pattern is that explicit ordering is unnecessary when both sides can derive the same order.
+
+Examples:
+
+~~~text
+genome       -> genomic coordinate order
+methylome    -> predefined CpG / region order
+image        -> canonical scene / layer traversal
+movie        -> canonical object / timeline order
+chemistry    -> atomic index / graph / lattice order
+~~~
+
+Thus the cheapest order field is often not a clever permutation code but **zero transmitted bits**, when order is already implied.
+
+The 84-bit `25!` rank is useful only when the permutation itself carries independent information.
+
+### 3. State overlays are cheaper than complete restatements when change is sparse
+
+Several domains naturally become:
+
+~~~text
+Reference
++ Overlay
++ Residual
+~~~
+
+Examples:
+
+~~~text
+reference genome
++ variants
+
+reference methylome
++ DMR / site differences
+
+reference image / asset layout
++ local edits
+
+previous movie state
++ motion / state transition
+
+ideal crystal / molecule
++ defect / reaction edit
+~~~
+
+This is one of the strongest recurring Doku patterns.
+
+### 4. Hierarchy converts one large search space into reusable local spaces
+
+Every extension has developed a hierarchy:
+
+~~~text
+DNA:
+genome -> region -> block -> locus
+
+media:
+scene -> object -> region -> residual
+
+movie:
+movie -> scene -> shot -> temporal block -> object transition
+
+chemistry:
+element -> fragment -> molecule -> material -> reaction
+~~~
+
+A hierarchical code can reuse local dictionaries and local rules without pretending that the entire global object is one small selector.
+
+### 5. Graph structure keeps emerging
+
+The represented object is often not fundamentally a flat byte string:
+
+~~~text
+molecule       -> bond graph
+material       -> lattice / neighborhood graph
+image          -> scene graph
+movie          -> temporal scene graph
+epigenome      -> coordinate / regulatory-region relationships
+distributed state -> dependency / reference graph
+~~~
+
+This suggests that a mature HexDoku Core may need a **versioned graph/topology layer** in addition to permutation ranks.
+
+### 6. Temporal change is a special case of graph editing
+
+MovieDoku and ReactionDoku expose the same pattern:
+
+~~~text
+Next State
+  = Current State
+  + Edit / Transition Set
+  + Residual
+~~~
+
+This may generalize to any evolving HexDoku object, including biological state, model state, files, scenes, molecules, and distributed checkpoints.
+
+### 7. Repetition creates dictionary opportunities
+
+Compression opportunity repeatedly appears where the domain contains recurring motifs:
+
+~~~text
+DNA            -> haplotypes / repeated sequence blocks
+methylation    -> regional methylation patterns
+image          -> assets / textures / object templates
+audio          -> motifs / phonetic or spectral patterns
+movie          -> persistent objects / repeated scenes
+chemistry      -> fragments / functional motifs / unit cells
+~~~
+
+Doku selectors are most useful when selecting among these shared recurring structures.
+
+### 8. Residual information never disappears
+
+Every extension reaches the same boundary:
+
+> anything not determined by shared state and deterministic rules must remain explicitly represented.
+
+Therefore:
+
+~~~text
+Doku gain
+  = removed repeated description
+  + derived metadata
+  + shared dictionary references
+  - selector / index overhead
+  - residual overhead
+  - shared-state amortized cost
+~~~
+
+A hash, selector, periodic rule, scene graph, or molecule fragment cannot reconstruct information that is absent from both the descriptor and the shared universe.
+
+### 9. The 25-element unit is a container, not a law of nature
+
+The recurring 25-element profile is useful because HexDoku currently studies a 25-unresolved-element trajectory and the `25!` permutation space.
+
+But:
+
+~~~text
+25 loci
+25 objects
+25 frames
+25 atoms
+25 scenes
+~~~
+
+are profile choices, not claims that natural systems intrinsically come in groups of 25.
+
+Future profiles may use different arities when entropy, topology, hardware, or domain structure makes another size better.
+
+### 10. The real optimization target is conditional entropy
+
+Across all domains, the strongest formulation is not:
+
+> make a large object fit into a tiny Doku ID.
+
+It is:
+
+> **given a shared universe and a deterministic reconstruction rule, encode only the information that is still uncertain.**
+
+Conceptually:
+
+~~~text
+raw object size
+      |
+      v
+remove shared knowledge
+      |
+      v
+remove deterministically derivable structure
+      |
+      v
+encode remaining choices
+      |
+      v
+entropy-code residual
+~~~
+
+This places HexDoku closer to a framework for **conditional reconstruction and structured residual coding** than to a standalone universal compressor.
+
+### Emerging general law
+
+The extensions so far suggest a common Doku law:
+
+~~~text
+Doku Description
+  = Identity
+  + Structure
+  + State / Transition
+  + Exceptions
+
+Reconstructed Object
+  = Shared Universe
+  + Doku Description
+  + Residual
+~~~
+
+or, in compact form:
+
+~~~text
+X = U + D + R
+~~~
+
+where:
+
+~~~text
+X = reconstructed object
+U = shared universe / reference
+D = versioned Doku structural description
+R = irreducible residual
+~~~
+
+A Doku profile is useful when `D + R`, including the amortized cost of `U`, is smaller or otherwise more useful than directly transmitting the original representation.
+
+This relationship should be treated as the unifying hypothesis of the HexDoku family and tested independently in each domain.
+
