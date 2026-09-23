@@ -591,3 +591,26 @@ ParityGrid
 The baseline fixes digits 1 and 2 as fully removed and removes seven instances of digit 3.
 
 The generalized mode may choose the two fully removed digits and the partially removed digit, creating 9,072 configurations, which fit in a 14-bit rank. That generalized mode remains secondary to the reproducible 36-mask baseline.
+
+## 27. HDE simplicity versus packet size
+
+For one 9×9 board, the architecture recognizes a deliberate tradeoff:
+
+~~~text
+more transmitted bits -> simpler HDE
+fewer transmitted bits -> more shared structure / decoding machinery
+~~~
+
+The current practical point is a shared canonical Parity plus a 41-bit Sudoku-preserving transform Seed.
+
+HDE work is then only parameter decode plus deterministic permutations; no backtracking is needed to regenerate Parity itself.
+
+At the extremes:
+
+~~~text
+324-bit full Parity -> trivial HDE
+41-bit transform Seed -> low/moderate HDE, restricted board family
+0-bit Parity update -> trivial only when exact Parity is already shared
+~~~
+
+The ~73-bit arbitrary-Sudoku rank option is smaller than direct board transmission but is not currently preferred because a complete canonical rank/unrank implementation is much more complex.
