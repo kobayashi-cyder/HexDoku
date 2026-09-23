@@ -435,3 +435,64 @@ CR = combination rank used with HD
 ```
 
 HR is part of the primary HDC/HDE ordering. HD/CR is not required for the primary turn order.
+
+
+## 20. Permutation / address layer
+
+HexDoku may represent the order of an already-known or content-addressable block universe.
+
+Let:
+
+~~~text
+U = {B0, B1, ... , Bn-1}
+~~~
+
+be a shared set of blocks identified by stable IDs or hashes.
+
+The final Parity may define a canonical permutation:
+
+~~~text
+Pi_D(U) = ordered sequence of block IDs
+~~~
+
+where D is the versioned HexDoku descriptor.
+
+HDC may search for a compact D that reproduces the source order. HDE reconstructs the same Parity and therefore the same order.
+
+The core invariant is:
+
+~~~text
+Pi_HDC(D,U) == Pi_HDE(D,U)
+~~~
+
+This compresses the **description of order/addressing**, not automatically the block bytes themselves.
+
+For n distinct arbitrary blocks, the full permutation space contains n! states and requires at least log2(n!) bits to distinguish in the absence of additional structure. For n=81, log2(81!) is approximately 401.17 bits.
+
+Compression below that general arbitrary-permutation bound requires shared state, restricted valid permutations, a nonuniform distribution, deterministic generation, delta state, or residual coding.
+
+The detailed model is in `docs/PERMUTATION_ADDRESSING.md`.
+
+## 21. Two-layer compression model
+
+HexDoku may be combined with a conventional content codec:
+
+~~~text
+source
+  -> content/block compression
+  -> IDs/hashes
+  -> HexDoku permutation/address compression
+  -> compact descriptor
+~~~
+
+On decode:
+
+~~~text
+descriptor
+  -> HexDoku order reconstruction
+  -> ID/hash resolution
+  -> content decompression
+  -> original stream
+~~~
+
+Order-compression gain and content-compression gain must be benchmarked separately.
