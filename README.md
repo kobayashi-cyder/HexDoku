@@ -26,6 +26,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 ### Documentation
 
 - [Origin of the idea](docs/ORIGIN.md)
+- [Unified-theory observables and cross-scale closure](docs/UNIFIED_THEORY_OBSERVABLES.md)
 - [What HexDoku can do](docs/CAPABILITIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md)
