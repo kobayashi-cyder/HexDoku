@@ -268,3 +268,15 @@ Therefore only 36 hole masks exist and a six-bit rank is sufficient.
 HDC MUST test candidate masks by running the same HDE reconstruction rules without using the hidden ParityGrid to select digits. A mask is valid only when the HDE result exactly equals the source ParityGrid.
 
 See [HDC_LITE_V1.md](HDC_LITE_V1.md) for the canonical scoring and generalized 9+9+7 mode.
+
+## 14. Minimal packet profile
+
+The current one-board experiment may use a shared canonical solved Sudoku plus a fixed-width 41-bit transform Seed.
+
+HDE reconstructs the completed Parity by deterministic digit/row/band/column/stack permutations and optional transpose.
+
+This path requires no Sudoku-wide rank/unrank and no transmission of q tables.
+
+If a coordinate-bearing channel is enabled and at least 32 reconstructible masks are available, add five payload bits for a 46-bit one-board descriptor.
+
+The transform-Seed profile is restricted to one canonical-grid orbit and is therefore not a universal representation of all Sudoku solutions.
