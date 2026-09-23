@@ -122,6 +122,8 @@ log2(25!) = 83.681513... bits
 
 A fixed-width standalone field supporting every possible 25-element order therefore needs 84 bits.
 
+This does not mean the current fixed-order Sudoku-v1 profile carries 83.68 bits. Its E-order is fixed and therefore has zero independent order capacity. The 83.68-bit figure is only the absolute 25-element permutation-space ceiling.
+
 HexDoku does not transmit that 84-bit field in the received-board profile when the order is regenerated deterministically from the board.
 
 However, 83.68 bits is only the **absolute permutation-space ceiling**.
@@ -291,3 +293,45 @@ For each test board record:
 - HDE candidate-cell evaluations;
 - HDE measured CPU instructions/cycles when instrumentation is available;
 - exact final Parity equality.
+
+## 12. Fixed-order baseline versus order-bearing profile
+
+The project now distinguishes two meanings of "order":
+
+### Baseline `sudoku-v1`
+
+`E0..E24` is fixed once in row-major hole order and HR/q never reorders it.
+
+Therefore, relative to E identities:
+
+~~~text
+K = 1
+independent order capacity = 0 bits
+~~~
+
+The fixed order can still be omitted from the packet because both endpoints know the rule, but this is metadata omission, not an information-bearing order channel.
+
+### Experimental `sudoku-order-bearing-mrv-v0`
+
+The next coordinate is selected dynamically by:
+
+~~~text
+minimum candidate count (minimum HR)
+then row-major tie-break
+~~~
+
+so different valid received boards may produce different derived 25-coordinate orders.
+
+For one fixed Parity and the 36-mask `9+9+7` HDC family, `K <= 36`, so capacity can never exceed `log2(36) ≈ 5.17` bits in that restricted experiment.
+
+The current single-Parity reference sample measured:
+
+~~~text
+accepted masks = 27 / 36
+K = 27
+log2(K) ≈ 4.7549 bits
+~~~
+
+To approach the absolute `log2(25!) ≈ 83.68`-bit permutation ceiling, the HDC construction family itself must expose at least 25! distinguishable valid board/order outcomes. The current 36-mask family cannot do that.
+
+See [ORDER_BEARING_PROFILE_V0.md](ORDER_BEARING_PROFILE_V0.md).
