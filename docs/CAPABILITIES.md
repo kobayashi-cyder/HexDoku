@@ -796,3 +796,32 @@ The 36 baseline masks require six fixed bits to rank.
 This six-bit value describes **which 25 positions were hidden under the known 9+9+7 rule**. It does not contain the missing 25 Sudoku values themselves.
 
 The real compression/reconstruction result depends on whether Sudoku-v1 HDE can reproduce the exact original ParityGrid from the resulting masked board. HDC therefore verifies exact round trip before accepting a mask.
+
+## 35. One-board packet range
+
+For one 9×9 board, the current design range is:
+
+~~~text
+324 bits : direct completed Parity
+243 bits : direct 9+9+7 masked board
+~73 bits : arbitrary valid-Sudoku rank, complex decoder
+41 bits  : shared canonical board + transform Seed
+46 bits  : transform Seed + five coordinate payload bits
+0 bits   : Parity already shared, no new Parity state
+~~~
+
+The 41-bit restricted profile is about 7.9 times smaller than a 324-bit direct grid and about 5.93 times smaller than a 243-bit masked grid.
+
+## 36. How simple can HDE be?
+
+In the recommended 41-bit profile, HDE does not search 36 masks, transmit q tables, or enumerate all Sudoku solutions.
+
+It only:
+
+1. reads the transform Seed;
+2. copies the shared canonical board;
+3. applies fixed digit/row/band/column/stack permutations and optional transpose;
+4. obtains the completed Parity;
+5. optionally applies/reconstructs the 9+9+7 hole profile and verifies it.
+
+This is substantially simpler than a general Sudoku solver or a complete Sudoku rank/unrank decoder.
