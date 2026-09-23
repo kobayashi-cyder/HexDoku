@@ -109,9 +109,9 @@ Qbits24 = Encode8(q1)||...||Encode8(q9)  # fixed digit order 1..9
 T76     = Qbits24 || terminal_extension4
 ~~~
 
-The 4-bit terminal extension is unrestricted 0..15 and is not HR.
+In the generic research container the four-bit extension may be versioned separately. In **Sudoku Profile v1** it is fixed to `0000` and is not HR.
 
-T76 is interpreted by the versioned terminal/permutation rule. The final cell does not need to be a digit 1..9.
+Under Sudoku Profile v1, T76 is a derived terminal word and not a free permutation selector. A future Payload Profile may reinterpret a terminal field under a new version.
 
 ## 7. DNA serialization order
 
@@ -188,3 +188,21 @@ CR = optional combination rank used with HD
 ~~~
 
 HD/CR is an optional addressing layer and is not part of coordinate selection.
+
+## 11. Sudoku Profile v1 binding
+
+For the first reference implementation, canonical order is evaluated under `sudoku-v1`.
+
+At every active coordinate:
+
+~~~text
+Candidates = locally legal Sudoku digits
+HR = |Candidates| - 1
+q = deterministic integer distribution from SUDOKU_PROFILE_V1.md
+~~~
+
+The scheduled target remains Et; Sudoku scores and HR never reorder E0..E24.
+
+At P24, the final Q72 is Sudoku-derived and the terminal extension is `0000`.
+
+A future Payload Profile may define another terminal rule, but that rule must use a new profile/version.
