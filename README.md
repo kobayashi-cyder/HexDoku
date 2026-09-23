@@ -32,6 +32,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [Sudoku Profile v1](docs/SUDOKU_PROFILE_V1.md)
 - [HDC-Lite v1](docs/HDC_LITE_V1.md)
 - [HDE Minimum Packet](docs/HDE_MIN_PACKET.md)
+- [One-Board Derived Information Model](docs/ONE_BOARD_DERIVED_INFORMATION.md)
 - [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [HR Branch Reference Channel](docs/HR_BRANCH_REFERENCES.md)
@@ -137,26 +138,38 @@ This makes the first HDC a small mask-search encoder rather than a broad combina
 See [HDC-Lite v1](docs/HDC_LITE_V1.md).
 
 ---
-## One-board HDE packet spectrum
+## One-board received-board model
 
-For the current 9×9 single-board scope, packet size and decoder simplicity are separate goals.
+The current reference input is **one 9×9 Sudoku board containing exactly 25 holes**.
 
-| Representation | Packet | Decoder character |
-|---|---:|---|
-| Full Parity, 4 bit/cell | 324 bit | trivial |
-| 9+9+7 masked board, 3 bit/cell | 243 bit | very small |
-| Arbitrary-Sudoku rank | ~73 bit | compact packet, complex rank/unrank |
-| Canonical board + transform Seed | 41 bit | low/moderate, no search |
-| Transform Seed + 5-bit coordinate payload | 46 bit | low/moderate |
-| Exact Parity already shared | 0 new Parity bit | trivial, shared-state case |
+HDE does not receive separate coordinate, solution-value, order, HR, or branch-slot-position metadata when those values are reproducible from the board.
 
-The practical current target is the **41-bit canonical-transform Seed**. Compared with direct 324-bit Parity transmission this reduces the board descriptor by about **87.35%** (about **7.9× smaller**), while avoiding a global Sudoku rank/unrank decoder.
+~~~text
+received 25-hole board
+   |
+   +-> 25 hole coordinates        : +0 transmitted bits
+   +-> solved values              : +0 transmitted bits
+   +-> deterministic solve order  : +0 transmitted bits
+   +-> HR trajectory              : +0 transmitted bits
+   +-> branch-reference positions : +0 transmitted bits
+~~~
 
-Compared with the 243-bit masked-board representation, 41 bits is about **83.13% smaller** (about **5.93× smaller**).
+A standalone cell address among 81 positions needs 7 fixed bits; `3 bit × 3 bit` is not sufficient for a 9×9 coordinate because three bits encode only eight values per axis. In the received-board model this does not matter: positions are implicit in the 81-cell array.
 
-This 41-bit profile covers the transformation orbit of one shared canonical Sudoku board, not every possible Sudoku solution.
+Simple board widths:
 
-See [HDE Minimum Packet](docs/HDE_MIN_PACKET.md).
+| Board profile | Simple fixed-width representation |
+|---|---:|
+| Generic `HOLE + 1..9` | 324 bit (`81 × 4`) |
+| Fixed `9+9+7`: `HOLE,3..9` | 243 bit (`81 × 3`) |
+
+The 243-bit figure applies **only** to the fixed `9+9+7` profile.
+
+For 25 distinct holes, the absolute arbitrary-order space is `25!`, or `log2(25!) ≈ 83.6815` bits. HexDoku omits a separate 84-bit order field only to the extent that HDC/HDE can actually realize and reproduce those orders. If only K orders are reachable, the real order-channel capacity is `log2(K)`.
+
+Against a hypothetical `board + standalone order` baseline, the maximum order-field omission is about **25.62%** for the 243-bit board and **20.53%** for the 324-bit board. If K=1, the order-derived saving is 0%.
+
+See [One-Board Derived Information Model](docs/ONE_BOARD_DERIVED_INFORMATION.md).
 
 ---
 ## DNA / Parity trajectory
