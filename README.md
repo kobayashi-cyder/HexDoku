@@ -118,11 +118,38 @@ With nine 8-bit candidate values per coordinate, the raw q-only DNA trajectory i
 
 The first 24 transitions use a versioned deterministic resolver. Standard Sudoku row/column/box rules are **not required**.
 
-The final coordinate is a **Terminal Reference**. It does not have to contain a digit 1..9; its canonical content is resolved or checked against the final **Parity**, defined as the fully materialized 81-cell table.
+The final coordinate is a **Terminal Reference**. Under the 8-bit-q terminal profile, its nine q values contribute 72 bits and a terminal-only 4-bit extension contributes another 4 bits, giving a **76-bit Terminal Selector (T76)**. The terminal extension is not HR; HR remains derived state. T76 can select one member of a versioned permutation family while the final **Parity** remains the fully materialized 81-cell table.
 
 The 25-table evaluation trajectory is **DNA**. The completed 81-cell reference table is **Parity**.
 
 See [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md).
+
+---
+
+## 76-bit Terminal Selector
+
+For the 25th evaluation table, the current 8-bit-q profile defines:
+
+~~~text
+q1..q9 in fixed candidate order = 9 × 8 = 72 bits
+Terminal Extension              = 4 bits
+------------------------------------------------
+T76                             = 76 bits
+~~~
+
+T76 is a **selector-width**, not automatically a claim of 76-bit cryptographic security.
+
+Its nominal selector space is:
+
+~~~text
+2^76 = 75,557,863,725,914,323,419,136 states
+~~~
+
+For an 81-block universe, a rule may use T76 to choose up to 2^76 unique permutations from the much larger 81! permutation space. It does not encode all 81! permutations; the complete arbitrary 81-element permutation still requires about 401.17 bits of distinguishing information.
+
+A canonical 13-symbol text form may use the Base64url alphabet as a **radix-64 integer alphabet**, with the first symbol restricted to 16 values. This is not standard byte-oriented Base64url encoding. Standard Base64url of a 10-byte container would require 14 unpadded characters.
+
+See [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md).
 
 ---
 
