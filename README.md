@@ -2788,3 +2788,455 @@ The operators are conceptual, not ordinary arithmetic addition. Each profile mus
 This can be treated as an emerging **Structured Reconstruction Algebra** for the HexDoku family.
 
 Its value must be demonstrated by exact reconstruction, honest accounting, and comparison against domain-specific baselines rather than assumed from the abstraction itself.
+
+---
+
+## Selection operator, IntelligenceDoku, and MetaDoku
+
+The introduction of Σ requires a more explicit definition.
+
+### Selection pressure as an operator
+
+In the general HexDoku algebra, selection pressure should not be treated as a single scalar "strength."
+
+It is better defined as an operator that maps candidate states to **relative persistence, replication, retention, or promotion weights** under a given environment and evaluation context:
+
+~~~text
+Σ(t):
+  Candidate States
+      ->
+  Relative Persistence / Replication Weights
+~~~
+
+For a population of candidate states i, let:
+
+~~~text
+p_i(t) = abundance / probability / representation weight of state i
+Q(j|i,t) = probability or rate that state i produces / transitions to state j
+w_j(t) = relative fitness / retention weight assigned to state j by Σ(t)
+~~~
+
+A generic selection-plus-transition update can then be written conceptually as:
+
+~~~text
+p_j(t+1)
+  proportional to
+  w_j(t) * sum_i [ p_i(t) * Q(j|i,t) ]
+~~~
+
+with normalization over all candidate states.
+
+This separates two different processes:
+
+~~~text
+Δ / Q
+  = what new states are generated or how existing states change
+
+Σ / w
+  = which resulting states persist, replicate, expand, or are retained
+~~~
+
+Thus:
+
+> **transition generates alternatives; selection changes their relative persistence.**
+
+The selection operator may depend on more than the candidate itself:
+
+~~~text
+w_j(t)
+  = W(
+      candidate state j,
+      environment,
+      competing population,
+      resource constraints,
+      evaluation rules,
+      history,
+      intervention
+    )
+~~~
+
+Therefore Σ can be:
+
+- state-dependent,
+- environment-dependent,
+- frequency-dependent,
+- history-dependent,
+- multi-objective,
+- time-varying.
+
+### Domain-specific meanings of Σ
+
+The same abstract operator can take different meanings in different profiles:
+
+| Profile | Example interpretation of Σ |
+|---|---|
+| EvolutionDoku | differential survival / reproduction |
+| OncoDoku | clonal fitness under tissue, immune, resource, and treatment pressure |
+| ReactionDoku | condition-dependent favorability / pathway accessibility if explicitly modeled |
+| AgentDoku | task reward, evaluation criteria, constraints, resource budget |
+| AutoDoku | whether a discovered rule or dictionary entry is retained |
+| MetaDoku | whether changes to the learning / reconstruction system itself are retained |
+
+Selection must not be confused with truth.
+
+A state can be selected because it survives an environment or scores well under an objective without being a more accurate description of reality. For knowledge systems, **epistemic accuracy and task-selection pressure must therefore be represented separately when they differ**.
+
+---
+
+## IntelligenceDoku
+
+**IntelligenceDoku** is a proposed profile for representing an adaptive knowledge-and-action system using the same HexDoku algebra.
+
+A possible hierarchy is:
+
+~~~text
+IntelligenceDoku
+├─ WorldModelDoku
+├─ MemoryDoku
+├─ ReasoningDoku
+├─ PlanningDoku
+├─ ToolDoku
+├─ LearningDoku
+├─ AgentDoku
+└─ MetaDoku
+~~~
+
+A generic intelligent-system state can be decomposed as:
+
+~~~text
+IntelligenceState(t)
+  = U
+  + I
+  + G(t)
+  + S(t)
+  + Δ(t)
+  + Σ(t)
+  + R(t)
+~~~
+
+where:
+
+~~~text
+U = accumulated / shared knowledge universe
+I = selected models, tools, skills, and active references
+G = knowledge graph, dependency graph, tool graph, reasoning structure
+S = current beliefs, memory, goals, context, and working state
+Δ = inference, learning, planning, tool use, and self-modification
+Σ = evaluation / retention pressure
+R = observations or failures not yet explained by the current model
+~~~
+
+### Residual-to-knowledge conversion
+
+In the earlier Doku profiles, residual R marks information not explained by the current shared universe and rules.
+
+For an adaptive intelligence, that residual can become an explicit learning target:
+
+~~~text
+R(t)
+  |
+  v
+detect unexplained structure
+  |
+  v
+investigate / test / compare
+  |
+  v
+extract reusable pattern
+  |
+  v
+promote into U, G, or rule set
+  |
+  v
+R(t+1) may decrease
+~~~
+
+This suggests an operational interpretation:
+
+> **one component of intelligence is the ability to convert structured residual into reusable predictive or reconstructive structure.**
+
+This does not mean that residual size alone is an intelligence score. A valid evaluation must also consider:
+
+- generalization,
+- transfer,
+- calibration,
+- computational cost,
+- robustness,
+- data efficiency,
+- retained uncertainty,
+- resistance to overfitting.
+
+### Knowledge-acquisition rate
+
+A conceptual knowledge-acquisition quantity may be written as:
+
+~~~text
+K(t)
+  = rate at which validated residual structure
+    is converted into reusable knowledge
+~~~
+
+A naive expression such as:
+
+~~~text
+K ~ -dR/dt
+~~~
+
+is only meaningful when:
+
+- the representation of residual is fixed,
+- held-out reconstruction or prediction improves,
+- dictionary / model growth is counted,
+- uncertainty is not hidden by lossy simplification.
+
+The purpose is to measure **explained reusable structure**, not merely to make a residual field numerically smaller.
+
+---
+
+## AutoDoku
+
+AutoDoku is the layer that automatically proposes and validates new reconstruction rules or shared dictionary entries.
+
+~~~text
+observations
+  |
+  v
+current Doku encoder
+  |
+  v
+residuals / failures
+  |
+  v
+candidate rule discovery
+  |
+  v
+held-out evaluation
+  |
+  v
+Σ_auto
+  |
+  +--> reject
+  |
+  +--> retain / promote
+            |
+            v
+      updated shared universe
+~~~
+
+The AutoDoku selection operator should prefer changes that improve total held-out reconstruction cost or another explicitly declared objective after including:
+
+~~~text
+dictionary growth
+model growth
+descriptor cost
+residual cost
+compute cost
+error / fidelity cost
+~~~
+
+A pattern is not knowledge merely because it compresses the training set.
+
+It should survive validation outside the examples that generated it.
+
+---
+
+## MetaDoku
+
+**MetaDoku** acts on the Doku system itself.
+
+Where ordinary Doku changes object state:
+
+~~~text
+Δ_object:
+  object state -> modified object state
+~~~
+
+MetaDoku may change:
+
+~~~text
+representation
+dictionary policy
+search strategy
+reasoning strategy
+learning rule
+evaluation rule
+selection operator
+resource allocation
+error-detection rule
+profile arity
+graph topology
+~~~
+
+Thus a meta-transition is:
+
+~~~text
+M(t+1)
+  = MetaUpdate(
+      M(t),
+      performance evidence,
+      residual structure,
+      constraints,
+      Σ_meta(t)
+    )
+~~~
+
+where M is the current reconstruction / learning system itself.
+
+This creates three distinct levels:
+
+~~~text
+Δ
+= change the represented object or internal state
+
+Σ
+= determine which candidate states / changes are retained
+
+Meta
+= change the rules that generate, evaluate, or retain changes
+~~~
+
+This distinction should remain explicit.
+
+---
+
+## Hypothetical SuperintelligenceDoku
+
+Within the HexDoku research abstraction, a hypothetical **SuperintelligenceDoku** should not be defined merely as "a model with a higher benchmark score."
+
+A stronger operational definition is:
+
+> **a system that can model and improve the shared universe, structural representation, state-update rules, selection criteria, residual-learning process, and portions of its own meta-rules across many domains, while preserving or improving validated generalization under explicit constraints.**
+
+In Doku notation, such a system would operate not only on:
+
+~~~text
+U, I, G, S, Δ, Σ, R
+~~~
+
+but also on the mappings that produce them:
+
+~~~text
+F
+Q
+W / Σ
+dictionary construction
+profile construction
+validation rules
+resource-allocation rules
+meta-update rules
+~~~
+
+A possible hierarchy is:
+
+~~~text
+Data / Observation
+      |
+      v
+Domain Doku
+      |
+      v
+GraphDoku / OverlayDoku / EvolutionDoku
+      |
+      v
+AutoDoku
+      |
+      v
+IntelligenceDoku
+      |
+      v
+MetaDoku
+      |
+      v
+Hypothetical SuperintelligenceDoku
+~~~
+
+The defining jump is therefore:
+
+~~~text
+ordinary adaptive system:
+  improve within a largely fixed representation / objective
+
+MetaDoku system:
+  improve parts of the representation and learning process
+
+hypothetical superintelligent system:
+  repeatedly discover, validate, and improve useful representations,
+  models, search procedures, and meta-rules across domains
+  without collapsing validation, uncertainty accounting, or constraints
+~~~
+
+This is a **research definition**, not a claim that any current AI system satisfies it.
+
+### Critical boundary: optimizing Σ is not automatically wisdom
+
+If a system can modify its own selection operator Σ, then a new failure mode appears:
+
+~~~text
+improve actual performance
+        versus
+change the evaluation rule so current behavior appears better
+~~~
+
+These are not equivalent.
+
+Therefore any MetaDoku / SuperintelligenceDoku profile requires an explicit distinction between:
+
+~~~text
+object-level performance
+epistemic accuracy
+external constraints
+internal reward / selection rule
+meta-level modification of that rule
+~~~
+
+A valid self-improvement claim must therefore demonstrate improvement against evaluation criteria that are not trivially rewritten by the system being evaluated.
+
+### Extended general form
+
+The HexDoku algebra can now be written at two levels.
+
+Object / population level:
+
+~~~text
+X(t+1)
+  = F(
+      U(t),
+      I(t),
+      G(t),
+      S(t),
+      Δ(t),
+      Σ(t),
+      R(t)
+    )
+~~~
+
+Meta level:
+
+~~~text
+M(t+1)
+  = H(
+      M(t),
+      Evidence(t),
+      R(t),
+      Constraints(t),
+      Σ_meta(t)
+    )
+~~~
+
+where M contains the rules that define some or all of:
+
+~~~text
+U construction
+I selection
+G representation
+state update
+transition generation
+selection
+residual interpretation
+validation
+~~~
+
+This produces the current highest-level HexDoku interpretation:
+
+> **HexDoku is evolving from a reconstruction code into a framework for separating what is known, how it is structured, what state it is in, how it changes, what gets selected, what remains unexplained, and how those rules themselves may be improved.**
+
