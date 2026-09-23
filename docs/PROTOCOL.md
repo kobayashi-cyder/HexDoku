@@ -143,16 +143,17 @@ A rule version may define a 25-turn pre-fix evaluation trajectory.
 
 For each turn:
 
-1. evaluate every currently unresolved coordinate;
-2. calculate candidate values for digits 1 through 9;
+1. scan board coordinates in row-major order (`r1c1 -> ... -> r1c9 -> r2c1 -> ... -> r9c9`) and skip already-filled cells;
+2. for each encountered unresolved coordinate, calculate candidate values for digits 1 through 9;
 3. apply canonical numeric encoding;
 4. determine the still-unresolved candidate set for every coordinate;
 5. calculate HexDoku Hamming Rank `HR = candidate_count - 1`;
 6. construct each Canonical Candidate Table using value ascending, then digit ascending;
-7. order cells by `HR ascending -> CCT lexicographic ascending -> coordinate ID ascending`;
-8. emit or reuse resulting immediate bit vectors in that logical order;
-9. commit exactly one cell using the versioned unique-solution rule;
-10. continue to the next turn.
+7. preserve row-major order as the canonical calculation/trajectory order;
+8. after all current-turn calculations complete, derive commit/compression priority as `HR ascending -> CCT lexicographic ascending -> coordinate ID ascending`;
+9. emit/reuse trajectory immediate bit vectors according to the fixed calculation order unless a versioned stream format explicitly selects the separate priority order;
+10. commit exactly one cell using the post-calculation priority and the versioned unique-solution rule;
+11. continue to the next turn.
 
 For 25 initial unresolved cells, this yields 325 evaluated cell states.
 
