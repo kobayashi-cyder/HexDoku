@@ -1,323 +1,154 @@
-# Turn Trajectory, Hamming Rank, and Optional Hamming Addressing
+# HexDoku DNA Trajectory
 
 Status: **Draft / experimental**
 
-This document defines the current interpretation of HexDoku's 25-turn reconstruction trajectory.
+This document defines the 25-table DNA trajectory.
 
-## 1. Twenty-five remaining turns
+See [DNA_PARITY_SPEC.md](DNA_PARITY_SPEC.md) for the complete model.
 
-Assume a 9×9 board has 25 unresolved cells.
+## 1. Shape of the trajectory
 
-Exactly one cell becomes fixed per turn.
+Begin with 25 unresolved coordinates E0..E24 fixed once in row-major order.
 
-HexDoku evaluates the unresolved state **before the fixation of that turn**, so the number of evaluated unresolved cells is:
-
-```text
-Turn  1: 25 cells
-Turn  2: 24 cells
-Turn  3: 23 cells
+~~~text
+P0  : 25 coordinates
+P1  : 24
+P2  : 23
 ...
-Turn 24:  2 cells
-Turn 25:  1 cell
-```
+P23 : 2
+P24 : 1
+~~~
 
-Therefore the trajectory contains:
+Total evaluated coordinate states:
 
-```text
+~~~text
 25 + 24 + ... + 1 = 325
-```
+~~~
 
-unresolved-cell evaluation states.
+There are 25 evaluation tables but only 24 normal commits.
 
-## 2. Per-cell candidate-value table
+The last coordinate E24 is a Terminal Reference.
 
-For every unresolved coordinate, HDE deterministically evaluates candidates 1 through 9.
+## 2. Table calculation
 
-Conceptually:
+For every active coordinate c at stage t:
 
-```text
-coordinate r,c
+~~~text
+Q(t,c) = [(1,q1),...,(9,q9)]
+~~~
 
-1 -> value/probability q1
-2 -> value/probability q2
-3 -> value/probability q3
-...
-9 -> value/probability q9
-```
+Candidate values are computed deterministically.
 
-If each finalized numerical value is represented with 8 bits, one unresolved-cell evaluation contains:
+Canonical ranked order is:
 
-```text
-9 × 8 = 72 bits
-```
+~~~text
+q ascending -> digit ascending on ties
+~~~
 
-of candidate-value output before any additional compression or omission.
+If q uses 8 bits:
 
-The numerical representation, scaling, rounding and saturation rules must be versioned.
-
-## 2A. Calculation position order
-
-At every turn, unresolved coordinates are visited in fixed board order:
-
-```text
-r1c1 -> r1c2 -> ... -> r1c9
--> r2c1 -> ... -> r2c9
--> ...
--> r9c1 -> ... -> r9c9
-```
-
-This is left-to-right on the top row, then each row from top to bottom.
-
-Filled coordinates are skipped. HR never changes this calculation-position order.
-
-The position index is therefore a stable row-major index in the range 0..80.
-
-## 3. Canonical evaluation order
-
-The same logical state must always generate the same bit sequence.
-
-A rule version therefore fixes:
-
-1. turn order;
-2. unresolved-coordinate calculation order: row-major, top-to-bottom and left-to-right;
-3. candidate-number order or probability-sorted order;
-4. tie-breaking rule;
-5. numeric quantization;
-6. byte/bit order.
-
-If the values are sorted by ascending evaluated probability/value, the digit identity must travel with the value or be recoverable by the canonical ranking rule.
-
-Example:
-
-```text
-digit:value
-6:1
-9:3
-2:4
-8:5
-4:8
-7:11
-1:15
-5:22
-3:31
-```
-
-The ordered table is deterministic only if equal values have a fixed tie-break, for example by digit number.
-
-## 3A. HexDoku Hamming Rank
-
-For every unresolved coordinate, HexDoku assigns a project-specific Hamming Rank:
-
-```text
-HR = number of still-unresolved candidate digits - 1
-```
-
-The range is 0 through 8.
-
-```text
-HR0 -> one candidate remains; logically determined, possibly still unfilled
-HR1 -> two candidates remain
-...
-HR8 -> nine candidates remain; maximum unresolved multiplicity
-```
-
-This HR is the primary ordering rank for compression and expansion.
-
-It is not the standard bitwise Hamming distance.
-
-Within each turn, unresolved cells are first **calculated in row-major coordinate order**. After all current-turn values exist, a separate commit/compression priority may be derived as:
-
-```text
-HR ascending
--> Canonical Candidate Table lexicographic ascending
--> coordinate ID ascending
-```
-
-See `CANONICAL_ORDER.md` for the normative ordering rule.
-
-## 4. Canonical trajectory bit string
-
-With 25 pre-fix turns and 8-bit values:
-
-```text
-325 evaluated cell states
-× 9 candidate values
-× 8 bits
-= 23,400 bits
+~~~text
+325 × 9 × 8 = 23,400 bits
 = 2,925 bytes
-```
+~~~
 
-This is the raw candidate-value trajectory only.
+for the raw q-only DNA stream.
 
-Coordinates do not need to be explicitly stored if turn state and coordinate traversal are themselves deterministic. If coordinates are explicitly encoded, their cost must be counted separately.
+## 3. Coordinate order
 
-The canonical trajectory is:
+Coordinates are never chosen by HR.
 
-```text
-Seed / initial board
-        |
-        v
-Turn 1 evaluation of 25 unresolved cells
-        |
-        v
-fix exactly one cell
-        |
-        v
-Turn 2 evaluation of 24 unresolved cells
-        |
-       ...
-        |
-        v
-Turn 25 evaluation of 1 unresolved cell
-        |
-        v
-canonical trajectory bit string
-```
+The original 25 unresolved coordinates are fixed as E0..E24 using:
 
-## 5. Numerical result as an immediate bit value
+~~~text
+top -> bottom
+left -> right within each row
+~~~
 
-The finalized evaluated numbers are not merely metadata.
+At stage t, active coordinates are simply:
 
-Once their representation is canonical, their bits may be reused directly as:
+~~~text
+Et, Et+1, ... E24
+~~~
 
-- immediate values;
-- hash input;
-- table keys;
-- Seed material;
-- bus words;
-- arithmetic operands;
-- next-stage deterministic state.
+## 4. State transitions
 
-Conceptually:
+After P0..P23:
 
-```text
-HDE numerical evaluation
-        |
-        v
-fixed-width canonical representation
-        |
-        v
-immediate bit vector
-```
+~~~text
+commit Et using the versioned deterministic resolver
+~~~
 
-No separate semantic translation is required between the evaluated number and its canonical bit representation.
+Then recompute the next table from the new state.
 
-## 6. Optional standard Hamming-distance addressing
+After P24, do not require a conventional numeric commit for E24.
 
-Separately from HexDoku HR, a 72-bit cell-state vector B may optionally be used with the **standard bitwise Hamming distance (HD)**. A vector at HD=d differs in exactly d bit positions.
+Instead:
 
-The number of vectors at distance d is:
+~~~text
+resolve/check E24 using Terminal Reference + Parity source
+~~~
 
-```text
-C(72, d)
-```
+## 5. HR
 
-Rather than materializing all candidates, HexDoku can identify one candidate with:
+~~~text
+HR = unresolved candidate multiplicity - 1
+~~~
 
-```text
-(base state B, standard Hamming distance HD=d, combination rank CR=k)
-```
+HR0 means logically determined even if the coordinate is still unfilled.
 
-where:
+HR8 means maximum unresolved multiplicity.
 
-```text
-0 <= k < C(72, d)
-```
+HR is state metadata and does not alter E-order.
 
-A deterministic combinatorial unranking function converts (d, k) into the exact set of bit positions to flip.
+## 6. DNA bit stream
 
-Thus:
+~~~text
+P0[E0..E24]
+||
+P1[E1..E24]
+||
+...
+||
+P24[E24]
+~~~
 
-```text
-B + d + k
-    |
-    v
-combination unrank
-    |
-    v
-exact flip positions
-    |
-    v
-one exact 72-bit derived value
-```
+Coordinates and stage boundaries can be implicit under a fixed 25-coordinate profile.
 
-This is intended as **direct addressing**, not literal exhaustive enumeration.
+If HDE can recompute HR and candidate permutation exactly, those fields can also be omitted from the transmitted representation.
 
-## 7. Optional standard Hamming space
+## 7. HCT compression prepass
 
-Across all Hamming distances:
+HDC may inspect all 2,925 8-bit q symbols first.
 
-```text
-sum(d=0..72) C(72,d) = 2^72
-```
+The HCT is then ordered by:
 
-Therefore one 72-bit base state defines an addressable Hamming space containing every possible 72-bit vector.
+~~~text
+frequency descending
+-> q ascending on ties
+~~~
 
-If fully materialized, that enumeration would contain:
+The most frequent q value is therefore known before encoding.
 
-```text
-72 × 2^72 bits
-```
+HDE must receive the HCT first or regenerate it independently from shared deterministic state.
 
-of output.
+This avoids a circular dependency.
 
-HexDoku does not need to materialize it. The purpose of the Hamming representation is to address an exact derived vector directly.
+## 8. Immediate-bit reuse
 
-Multiple base states can define multiple address contexts, but their Hamming spaces overlap; they must not be counted as independent information merely because each base can enumerate 2^72 vectors.
+Canonical q values can be reused directly as immediate machine values, hash input, lookup-table indexes, Seed derivation material, bus payload fields, or prediction/delta bases.
 
-## 8. Bus reuse
+## 9. Optional standard Hamming addressing
 
-A bus message may therefore identify a value by compact reconstruction coordinates such as:
+Standard bitwise Hamming distance (HD) and combination rank (CR) may still be defined as a secondary derived-bit addressing layer.
 
-```text
-Seed / state ID
-turn ID
-cell position or canonical cell index
-Hamming distance
-combination rank
-rule version
-verification fragment
-```
+They are not HexDoku HR and do not determine the 25-stage trajectory.
 
-The receiver can recreate the same base 72-bit state with HDE and then derive the exact requested bit vector.
+## 10. Equality target
 
-If the base state is already implied by the Seed and current turn, it need not be transmitted again.
+~~~text
+Q_HDC(t,c) == Q_HDE(t,c)
+for every active t,c
+~~~
 
-## 9. Separation of generated address space and information
-
-This distinction is mandatory:
-
-> A small Seed plus deterministic Hamming rules can generate or address a very large bit space, but it does not contain that many bits of independent unknown information.
-
-HexDoku's potential advantage is in avoiding transmission of deterministic, shared, or derivable information.
-
-For incompressible new information, the required independent bits still have to enter the system somewhere.
-
-## 10. HDC / HDE role
-
-HDC may search for a compact representation in terms of:
-
-- initial Seed;
-- canonical turn trajectory;
-- table/ranking reuse;
-- predictable candidate values;
-- Hamming distance;
-- combination rank;
-- residual bits.
-
-HDE reproduces the trajectory in exactly the same order and reconstructs the selected immediate bit vectors.
-
-Target invariant:
-
-```text
-same Seed
-+ same board state
-+ same rule version
-+ same numeric rules
-+ same turn/fix order
-+ same HexDoku HR and, when used, same HD/CR address
-=
-same canonical bit vector
-```
-
-This deterministic equality is the basis for using the generated values as bus immediates, hashes, references, or reconstruction operands.
+The final 81-cell Parity must also match bit-for-bit.
