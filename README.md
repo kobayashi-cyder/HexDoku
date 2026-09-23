@@ -652,3 +652,115 @@ Until a license is added, publication of the source repository does **not** auto
 ## Short definition
 
 > **HexDoku is an experimental deterministic reconstruction architecture in which a small Seed Cell selects a versioned Sudoku-inspired layout and content-addressed data, allowing compatible nodes to reproduce and verify the same larger state while transferring only what is missing.**
+
+---
+
+## DNADoku extension: genome reconstruction / reference-compression profile
+
+**DNADoku** is an experimental HexDoku extension that treats DNA-like symbols as a compact representation layer for **selectors, permutation ranks, reconstruction rules, and references**.
+
+It must not be interpreted as a claim that arbitrary biological DNA can be losslessly compressed to a tiny seed without shared information. DNADoku is most useful when a receiver already has a versioned reference genome, pangenome, block dictionary, or other shared reconstruction universe.
+
+### Radix-4 / codon mapping
+
+Using the four DNA symbols `A/C/G/T` as a radix-4 alphabet gives:
+
+~~~text
+1 base   = 2 bits
+3 bases  = 1 codon = 6 bits
+13 codons = 39 bases = 78 bits
+14 codons = 42 bases = 84 bits
+~~~
+
+This aligns naturally with the existing HexDoku selector work:
+
+- a 76-bit T76-style selector fits inside a 13-codon / 78-bit container,
+- an unrestricted permutation of 25 distinct elements needs `log2(25!) ≈ 83.6815` bits,
+- therefore every one of the `25!` permutations needs an 84-bit fixed-width rank, which fits in 14 codons.
+
+The unused rank values in the 84-bit space must be treated as invalid or reserved; 84 bits are a container width, not a claim that all `2^84` states correspond to valid 25-element permutations.
+
+### Genome-compression role
+
+DNADoku is not intended to replace sequence compressors by itself. Its intended role is the **reconstruction-description layer** around conventional sequence compression and shared-reference coding.
+
+~~~text
+individual genome
+      |
+      v
+reference / pangenome matching
+      |
+      +--> shared blocks / haplotypes / known variants
+      |
+      +--> novel or residual sequence
+      |
+      v
+DNADoku selector / ordering / dependency description
+      |
+      v
+residual integer coding + entropy coding
+      |
+      v
+compact reconstruction descriptor
+~~~
+
+For an idealized A/C/G/T-only sequence, direct two-bit packing already costs 2 bits per base. A roughly 3.1-billion-base haploid reference therefore has a simple lower representation scale of about 6.2 billion bits, or about 775 MB, before metadata, ambiguity symbols, indexing, ploidy, and other biological details are accounted for.
+
+DNADoku does not make those unknown sequence bits disappear.
+
+Its potential advantage appears when much of the genome is already present in a **shared, versioned universe**. In that case the transmitted or per-sample object may contain primarily:
+
+- reference / pangenome version,
+- selected shared blocks or haplotypes,
+- permutation / placement information,
+- known-variant selectors,
+- structural-variant description,
+- genuinely novel residual sequence,
+- verification hashes and integrity metadata.
+
+In that model, the per-individual descriptor can be far smaller than a self-contained whole-genome file, but the shared reference, dictionary, and decoder are dependencies and must be counted separately in storage accounting.
+
+### Proposed profiles
+
+| Profile | Shared context | DNADoku role | Claim status |
+|---|---|---|---|
+| DNADoku-13 | versioned selector family | 78-bit container for up to 76 selector bits | structural definition |
+| DNADoku-14 | fixed 25-element universe | 84-bit full permutation-rank container | mathematically sufficient for `25!` |
+| Genome-Reference Profile | reference genome shared | ordering / block / residual reconstruction description | experimental |
+| Genome-Pangenome Profile | pangenome + block/variant dictionary shared | compact haplotype/block selection and rearrangement description | experimental |
+| Population-Dictionary Profile | large shared cohort dictionary | per-sample residual / selector description | research target |
+
+No size target for the genome profiles is considered established until an implementation performs exact round-trip reconstruction and reports:
+
+~~~text
+original genome bytes
+shared reference bytes
+shared dictionary bytes
+per-sample descriptor bytes
+residual sequence bytes
+index / metadata bytes
+decoder / rule version
+reconstruction latency
+final byte-for-byte equality
+~~~
+
+### Accounting rule
+
+A DNADoku genome result must distinguish at least two measurements:
+
+1. **Incremental per-sample size** — bytes unique to one genome when all shared state already exists.
+2. **Amortized / self-contained size** — per-sample size after the required share of references, dictionaries, indexes, and rule data is included.
+
+Reporting only the first number as "genome compression size" is not sufficient.
+
+### Design objective
+
+The long-term objective is therefore not:
+
+> reconstruct an arbitrary human genome from a hash or tiny seed alone.
+
+The objective is:
+
+> **given the same versioned reference universe, encode the identity, arrangement, known differences, and irreducible novel sequence of an individual genome with the smallest deterministic reconstruction descriptor that still reproduces the exact canonical sequence.**
+
+In this role, DNADoku is best understood as a **genome reconstruction seed language layered on top of shared-reference and entropy-compression systems**, rather than as a standalone biological compression algorithm.
