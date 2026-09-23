@@ -28,7 +28,8 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [Origin of the idea](docs/ORIGIN.md)
 - [What HexDoku can do](docs/CAPABILITIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
-- [Turn trajectory and Hamming addressing](docs/TRAJECTORY.md)
+- [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
+- [Turn trajectory and optional Hamming addressing](docs/TRAJECTORY.md)
 - [Protocol draft](docs/PROTOCOL.md)
 - [Project status and milestones](docs/STATUS.md)
 - [Contributing](CONTRIBUTING.md)
@@ -101,9 +102,21 @@ If each unresolved cell deterministically produces nine 8-bit candidate values, 
 325 × 9 × 8 = 23,400 bits = 2,925 bytes
 ```
 
-These calculated values may themselves be used as canonical immediate bit values. A 72-bit cell state can additionally serve as the base of a Hamming-addressed space, where an exact derived value is selected directly by **Hamming distance + combination rank**, without exhaustively enumerating the space.
+These calculated values may themselves be used as canonical immediate bit values.
 
-See [Turn trajectory and Hamming addressing](docs/TRAJECTORY.md).
+HexDoku now defines a project-specific **Hamming Rank (HR) from 0 to 8**:
+
+```text
+HR0 = one candidate remains; logically determined, even if not yet committed
+...
+HR8 = all nine candidates remain; maximum unresolved multiplicity
+```
+
+Within every turn, cells are canonically ordered by **HR ascending → candidate-value table → coordinate**. This order is shared by HDC and HDE, so parallel execution cannot change logical reconstruction order.
+
+Standard bitwise Hamming distance, if used, is a separate optional addressing mechanism and is no longer the meaning of “Hamming Rank”.
+
+See [Canonical Order v0.1](docs/CANONICAL_ORDER.md) and [Turn trajectory](docs/TRAJECTORY.md).
 
 ---
 
