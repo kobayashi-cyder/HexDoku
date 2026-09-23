@@ -413,3 +413,55 @@ Benchmarks must separately report:
 - actual independent source bits represented.
 
 This separation is required for fair compression claims.
+
+
+## 17. Parity as a permutation/address map
+
+The final Parity may map its canonical cells to block IDs or content hashes.
+
+This allows the DNA trajectory to select a final canonical ordering of a shared block universe.
+
+~~~text
+DNA trajectory
+   |
+   v
+final Parity
+   |
+   v
+block-ID / hash permutation
+   |
+   v
+ordered block stream
+~~~
+
+The Parity is therefore not limited to representing solved puzzle symbols. It may function as a deterministic ordering/address table.
+
+The mapping from a Parity cell to an ID/hash-table entry is reconstruction-critical and must be versioned.
+
+## 18. Ordering compression boundary
+
+HexDoku may replace an explicit permutation with a shorter descriptor only when the permutation is sufficiently constrained or derivable.
+
+For n distinct arbitrary elements there are n! possible orders.
+
+For 81 elements:
+
+~~~text
+log2(81!) ≈ 401.17 bits
+~~~
+
+Thus a universal lossless encoding of arbitrary 81-element permutations still requires about 402 fixed bits of distinguishing capacity.
+
+HexDoku gains arise when the selected Parity/order is implied partly by:
+
+- shared Seed/rules;
+- the 25-stage DNA trajectory;
+- a restricted valid-order family;
+- previous state;
+- nonuniform probability;
+- HCT or other shared tables;
+- residual-only transmission.
+
+The block contents themselves remain separate information unless already shared, retrievable, or compressed by another codec.
+
+See [PERMUTATION_ADDRESSING.md](PERMUTATION_ADDRESSING.md).
