@@ -148,21 +148,20 @@ AND required source information unavailable
  -> regenerate
 ```
 
-## 6. Parity Genome
+## 6. DNA and Parity
 
-“Parity Genome” is a working term for using a completed HexDoku/Sudoku structure as a reusable parity/dependency map.
+The current model separates the evolving evaluation trajectory from the final reference state.
 
-It may encode relationships such as:
+~~~text
+DNA    = P0 || P1 || ... || P24
+Parity = fully materialized 81-cell final table
+~~~
 
-```text
-cell -> chunk
-row  -> group
-col  -> dependency family
-box  -> redundancy family
-digit -> transform/routing selector
-```
+For 25 initial unresolved coordinates, DNA contains 25 evaluation tables with 325 total evaluated coordinate states.
 
-This does not automatically create an error-correcting code. Error correction requires a defined code construction and measurable correction bounds.
+There are 24 normal commits. The remaining final coordinate is a Terminal Reference whose content may be a canonical non-numeric value and is resolved or verified from the Parity reference/source.
+
+Standard Sudoku row/column/3×3-box constraints are not required by the architecture. What is required is deterministic, versioned resolution and bit-identical reconstruction.
 
 ## 7. Seed Cell hierarchy
 
@@ -339,27 +338,33 @@ It must not be described as cryptographic confidentiality.
 Security-sensitive deployments should use authenticated encryption independently of HexDoku.
 
 
-## 15. Turn-state trajectory
+## 15. DNA turn-state trajectory
 
-For a board with 25 unresolved cells, the current model evaluates unresolved coordinates before one value is fixed per turn.
+For 25 initially unresolved coordinates E0..E24, fixed once in row-major order:
 
-The evaluated cell count is:
+~~~text
+P0  evaluates E0..E24
+P1  evaluates E1..E24
+...
+P23 evaluates E23..E24
+P24 evaluates E24
+~~~
 
-```text
-N = sum(n=1..25) n = 325
-```
+This is 25 evaluation tables and 325 evaluated coordinate states.
 
-For each unresolved coordinate c at turn t, HDE computes a versioned candidate table:
+P0..P23 are followed by 24 normal commits of E0..E23 using the versioned deterministic resolver.
 
-```text
-E(t,c) = [(digit 1, q1), ..., (digit 9, q9)]
-```
+P24 is the terminal stage. E24 is not required to become a digit; it is resolved or checked through the Terminal Reference / Parity source.
 
-where each q is converted to a canonical fixed-width numerical representation.
+For every active coordinate c at stage t:
 
-The ordering function, sorting direction, tie-break rule, rounding, saturation, and bit order are reconstruction-critical protocol state.
+~~~text
+Q(t,c) = [(1,q1),...,(9,q9)]
+~~~
 
-With 8-bit q values, each E(t,c) contributes 72 raw bits and the 25-turn trajectory contributes 23,400 raw bits before further reduction.
+Canonical ordering inside Q is q ascending, then digit ascending on ties.
+
+With 8-bit q values, the raw q-only DNA stream is 23,400 bits = 2,925 bytes.
 
 ## 16. Immediate-value reuse
 
@@ -401,45 +406,21 @@ The detailed definition is in `docs/TRAJECTORY.md`.
 
 ## 18. HexDoku Hamming Rank and canonical order
 
-HexDoku defines **Hamming Rank (HR)** as a project-specific unresolved-multiplicity rank:
+HexDoku HR is a project-specific unresolved-multiplicity rank:
 
-```text
-HR(t,c) = number_of_remaining_candidates(t,c) - 1
-```
+~~~text
+HR = number_of_remaining_candidates - 1
+~~~
 
-Thus HR is always in the range 0..8.
+with range 0..8.
 
-- HR0: one candidate remains; logically determined, including pending/unfilled commit state.
-- HR8: all nine candidates remain; maximum unresolved multiplicity.
+HR is state metadata only. It never selects the next coordinate.
 
-This is not standard Hamming distance.
+The coordinate sequence E0..E24 is fixed at initialization by row-major order of the 25 unresolved positions.
 
-For each pre-fix turn, **calculation positions are always evaluated in row-major board order**:
+At stage t, Et is the normal commit target for t=0..23. E24 is the Terminal Reference at the final stage.
 
-```text
-r1c1 -> r1c2 -> ... -> r1c9
--> r2c1 -> ... -> r2c9
--> ...
--> r9c1 -> ... -> r9c9
-```
-
-Filled cells are skipped.
-
-Only after the turn's unresolved cells have been calculated may a separate commit/compression priority be formed:
-
-```text
-HR ascending
--> canonical candidate table lexicographic ascending
--> row-major coordinate ID ascending
-```
-
-The first coordinate in that post-calculation priority is the next commit position, with its digit determined by the versioned unique-solution rule.
-
-Both HDC and HDE use this same logical order.
-
-Parallel execution may calculate values in any physical order, but no state transition is committed until the complete turn has been canonically ordered.
-
-The normative definition is in `docs/CANONICAL_ORDER.md`.
+The detailed normative order is in docs/CANONICAL_ORDER.md.
 
 ## 19. Optional standard Hamming-distance layer
 
