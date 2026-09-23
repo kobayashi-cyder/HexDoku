@@ -194,7 +194,9 @@ This generalized mode is not the first baseline. The fixed digits 1,2,3 mode is 
 
 ## 10. HDC-Lite descriptor
 
-For the fixed baseline, a logical descriptor can contain:
+In the **received-board baseline**, `mask_rank` is an HDC-internal/analysis value and does not need to be transmitted: the 25 hole coordinates are already visible in the received 81-cell board.
+
+An alternate compressed descriptor may still contain:
 
 ~~~text
 profile_id       = sudoku-v1/hdc-lite-9-9-7-v1
@@ -203,7 +205,7 @@ rule_version
 optional integrity/reference fields
 ~~~
 
-The six-bit mask rank identifies only the hole pattern relative to a known completed-grid digit layout rule. It does not by itself encode an unknown ParityGrid.
+but that is a different transport profile. The six-bit mask rank never encodes an unknown ParityGrid by itself.
 
 ## 11. HDE path
 
@@ -241,23 +243,14 @@ Measure at least:
 
 Only measured results should be reported as HDC-Lite performance.
 
-## 13. Packet-light HDE target
+## 13. Received-board HDE target
 
-HDC-Lite may pair the 9+9+7 mask strategy with a shared canonical Sudoku board and a 41-bit transform Seed.
+The current baseline sends the 25-hole board itself to HDE.
 
-Under that restricted profile, HDE can regenerate Parity by applying fixed Sudoku-preserving transformations rather than receiving 81 cells.
+Under fixed `9+9+7`, the simple board encoding is 243 bits because the only cell symbols on wire are `HOLE,3,4,5,6,7,8,9`.
 
-Reference sizes:
+From that board, HDE derives the 25 coordinates, solved values, deterministic order, HR values, and HR branch-slot positions. These derived fields therefore add zero transmission bits when the rule profile is pinned.
 
-~~~text
-full Parity direct      324 bits
-masked board direct     243 bits
-canonical transform Seed 41 bits
-Seed + 5 coordinate bits 46 bits
-~~~
+A 41-bit canonical-transform Seed remains an alternate restricted transport experiment and is not the current baseline.
 
-The 41-bit profile is approximately 87.35% smaller than the 324-bit direct-grid baseline and 83.13% smaller than the 243-bit masked-board baseline.
-
-This does not cover all completed Sudoku boards; it covers the orbit of the shared canonical board.
-
-See [HDE_MIN_PACKET.md](HDE_MIN_PACKET.md).
+See [HDE_MIN_PACKET.md](HDE_MIN_PACKET.md) and [ONE_BOARD_DERIVED_INFORMATION.md](ONE_BOARD_DERIVED_INFORMATION.md).
