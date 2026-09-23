@@ -423,9 +423,9 @@ The six-bit rank identifies the hole pattern only. It does not encode the unknow
 
 The decoder reconstructs using Sudoku Profile v1 and must not repeat the encoder mask search.
 
-## 20. One-board minimum packet modes
+## 20. One-board transport comparisons
 
-Supported design targets for the current single-board experiment:
+Comparison profiles for the single-board experiment (the received-board mode in section 22 is the current baseline):
 
 ~~~text
 mode = full-grid
@@ -483,3 +483,38 @@ If references are `w` bits each, raw reference field width is `B × w` bits, plu
 This raw width is not an independent-information claim. Benchmarks must also report deduplication and, where measurable, the number K of reachable complete branch/reference assignments.
 
 Receiver validation must reject a reference stream whose count or canonical slot mapping does not match the regenerated HR trajectory.
+
+## 22. Received 25-hole board as the current baseline
+
+The current one-board protocol input is the 81-cell 9×9 board containing exactly 25 holes.
+
+Because position in the 81-cell array is already the cell address, HDE does not receive a separate list of hole coordinates.
+
+Derived from the board and pinned rules:
+
+~~~text
+hole coordinates        -> +0 transmitted bits
+solution values         -> +0 transmitted bits
+deterministic order     -> +0 transmitted bits
+HR values               -> +0 transmitted bits
+HR branch-slot positions-> +0 transmitted bits
+~~~
+
+A standalone 81-way coordinate requires 7 fixed bits. A `3-bit row + 3-bit column` representation is invalid for a 9×9 board because each three-bit axis has only eight states.
+
+Simple received-board encodings:
+
+~~~text
+generic HOLE + 1..9 : 81 × 4 = 324 bits
+fixed 9+9+7         : 81 × 3 = 243 bits
+~~~
+
+The 243-bit width is specific to the fixed 9+9+7 profile.
+
+For 25 distinct hole coordinates, an arbitrary standalone order has `25!` states and `log2(25!) ≈ 83.6815` bits of information. HDE omits a separate order field only when that order is deterministically regenerated from the board.
+
+If HDC can realize only K distinct valid reconstruction orders, the actual independent order capacity is `log2(K)`.
+
+Branch/reference **positions** may likewise be regenerated from HR; reference values themselves must still be transmitted, shared, or retrievable.
+
+See [ONE_BOARD_DERIVED_INFORMATION.md](ONE_BOARD_DERIVED_INFORMATION.md).
