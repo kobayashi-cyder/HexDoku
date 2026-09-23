@@ -143,25 +143,42 @@ A rule version may define a 25-turn pre-fix evaluation trajectory.
 
 For each turn:
 
-1. enumerate currently unresolved coordinates in canonical order;
+1. evaluate every currently unresolved coordinate;
 2. calculate candidate values for digits 1 through 9;
 3. apply canonical numeric encoding;
-4. apply canonical sort/tie-break rules when the protocol uses ranked candidate tables;
-5. emit or reuse the resulting immediate bit vectors;
-6. fix exactly one cell according to the rule;
-7. continue to the next turn.
+4. determine the still-unresolved candidate set for every coordinate;
+5. calculate HexDoku Hamming Rank `HR = candidate_count - 1`;
+6. construct each Canonical Candidate Table using value ascending, then digit ascending;
+7. order cells by `HR ascending -> CCT lexicographic ascending -> coordinate ID ascending`;
+8. emit or reuse resulting immediate bit vectors in that logical order;
+9. commit exactly one cell using the versioned unique-solution rule;
+10. continue to the next turn.
 
 For 25 initial unresolved cells, this yields 325 evaluated cell states.
 
-## 12. Hamming address record
+## 11A. Hamming Rank field
 
-When a derived bit vector is referenced relative to a canonical 72-bit base state, a compact logical record may contain:
+HexDoku HR has values 0..8:
+
+```text
+0 = one remaining candidate / logically determined
+...
+8 = nine remaining candidates / maximum unresolved multiplicity
+```
+
+If explicitly serialized, HR uses a baseline 4-bit field. Values 9..14 are reserved and 15 is invalid/error.
+
+If both endpoints deterministically recompute HR from the same turn state, the HR field SHOULD be omitted from the payload and treated as derived state.
+
+## 12. Optional standard Hamming-distance address record
+
+`HR` is reserved for HexDoku's 0..8 unresolved-multiplicity rank. When a derived bit vector is optionally referenced relative to a canonical 72-bit base state using standard bitwise Hamming distance, a compact logical record may contain:
 
 ```text
 turn_id
 cell_index
-hamming_distance
-combination_rank
+hd_distance
+combination_rank_cr
 rule_version
 optional verification bits
 ```
