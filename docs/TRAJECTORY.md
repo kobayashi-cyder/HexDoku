@@ -90,9 +90,7 @@ Qbits24 = q1||q2||...||q9 = 72 bits
 T76     = Qbits24 || ext4  = 76 bits
 ~~~
 
-where q values are packed in fixed candidate identity order 1..9 and ext4 is a terminal-only nibble, not HR.
-
-T76 may then select the terminal Parity/permutation context.
+where q values are packed in fixed candidate identity order 1..9. In Sudoku Profile v1, ext4 is fixed to `0000`; the resulting T76 is derived state and does not independently select a permutation context.
 
 ## 5. HR
 
@@ -161,9 +159,9 @@ The final 81-cell Parity must also match bit-for-bit.
 
 ## 11. Terminal selector capacity
 
-T76 has a nominal address space of 2^76 values.
+The generic 76-bit container has 2^76 possible bit patterns, but Sudoku Profile v1 does not expose that full space as independent selector states.
 
-For an 81-element block universe, a versioned injective mapping can assign each T76 value to a distinct permutation because:
+A future Payload Profile could define an injective mapping from a free 76-bit selector to an 81-element permutation because:
 
 ~~~text
 2^76 < 81!
@@ -172,3 +170,23 @@ For an 81-element block universe, a versioned injective mapping can assign each 
 The full 81! permutation space remains much larger and is not represented by T76 alone.
 
 Actual selector entropy can be less than 76 bits if the terminal q evaluator cannot generate every 72-bit q pattern.
+
+## 12. Sudoku Profile v1 trajectory
+
+The first measured trajectory uses classic Sudoku constraints.
+
+For each active cell, the profile computes the local Sudoku candidate set, derives HR, and generates the deterministic integer q vector defined in `SUDOKU_PROFILE_V1.md`.
+
+The first 24 scheduled commits preserve at least one valid Sudoku completion.
+
+At the final stage:
+
+~~~text
+Q72 = Sudoku-derived final q vector
+ext4 = 0000
+T76 = Q72 || 0000
+~~~
+
+Therefore Sudoku Profile v1 does not claim 76 bits of independent terminal entropy.
+
+Payload-specific terminal entropy is deferred to a later rule profile.
