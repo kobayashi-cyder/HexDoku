@@ -1000,3 +1000,550 @@ The central research question is therefore whether a methylome can be represente
 - [Moore et al., DNA Methylation and Its Basic Function](https://pmc.ncbi.nlm.nih.gov/articles/PMC3521964/)
 - [Yang et al., DNMT3A in haematological malignancies](https://pmc.ncbi.nlm.nih.gov/articles/PMC5814392/)
 
+---
+
+## MediaDoku / MovieDoku extension
+
+HexDoku can be generalized beyond genome-like data into media reconstruction.
+
+The proposed split is:
+
+~~~text
+HexDoku
+├─ DNADoku
+│  ├─ GenomeDoku
+│  └─ EpigenomeDoku
+│
+├─ MediaDoku
+│  ├─ ImageDoku
+│  ├─ AudioDoku
+│  └─ LayoutDoku
+│
+└─ MovieDoku
+   ├─ SceneDoku
+   ├─ MotionDoku
+   ├─ TimelineDoku
+   └─ AV-SyncDoku
+~~~
+
+The common reconstruction equation is:
+
+~~~text
+Object
+  = Shared Reference
+  + Doku Structure
+  + Residual
+~~~
+
+For temporal media, a second equation becomes important:
+
+~~~text
+State(t+1)
+  = State(t)
+  + Transition(t -> t+1)
+  + Residual(t+1)
+~~~
+
+This is the central distinction between MediaDoku and MovieDoku.
+
+### MediaDoku
+
+**MediaDoku** is a reconstruction-description layer for static or composite media such as images, audio, text/layout composites, and multimodal assets.
+
+Instead of treating a media object only as an opaque byte stream, MediaDoku may decompose it into reusable structural components such as:
+
+~~~text
+background
+object
+person
+face
+clothing
+text
+logo
+lighting
+camera state
+texture
+audio source
+layout element
+~~~
+
+A conceptual representation is:
+
+~~~text
+Media Seed
+  + shared asset dictionary
+  + object / layer selection
+  + layout / coordinates
+  + transforms
+  + ordering / dependencies
+  + codec residual
+~~~
+
+For example:
+
+~~~text
+asset #183 = background
+asset #927 = face template
+asset #442 = clothing asset
+
+face:
+  position = (x, y, w, h)
+
+transform:
+  rotation
+  scale
+  lighting delta
+
+residual:
+  unique pixels / coefficients / waveform data
+~~~
+
+MediaDoku therefore targets **asset identity, placement, structure, topology, and exceptions** rather than attempting to make irreducible pixel or waveform information disappear.
+
+### ImageDoku
+
+ImageDoku is the spatial specialization of MediaDoku.
+
+A scene may be divided into objects, semantic regions, layers, tiles, latent regions, or other versioned units. A 25-element Doku block could therefore represent:
+
+~~~text
+25 objects
+25 semantic regions
+25 reusable tiles
+25 layer nodes
+25 latent components
+~~~
+
+The 25-element structure does not imply that every image must literally contain 25 visual objects. It is a reconstruction container whose element semantics are profile-defined.
+
+A possible image hierarchy is:
+
+~~~text
+Image
+  -> scene / canvas
+     -> object or region groups
+        -> 25-element Doku block
+           -> shared asset / pattern selector
+           -> transform
+           -> residual
+~~~
+
+Canonical ordering should be implicit whenever possible. An 84-bit full 25-element permutation rank is useful only when the permutation itself carries information that is not already determined by the scene graph or coordinate system.
+
+Therefore:
+
+- canonical layer / coordinate order: transmit 0 extra ordering bits,
+- known reusable layouts: transmit a compact pattern ID,
+- exceptional ordering or graph structure: transmit Doku selector / rank,
+- irreducible visual difference: transmit residual through an appropriate image codec.
+
+### AudioDoku
+
+Audio can be decomposed similarly:
+
+~~~text
+Audio
+  = shared source / model
+  + timing
+  + pitch / spectral state
+  + amplitude / envelope
+  + effects / spatial state
+  + residual waveform or coefficients
+~~~
+
+Depending on the profile, shared units may include:
+
+- phonemes or speech units,
+- speaker or voice references,
+- musical notes,
+- instruments,
+- repeated motifs,
+- sound effects,
+- environmental loops,
+- spectral templates.
+
+A speech-oriented profile might be described as:
+
+~~~text
+speaker reference
++ phoneme / token sequence
++ timing
++ prosody
++ residual audio
+~~~
+
+A music-oriented profile might instead use:
+
+~~~text
+instrument
++ note / event
++ duration
++ velocity
++ effect state
++ residual
+~~~
+
+These are reconstruction models, not a claim that semantic decomposition alone can reproduce arbitrary source audio exactly. Exact reconstruction still requires all irreducible residual information.
+
+### LayoutDoku
+
+LayoutDoku represents spatial relationships that are more naturally described as structure than as pixels:
+
+~~~text
+page / canvas
+  -> regions
+     -> text blocks
+     -> images
+     -> controls / objects
+     -> relative constraints
+~~~
+
+Potential fields include:
+
+~~~text
+object ID
+parent ID
+anchor
+relative position
+z-order
+scale
+rotation
+visibility
+style reference
+residual
+~~~
+
+This may be useful for documents, UI snapshots, slide-like media, game scenes, or other structured visual compositions where many elements already exist in a shared asset universe.
+
+---
+
+## MovieDoku: temporal reconstruction
+
+**MovieDoku** extends MediaDoku over time.
+
+The naive representation of video is a sequence of complete frames:
+
+~~~text
+Frame 0
+Frame 1
+Frame 2
+...
+Frame N
+~~~
+
+MovieDoku instead treats a movie as an evolving state:
+
+~~~text
+Initial Scene State
+      |
+      v
+Transition 0
+      |
+      v
+State 1
+      |
+      v
+Transition 1
+      |
+      v
+State 2
+      |
+     ...
+~~~
+
+At a conceptual level:
+
+~~~text
+Frame(t+1)
+  = Frame(t)
+  + motion
+  + object-state changes
+  + camera changes
+  + lighting changes
+  + appearance changes
+  + residual
+~~~
+
+This is intentionally compatible with conventional video coding ideas such as inter-frame prediction and motion compensation, but MovieDoku operates at a potentially higher structural level.
+
+It does **not** replace the need for AV1, HEVC/VVC, neural codecs, or other lower-level codecs where those codecs are efficient. Instead, MovieDoku can sit above them and describe reusable scene state, object identity, topology, and transitions.
+
+### SceneDoku
+
+SceneDoku represents the persistent structure of one scene.
+
+A scene may contain:
+
+~~~text
+person
+face
+mouth
+left hand
+right hand
+foreground object
+background
+camera
+lighting
+text / subtitle region
+audio source
+...
+~~~
+
+A 25-node profile could map these elements to a canonical scene graph:
+
+~~~text
+O1  = person
+O2  = face
+O3  = mouth
+O4  = left hand
+O5  = right hand
+...
+O25 = background / environment
+~~~
+
+The scene itself is reconstructed from a shared asset/model universe plus local parameters and residuals.
+
+### MotionDoku
+
+MotionDoku describes how scene elements change between states.
+
+For example:
+
+~~~text
+scene #81
+
+camera:
+  pan-right
+
+person #17:
+  x += 4
+  y += 0
+
+mouth:
+  state 3 -> state 4
+
+lighting:
+  unchanged
+
+background:
+  unchanged
+~~~
+
+The intended representation principle is:
+
+> unchanged state should require little or no repeated description.
+
+Therefore MovieDoku should preferentially encode only:
+
+~~~text
+motion
+state transition
+appearance delta
+new / removed object
+exception
+residual
+~~~
+
+rather than re-describing the complete frame.
+
+### TimelineDoku
+
+TimelineDoku groups state changes over a longer interval.
+
+At one scale:
+
+~~~text
+25 temporal states
+  -> one MovieDoku block
+~~~
+
+At another scale:
+
+~~~text
+25 shots / scenes
+  -> one higher-level MovieDoku block
+~~~
+
+Thus MovieDoku can be hierarchical:
+
+~~~text
+Movie
+  -> sequence
+     -> scene
+        -> shot
+           -> temporal block
+              -> object state
+                 -> codec residual
+~~~
+
+The exact hierarchy must be versioned by profile.
+
+### AV-SyncDoku
+
+Movie media often consists of several synchronized timelines:
+
+~~~text
+video
+audio
+speech
+music
+subtitle
+metadata
+interaction / event tracks
+~~~
+
+AV-SyncDoku can represent their shared temporal anchors and dependencies:
+
+~~~text
+time anchor
+  ├─ video state transition
+  ├─ audio event
+  ├─ subtitle event
+  └─ metadata / scene event
+~~~
+
+When timings are already implied by a shared canonical timeline, those values should not be retransmitted. Only deviations or independently informative timing data should become residuals.
+
+### 25-element rule
+
+The same caution used in DNADoku applies here.
+
+A 25-element Doku block may describe:
+
+~~~text
+25 objects
+25 regions
+25 motion nodes
+25 temporal states
+25 shots
+25 scenes
+~~~
+
+but an 84-bit DNADoku-14-style permutation field must not be added automatically.
+
+If a 25-element binary state takes only 25 bits and the canonical order is already shared, adding an 84-bit permutation field would increase size rather than reduce it.
+
+Therefore the default rule across MediaDoku and MovieDoku is:
+
+1. derive canonical order from shared structure when possible,
+2. use compact pattern / dictionary IDs for common states,
+3. use Doku selectors only for genuine structural choices,
+4. encode exceptional values as residuals,
+5. pass irreducible media entropy to a lower-level codec.
+
+### Layering with conventional codecs
+
+MediaDoku and MovieDoku are intended to be **structural layers above conventional compression**, not blanket replacements for it.
+
+~~~text
+Image:
+shared assets / scene graph
+        |
+        v
+MediaDoku / ImageDoku
+        |
+        v
+AVIF / JPEG XL / neural / other residual codec
+
+Video:
+shared assets / scene graph / timeline
+        |
+        v
+MovieDoku
+        |
+        v
+AV1 / HEVC / VVC / neural / other residual codec
+~~~
+
+The same principle applies to audio:
+
+~~~text
+shared semantic / event structure
+        |
+        v
+AudioDoku
+        |
+        v
+Opus / AAC / FLAC / neural / other residual codec
+~~~
+
+Lossless reconstruction requires that the residual layer preserve every source distinction not reproduced by the structural layer.
+
+### High-level Movie Seed
+
+A mature MovieDoku descriptor could take the form:
+
+~~~text
+Movie Seed
+   |
+   +--> asset dictionary version
+   +--> character / object references
+   +--> environment / background references
+   +--> scene graph
+   +--> MovieDoku temporal rules
+   +--> motion / state transitions
+   +--> audio / subtitle timeline
+   +--> residual codec streams
+   +--> integrity hashes
+   |
+   v
+exact or profile-defined reconstructed movie
+~~~
+
+This changes the conceptual storage question from:
+
+> how do we compress every frame independently?
+
+toward:
+
+> what exists, how does it change, what is already shared, and what information remains irreducible?
+
+### Compression-accounting rule
+
+Every MediaDoku / MovieDoku benchmark must distinguish:
+
+| Component | Required accounting |
+|---|---|
+| Shared asset/model dictionary | bytes and version |
+| Scene graph / layout | bytes |
+| Doku selectors / permutation data | bytes |
+| Motion / transition data | bytes |
+| Audio / subtitle timing | bytes |
+| Lower-level codec residual | bytes |
+| Integrity / index metadata | bytes |
+| Incremental media object | bytes |
+| Amortized shared-state cost | bytes per object |
+| Self-contained equivalent | bytes |
+| Reconstruction fidelity | exact bytes or declared perceptual metric |
+
+A benchmark is incomplete if it reports only the Seed or structural descriptor while excluding the shared assets or residual codec required for reconstruction.
+
+### Unified HexDoku family
+
+The resulting research family can be summarized as:
+
+~~~text
+HexDoku
+  = deterministic reconstruction / addressing / verification framework
+
+DNADoku
+  = biological-sequence and state-overlay reconstruction descriptor
+
+MediaDoku
+  = spatial / multimodal structure reconstruction descriptor
+
+MovieDoku
+  = temporal state-transition reconstruction descriptor
+~~~
+
+All of them share the same general principle:
+
+~~~text
+Reconstructed Object
+  = Shared Universe
+  + Versioned Doku Description
+  + Irreducible Residual
+~~~
+
+The useful research question is not whether Doku metadata can replace entropy coding, but whether **shared structure and deterministic reconstruction can remove repeated description before conventional entropy coding is applied**.
+
