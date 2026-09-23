@@ -885,3 +885,27 @@ For the fixed 9+9+7 243-bit board, omitting a fully independent 83.6815-bit orde
 For a generic 324-bit board, the analogous comparison is `407.6815 -> 324` bits, approximately 20.53%.
 
 These are upper-bound comparisons. If only K distinct valid solve orders are realizable, the real independent order capacity is `log2(K)`; if K=1, the order-derived saving is zero.
+
+## 41. Measured fixed-family limitation
+
+The fixed 36-mask `9+9+7` family is now corpus-tested rather than only reasoned about.
+
+On 500 generated completed Sudokus:
+
+~~~text
+367/500 boards had at least one exact-round-trip mask
+133/500 had none
+mean K over all boards = 7.56
+max K = 30
+successful-board mean log2(K) = 2.928 bits
+~~~
+
+Therefore the current profile's guaranteed independent variable-order capacity is zero.
+
+This does not invalidate metadata omission: a deterministic coordinate/order/HR structure can still be regenerated instead of serialized. It limits the stronger claim that HDC can always choose among multiple orders to encode additional independent information.
+
+## 42. Measured HR reference structure
+
+Across 3,780 accepted masks, target-only `sum(HR)` averaged 2.222 slots and full-DNA `sum(HR)` averaged 357.613 slots. The observed full-DNA range was 258..467.
+
+These numbers show that HR provides a dense structural addressing surface, but actual information capacity must still be measured through reachable complete assignments K and reference entropy.
