@@ -335,3 +335,34 @@ log2(K) ≈ 4.7549 bits
 To approach the absolute `log2(25!) ≈ 83.68`-bit permutation ceiling, the HDC construction family itself must expose at least 25! distinguishable valid board/order outcomes. The current 36-mask family cannot do that.
 
 See [ORDER_BEARING_PROFILE_V0.md](ORDER_BEARING_PROFILE_V0.md).
+
+## 13. 500-board measured boundary
+
+The fixed 36-mask `9+9+7` family was tested on 500 generated completed Sudokus, all 36 masks per board:
+
+~~~text
+18,000 mask evaluations
+3,780 exact round trips
+367 boards with >=1 valid mask
+133 boards with NO_MASK
+~~~
+
+For the experimental dynamic order-bearing profile:
+
+~~~text
+K over all boards: min=0, mean=7.56, median=6, max=30
+successful-board mean log2(K) = 2.9280 bits
+maximum measured log2(K)      = 4.9069 bits
+~~~
+
+Therefore:
+
+~~~text
+current guaranteed independent order capacity = 0 bits
+~~~
+
+The fixed baseline can still omit a known deterministic order field as metadata, but the current 36-mask family does not guarantee a selectable variable-order payload.
+
+To obtain a guaranteed non-zero order channel, HDC must expand its construction family and enforce a minimum-K acceptance rule.
+
+See [ORDER_HR_CORPUS_500.md](ORDER_HR_CORPUS_500.md).
