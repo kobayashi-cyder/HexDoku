@@ -45,7 +45,7 @@ A Seed Cell must not silently depend on unspecified software state.
 
 ### 3.2 HexDoku layout
 
-A solved Sudoku board provides a deterministic topology.
+A 9×9 HexDoku board provides a deterministic coordinate topology. A conventional Sudoku solution is optional and is not normative.
 
 Example roles:
 
@@ -199,7 +199,7 @@ These are not assumed to exist until implemented.
 The first implementation should optimize for auditability, not performance:
 
 - fixed corpus
-- fixed 9x9 solved board
+- fixed 9x9 HexDoku coordinate board
 - deterministic chunking
 - SHA-256
 - canonical serialization
