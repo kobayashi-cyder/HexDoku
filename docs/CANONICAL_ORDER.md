@@ -206,3 +206,45 @@ The scheduled target remains Et; Sudoku scores and HR never reorder E0..E24.
 At P24, the final Q72 is Sudoku-derived and the terminal extension is `0000`.
 
 A future Payload Profile may define another terminal rule, but that rule must use a new profile/version.
+
+## 12. Canonical HR branch-reference order
+
+HR may expose alternative branch-reference positions without changing the coordinate schedule.
+
+For a coordinate with `HR = h`:
+
+~~~text
+candidate_count = h + 1
+alternative_reference_slots = h
+~~~
+
+One candidate is the canonical anchor branch and carries no required side reference in the baseline representation.
+
+For Sudoku Profile v1, the anchor is the first candidate accepted by the normal deterministic resolver under the current state and tie-break rules.
+
+All remaining candidates are alternative branches and must be ordered deterministically by the negotiated candidate-order rule.
+
+Therefore HDC and HDE must agree on:
+
+~~~text
+anchor candidate
+alternative candidate order
+branch slot index
+reference-table interpretation
+~~~
+
+HR branch references do not reorder E0..E24.
+
+Target-only slot count:
+
+~~~text
+B_target = sum_t HR(t,E_t)
+~~~
+
+Full-DNA slot count:
+
+~~~text
+B_DNA = sum_t sum_{c in active(t)} HR(t,c)
+~~~
+
+The full 325-state structural upper bound is 2,600 slots. Slot count must not be reported as independent payload bits without measuring the reachable assignment space.
