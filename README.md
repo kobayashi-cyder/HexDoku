@@ -4684,3 +4684,223 @@ The correct current claim is therefore:
 
 > **A plausible unification hypothesis may have emerged, but its status now depends entirely on derivation and falsification rather than further naming or analogy.**
 
+---
+
+## Addendum: coarse-graining, conservation, memory, and effective inertia
+
+The current unification hypothesis should also preserve a stricter distinction between microscopic dynamics and macroscopic effective laws.
+
+### 1. Microscopic-to-macroscopic continuity requires coarse-graining
+
+The macroscopic description is not assumed to be a literal magnified copy of the microscopic description.
+
+Conceptually:
+
+~~~text
+microscopic state
+    ->
+coarse-graining / information reduction
+    ->
+effective macroscopic state
+~~~
+
+A macroscopic variable is therefore treated as a compressed description of many compatible microscopic states.
+
+Examples:
+
+~~~text
+microscopic coordinates / momenta
+    -> temperature
+
+microscopic collisions
+    -> pressure / viscosity
+
+microscopic correlations
+    -> memory / hysteresis / relaxation structure
+~~~
+
+The continuity is physical, but the description changes with scale.
+
+### 2. Conservation rather than "force immortality"
+
+The framework should not assume that force itself is conserved.
+
+Instead, the physically stronger starting point is conservation of appropriate quantities in the relevant closed-system limit.
+
+Conceptually:
+
+~~~text
+input energy / momentum / charge / other conserved quantity
+    ->
+redistribution among available degrees of freedom
+    ->
+different observable channels
+~~~
+
+Apparent conversion loss is therefore first interpreted as redistribution into unresolved or less-useful degrees of freedom, not disappearance.
+
+A schematic energy accounting is:
+
+~~~text
+E_total
+  =
+E_observed
++ E_internal
++ E_field
++ E_thermal
++ E_unresolved
+~~~
+
+Any claimed anomaly must first close this accounting as far as experimentally possible.
+
+### 3. Coarse-graining can generate memory and fluctuations together
+
+If microscopic degrees of freedom are removed from the explicit description, their influence may re-enter the effective equation as memory and noise.
+
+A generic candidate form is:
+
+~~~text
+dx/dt
+  =
+F[x(t)]
++ integral K(t - t') x(t') dt'
++ xi(t)
+~~~
+
+where:
+
+~~~text
+K   = memory kernel
+xi  = effective fluctuation / unresolved-degree contribution
+~~~
+
+This makes "history dependence" an expected effective phenomenon in many systems without requiring a new fundamental history field.
+
+Examples that motivate this distinction include:
+
+~~~text
+hysteresis
+viscoelastic response
+glassy relaxation
+non-Markovian open-system behavior
+Mpemba-like preparation dependence
+~~~
+
+### 4. New history degrees of freedom require a stronger test
+
+Preparation history alone is not evidence for a new field.
+
+The stronger criterion is:
+
+~~~text
+same presently resolved state
++ different preparation history
+    ->
+reproducibly different future behavior
+~~~
+
+after all known internal variables, non-equilibrium modes, environmental couplings, and statistical fluctuations have been controlled as far as possible.
+
+Only then should an additional hidden or history-carrying degree of freedom be introduced.
+
+### 5. Effective inertia hypothesis
+
+A stronger current candidate is:
+
+> **inertia may be an effective response emerging after coarse-graining deeper degrees of freedom, rather than a primitive force-like entity transmitted through a separate medium.**
+
+The standard relation:
+
+~~~text
+F = m a
+~~~
+
+is therefore treated as a possible effective law to be derived in the appropriate scale and regime.
+
+The derivation target becomes:
+
+~~~text
+fundamental / deeper dynamics
+    ->
+coarse-graining
+    ->
+effective inertial response
+    ->
+F = m a in the validated limit
+~~~
+
+Possible deviations should be sought as:
+
+~~~text
+memory dependence
+nonlocality
+scale dependence
+response-rate dependence
+anomalous fluctuation structure
+~~~
+
+rather than by assuming an arbitrary new force.
+
+### 6. Dark-matter caution
+
+The simple hypothesis:
+
+~~~text
+dark-matter-like effects
+  =
+ordinary matter plus a delayed inertial / gravitational response
+~~~
+
+should not be treated as a leading branch.
+
+Simple propagation delay, simple time-only memory, or a gravitational field that merely tracks earlier baryonic positions do not naturally reproduce the combined observational constraints from galaxy dynamics, lensing, colliding clusters, the CMB, and structure formation.
+
+If a modified-inertia or memory theory is retained, it must independently reproduce all of those observations with one consistent rule set.
+
+Adding enough new field content to do so may amount physically to introducing a new dark degree of freedom under another description.
+
+### 7. Unified-theory methodological principle
+
+The preferred hierarchy is now:
+
+~~~text
+fundamental degrees of freedom
+    ->
+conservation / admissible transformations
+    ->
+coarse-graining
+    ->
+effective variables
+    ->
+memory + fluctuations + transport
+    ->
+effective inertia / geometry / thermodynamics / other laws
+~~~
+
+The central research question is therefore not:
+
+> "What single force explains everything?"
+
+but rather:
+
+> **"What minimal deeper dynamics, under scale-dependent coarse-graining, generates the observed effective laws while preserving the required symmetries, conservation laws, and falsifiable predictions?"**
+
+### 8. Falsification discipline
+
+New entities should not be introduced while known unresolved degrees of freedom can explain the observation.
+
+A candidate extension becomes scientifically meaningful only when it predicts a measurable residual such as:
+
+~~~text
+unexpected memory after full state matching
+nonlocal response not reducible to known transport
+scale-dependent inertia outside existing theory
+fluctuation spectra inconsistent with known baths / couplings
+a quantitatively new cross-domain relation
+~~~
+
+The intended principle is:
+
+> **Known degrees of freedom first; new degrees of freedom only after reproducible residuals remain.**
+
+This addendum is part of the candidate unified-theory research direction, not evidence that the theory has been established.
