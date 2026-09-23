@@ -536,3 +536,43 @@ It is:
 > **“How little genuinely new information must compatible systems exchange to reproduce exactly the same canonical bit string?”**
 
 That is the central capability HexDoku is intended to test.
+
+
+## 17. Twenty-five-turn trajectory
+
+For the current 25-empty-cell interpretation, HDE evaluates the complete unresolved state before fixing one cell on every turn.
+
+```text
+Turn 1 -> 25 unresolved cells
+Turn 2 -> 24
+...
+Turn 25 -> 1
+```
+
+This produces 325 unresolved-cell evaluation states.
+
+If each state contains nine canonical 8-bit candidate values, the raw evaluated trajectory is 23,400 bits (2,925 bytes).
+
+The calculated numerical values are themselves usable as immediate bit vectors after canonical numeric encoding.
+
+## 18. Hamming direct addressing
+
+Each 72-bit cell-state vector may be treated as a base vector for Hamming addressing.
+
+An exact derived vector is identified by:
+
+```text
+base state
++ Hamming distance d
++ combination rank k
+```
+
+rather than by enumerating all candidates.
+
+A deterministic unranking operation converts k into the exact d positions to flip.
+
+This lets the same HDE-generated state act as an address base for hashes, bus values, lookup keys, or later reconstruction stages.
+
+The full Hamming space of a 72-bit base contains 2^72 possible vectors, but that address space is not 2^72 bits of independent information. It is a deterministic space generated from the base and addressing rule.
+
+See [Turn trajectory and Hamming addressing](TRAJECTORY.md).
