@@ -26,10 +26,31 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 ### Documentation
 
 - [Origin of the idea](docs/ORIGIN.md)
+- [What HexDoku can do](docs/CAPABILITIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Protocol draft](docs/PROTOCOL.md)
 - [Project status and milestones](docs/STATUS.md)
 - [Contributing](CONTRIBUTING.md)
+
+---
+
+## What can HexDoku do?
+
+In practical terms, HexDoku aims to let compatible systems **reproduce a large shared state while exchanging only the new information needed to identify or complete that state**.
+
+Potential uses include:
+
+- sparse state synchronization
+- content-addressed caches
+- deterministic checkpoints
+- distributed agent/model state
+- partial transfers between nodes
+- rollback and regeneration
+- hierarchical Seed Cells
+
+The strongest gains are expected when the sender and receiver already share most of the underlying data or deterministic rules.
+
+See [What HexDoku can do](docs/CAPABILITIES.md) for the full explanation.
 
 ---
 
