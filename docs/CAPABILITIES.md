@@ -552,7 +552,7 @@ There are only 24 normal commits. The last active coordinate is a Terminal Refer
 
 The 25-table evaluation history is **DNA**. The fully materialized final 81-cell table is **Parity**.
 
-Standard Sudoku solving constraints are not required. The required property is deterministic, versioned reconstruction.
+HexDoku Core does not permanently require Sudoku, but the **first reference implementation does**: Sudoku Profile v1 uses ordinary row/column/3×3 constraints as the baseline.
 
 With nine 8-bit q values per evaluated coordinate:
 
@@ -743,3 +743,31 @@ D. block-content bytes
 ~~~
 
 A high reduction in A is useful, but it must not be reported as total-file compression unless B, C, and D are also accounted according to the experiment.
+
+## 31. Baseline first, payload second
+
+The development order is now explicit:
+
+~~~text
+Phase 1: Sudoku Profile v1
+  -> generate/measure probability tables
+  -> verify 25-stage determinism
+  -> measure DNA/HCT compression
+
+Phase 2: Payload Profile
+  -> design block/hash ordering payload
+  -> define terminal/selector capacity
+  -> compare against Sudoku baseline
+~~~
+
+This prevents payload-specific assumptions from contaminating the first compression measurements.
+
+## 32. T76 under the Sudoku baseline
+
+Although the general research model contains a 76-bit terminal container, Sudoku Profile v1 does not expose 76 bits of free selector entropy.
+
+Its 72 q bits are determined by Sudoku state and its four-bit extension is reserved as zero.
+
+The earlier 39.20% to 98.81% T76 ordering examples therefore describe a **conditional future Payload Profile**, not measured Sudoku-v1 compression.
+
+The Sudoku-v1 compression result must come from actual 325-state q trajectories.
