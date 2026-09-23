@@ -624,3 +624,46 @@ The relevant security question is how much uncertainty about the final Parity re
 HexDoku v0.2 does not claim proven cryptographic security.
 
 See [DNA / Parity Model v0.2](DNA_PARITY_SPEC.md).
+
+
+## 23. Permutation / address compression
+
+HexDoku can describe how a known set of blocks should be ordered.
+
+If sender and receiver already share or can retrieve blocks by hash/ID, the sender may avoid transmitting a full explicit permutation.
+
+~~~text
+explicit ID order
+->
+HexDoku descriptor + residual ordering data
+~~~
+
+The final Parity acts as an ordering/address map.
+
+HDE reconstructs the Parity, resolves the referenced block IDs, and concatenates the blocks in canonical order.
+
+This is most useful when block contents are already shared or content-addressable.
+
+## 24. Not a universal permutation shortcut
+
+An arbitrary permutation of n distinct items has n! possibilities.
+
+For 81 items:
+
+~~~text
+log2(81!) ≈ 401.17 bits
+~~~
+
+So HexDoku cannot universally encode every arbitrary 81-item permutation losslessly below that information requirement without relying on additional shared information or constraints.
+
+The useful cases are those where the order has structure, is generated from shared rules, is drawn from a restricted family, is predictable from previous state, or requires only residual exceptions.
+
+## 25. Downstream compression effect
+
+A HexDoku-generated order may place related blocks near one another.
+
+If that happens, conventional delta/dictionary/entropy codecs may compress the reordered content better.
+
+This is a secondary hypothesis and requires measured benchmarks.
+
+See [Permutation / Address Compression](PERMUTATION_ADDRESSING.md).
