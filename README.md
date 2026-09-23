@@ -28,6 +28,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [Origin of the idea](docs/ORIGIN.md)
 - [What HexDoku can do](docs/CAPABILITIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [Turn trajectory and optional Hamming addressing](docs/TRAJECTORY.md)
 - [Protocol draft](docs/PROTOCOL.md)
@@ -88,35 +89,39 @@ canonical reconstructed bytes
 
 HDC may be computationally expensive. HDE is intended to be deterministic, reproducible, and simpler to execute.
 
-## 25-turn evaluation trajectory
+## DNA / Parity trajectory
 
-For a board with 25 unresolved cells, HexDoku currently defines the HDE trajectory as **25 pre-fix turns**. One cell becomes fixed per turn, while HDE evaluates every still-unresolved coordinate before that fixation.
+For the current 25-unresolved-coordinate profile, HexDoku defines **25 canonical evaluation tables but only 24 normal commits**.
 
-```text
-25 + 24 + ... + 1 = 325 evaluated cell states
-```
-
-If each unresolved cell deterministically produces nine 8-bit candidate values, the raw trajectory contains:
-
-```text
-325 × 9 × 8 = 23,400 bits = 2,925 bytes
-```
-
-These calculated values may themselves be used as canonical immediate bit values.
-
-HexDoku now defines a project-specific **Hamming Rank (HR) from 0 to 8**:
-
-```text
-HR0 = one candidate remains; logically determined, even if not yet committed
+~~~text
+P0  -> 25 unresolved coordinates
+P1  -> 24
 ...
-HR8 = all nine candidates remain; maximum unresolved multiplicity
-```
+P23 -> 2
+P24 -> 1 Terminal Reference coordinate
+~~~
 
-Within every turn, **calculation positions are always scanned in fixed board order: left-to-right across the top row, then row-by-row from top to bottom (`r1c1 → r1c9 → r2c1 → ... → r9c9`)**. Filled cells are skipped. HR and candidate tables are calculated from that scan. Any later commit/compression priority is a separate deterministic stage.
+The initial 25 unresolved coordinates are fixed once in row-major order (top-to-bottom, left-to-right). HR and probability values never choose the next coordinate.
 
-Standard bitwise Hamming distance, if used, is a separate optional addressing mechanism and is no longer the meaning of “Hamming Rank”.
+The tables contain:
 
-See [Canonical Order v0.1](docs/CANONICAL_ORDER.md) and [Turn trajectory](docs/TRAJECTORY.md).
+~~~text
+25 + 24 + ... + 1 = 325 evaluated coordinate states
+~~~
+
+With nine 8-bit candidate values per coordinate, the raw q-only DNA trajectory is:
+
+~~~text
+325 × 9 × 8 = 23,400 bits = 2,925 bytes
+~~~
+
+The first 24 transitions use a versioned deterministic resolver. Standard Sudoku row/column/box rules are **not required**.
+
+The final coordinate is a **Terminal Reference**. It does not have to contain a digit 1..9; its canonical content is resolved or checked against the final **Parity**, defined as the fully materialized 81-cell table.
+
+The 25-table evaluation trajectory is **DNA**. The completed 81-cell reference table is **Parity**.
+
+See [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md).
 
 ---
 
@@ -166,9 +171,9 @@ The design goal is that two compatible nodes given the same Seed Cell and the sa
 
 ---
 
-## Solved Sudoku as parity / topology
+## DNA / Parity topology
 
-The original HexDoku idea uses a **solved Sudoku board** not merely as a puzzle answer, but as a reusable structural object.
+The current HexDoku model uses a 9×9 board as a deterministic coordinate topology. Standard Sudoku constraints are optional rather than normative. The fully materialized 81-cell final table is called **Parity**, while the 25-stage evaluation-table trajectory is called **DNA**.
 
 Possible roles include:
 
