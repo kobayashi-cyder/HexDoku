@@ -1,0 +1,79 @@
+# Project Status
+
+Last updated: 2026-09-23
+
+## Current phase
+
+HexDoku is in the **formalization and reference-test phase**.
+
+The architecture has a defined direction, but performance and scaling claims remain unverified.
+
+## Defined concepts
+
+- Seed Cell as a minimal bootstrap descriptor
+- HexDoku ID / serial
+- versioned deterministic reconstruction
+- content-addressed chunk references
+- hash-based integrity verification
+- solved Sudoku as a reusable layout / parity / dependency map
+- rollback-first recovery
+- regeneration when rollback and source recovery are impossible
+- bit-perfect reconstruction as the first acceptance criterion
+
+## Not yet established
+
+The following should be treated as open research questions:
+
+- practical compression advantage
+- storage advantage after counting shared dependencies
+- bandwidth reduction on real workloads
+- reconstruction latency at scale
+- useful error-correction properties
+- optimal HexDoku board construction
+- formal information-theoretic bounds
+- distributed AI/model-state benefit
+- security against malicious manifests or peers
+
+## Required evidence before stronger claims
+
+A result should include:
+
+1. source corpus
+2. exact code version
+3. Seed Cell size
+4. all external/shared storage bytes
+5. bytes transferred
+6. reconstruction time
+7. hardware/software environment
+8. original digest
+9. reconstructed digest
+10. direct byte comparison
+
+## Near-term milestones
+
+### M0 — Formal schema
+Define a canonical Seed Cell and rule-version format.
+
+### M1 — One-board reference implementation
+Use one fixed solved 9x9 board and one fixed corpus.
+
+### M2 — Bit-perfect cross-process reconstruction
+Prove exact reconstruction in a fresh process.
+
+### M3 — Partial-cache transfer test
+Measure bytes transferred at different cache hit rates.
+
+### M4 — Corruption and rollback test
+Inject corruption and verify rollback behavior.
+
+### M5 — Cross-implementation test
+Reproduce identical bytes using two independent implementations.
+
+### M6 — Comparative benchmark
+Compare against simple baselines such as full transfer, ordinary content-addressed deduplication, and conventional compression.
+
+## Publication principle
+
+Experimental hypotheses should be easy to distinguish from measured results.
+
+The project should prefer a small falsifiable claim over a broad unverifiable one.
