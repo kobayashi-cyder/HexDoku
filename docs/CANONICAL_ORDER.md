@@ -102,9 +102,16 @@ target coordinate = E24
 
 E24 is the Terminal Reference coordinate.
 
-Its final cell content may be a canonical typed value and does not need to be a digit 1..9.
+For the 8-bit-q terminal profile:
 
-Its final interpretation is supplied/verified by the Parity reference or equivalent deterministic source.
+~~~text
+Qbits24 = Encode8(q1)||...||Encode8(q9)  # fixed digit order 1..9
+T76     = Qbits24 || terminal_extension4
+~~~
+
+The 4-bit terminal extension is unrestricted 0..15 and is not HR.
+
+T76 is interpreted by the versioned terminal/permutation rule. The final cell does not need to be a digit 1..9.
 
 ## 7. DNA serialization order
 
@@ -143,8 +150,19 @@ HCT must be available to HDE before any HCT-coded payload is decoded.
 For all active (t,c):
 
 ~~~text
-Q_HDC(t,c)  == Q_HDE(t,c)
+Q_HDC(t,c) == Q_HDE(t,c)
+~~~
+
+For HR-bearing states:
+
+~~~text
 HR_HDC(t,c) == HR_HDE(t,c)
+~~~
+
+At P24:
+
+~~~text
+T76_HDC == T76_HDE
 ~~~
 
 For t=0..23:
