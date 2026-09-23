@@ -211,6 +211,53 @@ The first implementation should optimize for auditability, not performance:
 Only after this passes should more complex layouts or distributed execution be added.
 
 
+## HDC / HDE codec boundary
+
+HexDoku names its two primary codec stages explicitly.
+
+### HDC — HexDoku Compressor
+
+HDC is the analysis and reduction stage.
+
+Responsibilities may include:
+
+- finding shared chunks;
+- finding deterministic generators;
+- identifying arithmetic dependencies;
+- selecting a HexDoku layout;
+- constructing Seed Cells;
+- emitting residual bits;
+- emitting hashes and references;
+- choosing a versioned reconstruction recipe.
+
+HDC is allowed to be computationally expensive.
+
+### HDE — HexDoku Expander
+
+HDE is the deterministic reconstruction stage.
+
+Responsibilities include:
+
+- resolving the exact rule versions;
+- resolving required references;
+- reconstructing omitted deterministic bits;
+- applying canonical ordering;
+- verifying chunk hashes;
+- producing the final bit string;
+- validating the final root hash.
+
+HDE should have a much narrower behavior surface than HDC.
+
+Normative target:
+
+```text
+HDE(HDC(X), U) = X
+```
+
+where U is the exact shared reconstruction universe required by the selected HexDoku version.
+
+If U is unavailable or verification fails, HDE must fail rather than silently producing a different state.
+
 ## 10. Descriptor-only communication bus
 
 HexDoku can separate the transport layer from semantic reconstruction.
