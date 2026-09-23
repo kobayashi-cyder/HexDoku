@@ -446,3 +446,40 @@ The 5-bit coordinate value is valid only when the negotiated board/mask context 
 The canonical-transform mode is valid only for ParityGrids belonging to the negotiated canonical board's Sudoku-preserving transformation orbit.
 
 Version/integrity/framing overhead must be reported separately from these logical payload widths.
+
+## 21. HR branch-reference profile
+
+An optional branch-reference profile may associate references with the non-anchor candidates implied by HR.
+
+For each HR-bearing coordinate:
+
+~~~text
+candidate_count = HR + 1
+alternative_reference_count = HR
+~~~
+
+The anchor branch is deterministic and implicit.
+
+Alternative branches are assigned slot indexes in canonical candidate order.
+
+A logical record may therefore contain only the reference values/indexes themselves when the receiver can recompute HR and slot order:
+
+~~~text
+branch_reference_dictionary_id   # optional/shared
+branch_reference_values[]        # target-only or full-DNA scope
+branch_reference_profile_version
+~~~
+
+Supported accounting scopes:
+
+~~~text
+target-only: B = sum_t HR(t,E_t)
+commit-only: B = sum_{t=0..23} HR(t,E_t)
+full-DNA:    B = sum_t sum_{c in active(t)} HR(t,c)
+~~~
+
+If references are `w` bits each, raw reference field width is `B × w` bits, plus any dictionary/manifest overhead.
+
+This raw width is not an independent-information claim. Benchmarks must also report deduplication and, where measurable, the number K of reachable complete branch/reference assignments.
+
+Receiver validation must reject a reference stream whose count or canonical slot mapping does not match the regenerated HR trajectory.
