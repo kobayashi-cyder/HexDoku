@@ -15,7 +15,7 @@ The architecture has a defined direction, but performance and scaling claims rem
 - versioned deterministic reconstruction
 - content-addressed chunk references
 - hash-based integrity verification
-- solved Sudoku as a reusable layout / parity / dependency map
+- Sudoku Profile v1 as the first reference rule profile
 - rollback-first recovery
 - regeneration when rollback and source recovery are impossible
 - bit-perfect reconstruction as the first acceptance criterion
@@ -54,8 +54,14 @@ A result should include:
 ### M0 — Formal schema
 Define a canonical Seed Cell and rule-version format.
 
-### M1 — One-board reference implementation
-Use one fixed solved 9x9 board and one fixed corpus.
+### M1 — Sudoku Profile v1 reference implementation
+Implement one fixed 9×9 Sudoku baseline with 25 unresolved coordinates, deterministic q tables, HR, 24 validity-preserving commits, and ParityGrid verification.
+
+### M1A — Probability trajectory benchmark
+Generate a corpus of Sudoku Profile v1 boards and measure q-value histograms, entropy, repeated values, turn-to-turn reuse, HCT size, and compression of the raw 2,925-byte trajectory.
+
+### M1B — Payload profile design gate
+Do not freeze a payload-specific terminal/permutation rule until the Sudoku v1 baseline is measured. T76 is not counted as 76 free payload bits in sudoku-v1.
 
 ### M2 — Bit-perfect cross-process reconstruction
 Prove exact reconstruction in a fresh process.
