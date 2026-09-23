@@ -91,9 +91,49 @@ Thus equal evaluated values never create an ordering ambiguity.
 
 The resulting ordered list is called the **Canonical Candidate Table (CCT)** for that cell and turn.
 
-## 5. Cell ordering inside a turn
+## 5. Calculation-position order inside a turn
 
-All unresolved coordinates are sorted by the following canonical key:
+The **calculation-position order is fixed by board geometry and never by HR**.
+
+Coordinates are scanned row-major:
+
+```text
+r1c1 -> r1c2 -> ... -> r1c9
+  -> r2c1 -> r2c2 -> ... -> r2c9
+  -> ...
+  -> r9c1 -> ... -> r9c9
+```
+
+Equivalent coordinate IDs are:
+
+```text
+r1c1 = 0
+r1c2 = 1
+...
+r1c9 = 8
+r2c1 = 9
+...
+r9c9 = 80
+```
+
+Already-filled cells are skipped, but their positions remain part of the fixed board coordinate system.
+
+Therefore every turn calculates unresolved cells in exactly the same geometric sequence:
+
+```text
+top row: left -> right
+then next row
+...
+bottom row: left -> right
+```
+
+This **calculation order** is distinct from later commit/compression priority.
+
+## 5A. Commit / compression priority after calculation
+
+Only after all unresolved coordinates for the turn have been calculated in row-major order may the implementation derive a priority key for commit or compression decisions.
+
+Current draft priority:
 
 ```text
 1. HR ascending
@@ -101,20 +141,11 @@ All unresolved coordinates are sorted by the following canonical key:
 3. coordinate ID ascending
 ```
 
-Coordinate ID is row-major:
-
-```text
-r1c1 = 0
-r1c2 = 1
-...
-r9c9 = 80
-```
-
-This guarantees one logical order even if evaluation is physically parallel.
+Thus HR does not reorder the calculation scan. It ranks already-calculated cell states for the next deterministic action.
 
 ## 6. Commit order
 
-The first coordinate in the canonical cell order is the next coordinate to commit.
+The first coordinate in the post-calculation commit-priority order is the next coordinate to commit.
 
 Its committed digit must be the digit selected by the versioned unique-solution rule.
 
@@ -195,13 +226,16 @@ Physical execution order is not logical order.
 Workers may evaluate coordinates or candidate values concurrently. Results are buffered and committed only after canonical keys are available.
 
 ```text
-parallel evaluation
+row-major logical scan
        |
        v
-collect all results for turn
+parallel workers may calculate internally
        |
        v
-HR + CCT + coordinate canonical sort
+collect results tagged by fixed coordinate ID
+       |
+       v
+HR + CCT commit-priority sort
        |
        v
 one deterministic commit
