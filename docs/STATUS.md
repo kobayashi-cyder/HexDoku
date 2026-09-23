@@ -10,6 +10,8 @@ The architecture has a defined direction, but performance and scaling claims rem
 
 ## Defined concepts
 
+- HDC-Lite v1 9+9+7 Parity-first mask search (36 masks / 6-bit rank)
+
 - Seed Cell as a minimal bootstrap descriptor
 - HexDoku ID / serial
 - versioned deterministic reconstruction
@@ -62,6 +64,9 @@ Generate a corpus of Sudoku Profile v1 boards and measure q-value histograms, en
 
 ### M1B — Payload profile design gate
 Do not freeze a payload-specific terminal/permutation rule until the Sudoku v1 baseline is measured. T76 is not counted as 76 free payload bits in sudoku-v1.
+
+### M1C — HDC-Lite 36-mask benchmark
+From completed Sudoku ParityGrids, enumerate the 36 fixed `9+9+7` masks, replay HDE exactly, reject non-round-tripping masks, select the canonical best mask, and measure HDC search/HDE decode time plus q-trajectory compression.
 
 ### M2 — Bit-perfect cross-process reconstruction
 Prove exact reconstruction in a fresh process.
