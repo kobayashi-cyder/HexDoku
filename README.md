@@ -33,6 +33,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [HDC-Lite v1](docs/HDC_LITE_V1.md)
 - [HDE Minimum Packet](docs/HDE_MIN_PACKET.md)
 - [One-Board Derived Information Model](docs/ONE_BOARD_DERIVED_INFORMATION.md)
+- [Order-Bearing Sudoku Profile v0](docs/ORDER_BEARING_PROFILE_V0.md)
 - [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [HR Branch Reference Channel](docs/HR_BRANCH_REFERENCES.md)
@@ -170,6 +171,17 @@ For 25 distinct holes, the absolute arbitrary-order space is `25!`, or `log2(25!
 Against a hypothetical `board + standalone order` baseline, the maximum order-field omission is about **25.62%** for the 243-bit board and **20.53%** for the 324-bit board. If K=1, the order-derived saving is 0%.
 
 See [One-Board Derived Information Model](docs/ONE_BOARD_DERIVED_INFORMATION.md).
+
+### Fixed order vs information-bearing order
+
+The baseline `sudoku-v1` still keeps `E0..E24` fixed in row-major order. Therefore its independent order-channel capacity is **0 bits** even though the fixed order itself needs no transmission.
+
+To test order as a derived information channel, the separate experimental `sudoku-order-bearing-mrv-v0` profile dynamically chooses the next coordinate by minimum candidate count (minimum HR), then row-major tie-break.
+
+For one fixed ParityGrid and the current 36-mask `9+9+7` family, the hard upper bound is only `K <= 36`, or at most **5.17 bits** of order capacity. The current single-Parity reference sample accepted 27 masks with 27 distinct orders: `K=27`, `log2(K)≈4.755 bits`.
+
+The often-mentioned `log2(25!)≈83.68 bits` remains only the absolute ceiling for an unrestricted 25-element permutation family; it is not a measured capacity of the current 36-mask profile.
+
 
 ---
 ## DNA / Parity trajectory
