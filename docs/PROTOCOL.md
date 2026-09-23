@@ -135,3 +135,59 @@ Protocol tests should include:
 - rollback available
 - rollback unavailable
 - cross-implementation byte equality
+
+
+## 11. Turn trajectory fields
+
+A rule version may define a 25-turn pre-fix evaluation trajectory.
+
+For each turn:
+
+1. enumerate currently unresolved coordinates in canonical order;
+2. calculate candidate values for digits 1 through 9;
+3. apply canonical numeric encoding;
+4. apply canonical sort/tie-break rules when the protocol uses ranked candidate tables;
+5. emit or reuse the resulting immediate bit vectors;
+6. fix exactly one cell according to the rule;
+7. continue to the next turn.
+
+For 25 initial unresolved cells, this yields 325 evaluated cell states.
+
+## 12. Hamming address record
+
+When a derived bit vector is referenced relative to a canonical 72-bit base state, a compact logical record may contain:
+
+```text
+turn_id
+cell_index
+hamming_distance
+combination_rank
+rule_version
+optional verification bits
+```
+
+If turn and cell are already implied by the state machine, they may be omitted.
+
+The combination rank is interpreted only under the exact versioned combinatorial ranking convention.
+
+The receiver:
+
+1. recreates the canonical base state with HDE;
+2. un-ranks the selected combination of bit positions;
+3. flips exactly those positions;
+4. obtains the exact derived bit vector;
+5. optionally verifies it by hash or check value.
+
+The protocol must never require exhaustive Hamming enumeration to resolve a single address.
+
+## 13. Information accounting
+
+Generated Hamming address space is not counted as independently compressed source information.
+
+Benchmarks must distinguish:
+
+- bits explicitly transmitted;
+- bits regenerated deterministically;
+- shared decoder state;
+- address-space size;
+- actual independent source information represented.
