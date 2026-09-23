@@ -700,3 +700,46 @@ A compact 13-character form is possible with a custom fixed-width radix-64 encod
 Standard byte-oriented Base64url of a 10-byte container is 14 unpadded characters.
 
 T76 should be described as a 76-bit selector width, not automatically as 76-bit cryptographic strength. Modern confidentiality/authentication should use standard cryptographic primitives.
+
+## 28. What compression ratio does T76 provide?
+
+The answer depends on the baseline.
+
+For 25 elements:
+
+~~~text
+25 × 5-bit explicit local IDs = 125 bits
+T76                           = 76 bits
+reduction                     = 39.20%
+~~~
+
+For wider identifiers, if the identifier set itself is already shared:
+
+~~~text
+25 × 32-bit IDs   : 800  -> 76 bits = 90.50% reduction
+25 × 64-bit IDs   : 1600 -> 76 bits = 95.25% reduction
+25 × 256-bit IDs  : 6400 -> 76 bits = 98.81% reduction
+~~~
+
+The 256-bit case means that the receiver already knows the 25 hashes/objects and only needs to learn their order. It does not mean 6,400 bits of unknown hash information can universally be reconstructed from 76 bits.
+
+## 29. T76 is already optimal for its selected family
+
+A full family of 2^76 distinguishable orders requires at least 76 bits.
+
+Therefore, once a HexDoku context defines exactly that family, T76 has no further lossless compression headroom as a uniform selector.
+
+Additional savings must come from fewer reachable orders, nonuniform order probabilities and entropy coding, prediction from previous state, shared/deterministic T76 derivation, repeated-selector omission, or residual/delta coding across multiple HexDoku units.
+
+## 30. Required benchmark distinction
+
+Report:
+
+~~~text
+A. incremental selector bytes
+B. complete HexDoku descriptor bytes
+C. block-universe bytes
+D. block-content bytes
+~~~
+
+A high reduction in A is useful, but it must not be reported as total-file compression unless B, C, and D are also accounted according to the experiment.
