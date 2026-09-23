@@ -1651,6 +1651,256 @@ a Higgs-like internal connection
 
 without inserting these factors independently.
 
+
+---
+
+## Constrained state spaces, excitation gaps, and the "local cosmo" analogy
+
+The current framework should distinguish between:
+
+~~~text
+microscopic degrees of freedom that exist
+~~~
+
+and:
+
+~~~text
+effective degrees of freedom that are actually accessible at a given energy and timescale
+~~~
+
+A degree of freedom can exist while remaining effectively invisible if it is strongly constrained or separated by a large excitation gap.
+
+For a mode q_i with local quadratic dynamics:
+
+~~~text
+V(q_i) ~= (1/2) k_i q_i^2
+~~~
+
+the characteristic frequency is schematically:
+
+~~~text
+omega_i ~ sqrt(k_i / I_i)
+~~~
+
+and the excitation scale is:
+
+~~~text
+Delta_i ~ hbar omega_i
+~~~
+
+If an experiment satisfies:
+
+~~~text
+E << Delta_i
+~~~
+
+then that direction is effectively frozen.
+
+If:
+
+~~~text
+E >= Delta_i
+~~~
+
+the mode becomes dynamically accessible.
+
+This motivates a scale-dependent effective degree-of-freedom count:
+
+~~~text
+N_eff(E)
+=
+number of modes with Delta_i below the accessible energy scale
+~~~
+
+### Geometrically compact directions
+
+A hidden direction can also be difficult to excite because it is geometrically compact.
+
+For an internal direction of characteristic size r_i, a generic Kaluza-Klein-like excitation scale behaves as:
+
+~~~text
+E_i ~ hbar c / r_i
+~~~
+
+so:
+
+~~~text
+smaller r_i
+    ->
+higher excitation threshold
+    ->
+less visible low-energy freedom
+~~~
+
+This gives a precise version of the intuitive phrase "the direction is shrunk."
+
+The present framework should therefore distinguish:
+
+~~~text
+geometrically small direction: r_i small
+dynamically stiff direction:    Delta_i large
+~~~
+
+Both can make a degree of freedom effectively absent from low-energy observations.
+
+### Phase transitions as release of effective freedom
+
+A phase transition need not create degrees of freedom from nothing.
+
+A more conservative candidate mechanism is:
+
+~~~text
+strongly constrained / gapped state space
+    ->
+control parameter changes
+    ->
+some gaps decrease
+    ->
+previously frozen modes become accessible
+    ->
+new effective coordinates and collective modes appear
+~~~
+
+If a common order parameter chi controls several sectors, write schematically:
+
+~~~text
+r_i = r_i(chi)
+Delta_i = Delta_i(chi)
+~~~
+
+Then a transition in chi can reorganize which directions are dynamically available.
+
+The release can occur simultaneously or in stages.
+
+This is preferable to saying that a transition literally creates all later dimensions and internal degrees of freedom ex nihilo.
+
+---
+
+## Water evaporation as a controlled analogy
+
+Liquid water provides a useful classical analogy for constrained versus accessible state space.
+
+A water molecule already possesses translational, rotational, vibrational, and electronic degrees of freedom.
+
+In the liquid, however, neighboring molecules and the hydrogen-bond network strongly constrain the set of configurations explored on a given timescale.
+
+Evaporation changes the accessible state space:
+
+~~~text
+liquid local environment
+    ->
+molecular escape through the interface
+    ->
+gas-phase motion with much larger accessible translational phase space
+~~~
+
+The entropy relation:
+
+~~~text
+S = k_B ln Omega
+~~~
+
+expresses this in terms of accessible microstate count.
+
+For vaporization:
+
+~~~text
+Omega_gas >> Omega_liquid
+~~~
+
+and therefore, under ordinary conditions:
+
+~~~text
+Delta S_vap > 0
+~~~
+
+The important lesson is not that water literally contains a separate universe.
+
+The useful structural analogy is:
+
+> A local interacting system can possess many microscopic degrees of freedom while only a restricted subset of its state space is effectively accessible; a phase transition can greatly enlarge that accessible region.
+
+This is the intended physical meaning of the informal "local cosmo" language.
+
+### A minimal working definition of "cosmo" for this project
+
+To prevent the word from becoming purely metaphorical, define a local effective cosmo as a triple:
+
+~~~text
+C = (X, C_constraints, Delta)
+~~~
+
+where:
+
+~~~text
+X              = state space
+C_constraints  = active constraints / couplings
+Delta          = excitation-gap spectrum
+~~~
+
+Optionally include a metric or response kernel:
+
+~~~text
+G_ij
+~~~
+
+that determines distances, kinetic cost, or response in state space.
+
+A phase transition is then represented as:
+
+~~~text
+C_before
+    ->
+C_after
+~~~
+
+with changes in:
+
+~~~text
+accessible region of X
+constraint structure
+gap spectrum
+effective dimensionality
+collective modes
+symmetry
+~~~
+
+This definition is intentionally general enough to describe:
+
+~~~text
+molecular phase transitions
+condensed-matter order
+Higgs-like vacuum transitions
+compact / hidden internal directions
+candidate pre-geometric transitions
+~~~
+
+without claiming that these systems are physically identical.
+
+### Current preferred interpretation
+
+The strongest current formulation is:
+
+> The pre-transition phase need not be "undefined." It may instead contain a larger underlying state space whose directions are strongly constrained, compact, gapped, or not yet separated into the effective coordinates used by the post-transition observer.
+
+The corresponding emergence chain is:
+
+~~~text
+underlying state space
+    ->
+strong constraints / large gaps
+    ->
+phase transition
+    ->
+gap reduction / constraint reorganization
+    ->
+effective directions become accessible
+    ->
+collective modes become observable as particles / fields
+~~~
+
+This is currently a better-defined branch than saying that the later degrees of freedom did not exist at all.
+
 ## Canonical current map
 
 The current physically disciplined map is:
