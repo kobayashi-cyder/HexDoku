@@ -558,3 +558,45 @@ If all 2^76 values are uniformly secret, exhaustive selector search has at most 
 Therefore T76 should not be advertised as a standalone modern encryption key.
 
 For confidentiality/authentication, use a standard cryptographic construction and treat T76 as a selector, nonce/reference component, truncated tag only where appropriate, or one part of a larger keyed state.
+
+## 21. T76 compression accounting
+
+The terminal selector is a 76-bit state identifier.
+
+For a profile exposing all 2^76 selector states, 76 bits is the minimum uniform lossless selector width.
+
+The apparent compression gain comes from replacing a larger explicit ordering representation with this shared-context selector.
+
+For a 25-element example:
+
+~~~text
+naive 5-bit ID list: 25 × 5 = 125 bits
+T76 selector:                  76 bits
+reduction:                     39.20%
+~~~
+
+If the receiver already has the same ID/hash universe, wider explicit identifier lists give larger order-description reductions:
+
+~~~text
+25 × 32-bit IDs  -> 90.50% reduction
+25 × 64-bit IDs  -> 95.25% reduction
+25 × 256-bit IDs -> 98.81% reduction
+~~~
+
+These figures exclude any context that is already shared by assumption.
+
+The full descriptor size must add every non-shared Seed, rule identifier, universe/manifest reference, residual, and verification field.
+
+## 22. Full 25! space versus T76 family
+
+A complete arbitrary 25-element permutation requires:
+
+~~~text
+log2(25!) ≈ 83.68 bits
+~~~
+
+and therefore 84 fixed bits if every order must be supported.
+
+T76 supports at most 2^76 of those orders.
+
+Consequently, T76 is a compact selector for a **restricted/contextual permutation family**, not a universal 76-bit encoding of all 25-element permutations.
