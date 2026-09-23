@@ -633,3 +633,22 @@ A standalone 81-way coordinate would need 7 fixed bits; `3-bit row + 3-bit colum
 For 25 distinct holes, the absolute arbitrary-order space is `25!`, or about 83.6815 bits. Actual order-channel capacity is `log2(K)` where K is the number of valid solve orders HDC can deliberately realize and HDE can reproduce.
 
 See `docs/ONE_BOARD_DERIVED_INFORMATION.md`.
+
+## 29. Measured order-bearing boundary
+
+The fixed-order `sudoku-v1` baseline has one canonical E-order and therefore zero independent order-channel capacity.
+
+The separate experimental dynamic order-bearing profile was tested on 500 completed Sudokus using the 36-mask fixed `9+9+7` HDC family.
+
+~~~text
+18,000 mask evaluations
+3,780 exact round trips
+367/500 boards covered
+133/500 NO_MASK
+K = 0..30
+successful-board mean log2(K) = 2.928 bits
+~~~
+
+The current fixed family therefore has zero guaranteed independent order bits. The architecture must increase HDC construction diversity if a non-zero minimum order channel is a requirement.
+
+At the same time, derived metadata omission remains valid: the received board can still determine coordinates, deterministic order, HR, and branch-slot positions without transmitting those fields separately.
