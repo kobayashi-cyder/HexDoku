@@ -55,6 +55,23 @@ of candidate-value output before any additional compression or omission.
 
 The numerical representation, scaling, rounding and saturation rules must be versioned.
 
+## 2A. Calculation position order
+
+At every turn, unresolved coordinates are visited in fixed board order:
+
+```text
+r1c1 -> r1c2 -> ... -> r1c9
+-> r2c1 -> ... -> r2c9
+-> ...
+-> r9c1 -> ... -> r9c9
+```
+
+This is left-to-right on the top row, then each row from top to bottom.
+
+Filled coordinates are skipped. HR never changes this calculation-position order.
+
+The position index is therefore a stable row-major index in the range 0..80.
+
 ## 3. Canonical evaluation order
 
 The same logical state must always generate the same bit sequence.
@@ -62,7 +79,7 @@ The same logical state must always generate the same bit sequence.
 A rule version therefore fixes:
 
 1. turn order;
-2. unresolved-coordinate order;
+2. unresolved-coordinate calculation order: row-major, top-to-bottom and left-to-right;
 3. candidate-number order or probability-sorted order;
 4. tie-breaking rule;
 5. numeric quantization;
@@ -108,7 +125,7 @@ This HR is the primary ordering rank for compression and expansion.
 
 It is not the standard bitwise Hamming distance.
 
-Within each turn, unresolved cells are canonically ordered by:
+Within each turn, unresolved cells are first **calculated in row-major coordinate order**. After all current-turn values exist, a separate commit/compression priority may be derived as:
 
 ```text
 HR ascending
