@@ -58,6 +58,34 @@ See [What HexDoku can do](docs/CAPABILITIES.md) for the full explanation.
 
 ---
 
+## HDC / HDE
+
+HexDoku defines two primary codec components:
+
+- **HDC — HexDoku Compressor**  
+  Converts source data into a compact HexDoku representation such as a Seed Cell, rule references, hashes, shared-state references, arithmetic reconstruction rules, and residual bits.
+
+- **HDE — HexDoku Expander**  
+  Takes the compact HexDoku representation and deterministically reconstructs the canonical original bit string.
+
+```text
+source bytes
+   |
+   v
+  HDC
+   |
+   v
+Seed Cell + references + residual bits
+   |
+   v
+  HDE
+   |
+   v
+canonical reconstructed bytes
+```
+
+HDC may be computationally expensive. HDE is intended to be deterministic, reproducible, and simpler to execute.
+
 ## Core idea
 
 HexDoku separates the system into a very small **Seed Cell** and a deterministic reconstruction path.
