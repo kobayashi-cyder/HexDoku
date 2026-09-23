@@ -1901,6 +1901,273 @@ collective modes become observable as particles / fields
 
 This is currently a better-defined branch than saying that the later degrees of freedom did not exist at all.
 
+
+---
+
+## Reverse inference from present conserved quantities
+
+The present branch can be made more concrete by reversing the usual direction of the cosmological problem.
+
+Instead of asking:
+
+~~~text
+What initial microstate should be assumed?
+~~~
+
+ask:
+
+~~~text
+Given quantities and correlations that survive to the present,
+what pre-transition state spaces remain compatible with them?
+~~~
+
+### Conservation law to use
+
+In general relativity the robust local conservation statement is:
+
+~~~text
+nabla_mu T^(mu nu) = 0
+~~~
+
+For a homogeneous expanding universe this becomes the continuity equation:
+
+~~~text
+dot(rho) + 3 H (rho + p) = 0
+~~~
+
+This does not imply that a unique global "total energy of the whole universe" must exist in the same sense as in ordinary Newtonian mechanics.
+
+The useful conserved / transported information is instead encoded in local stress-energy evolution, conserved charges, entropy flow, and relic correlations.
+
+For standard components:
+
+~~~text
+nonrelativistic matter: rho_m proportional to a^-3
+radiation:             rho_r proportional to a^-4
+vacuum-like energy:    rho_vac approximately constant
+~~~
+
+These scaling laws allow present densities to constrain earlier states.
+
+### Entropy as a probe of accessible state count
+
+Energy alone cannot determine how many degrees of freedom carried it.
+
+Entropy adds information about accessible state count:
+
+~~~text
+S = k_B ln Omega
+~~~
+
+For a relativistic thermal plasma:
+
+~~~text
+s proportional to g_*s T^3
+~~~
+
+and under approximately adiabatic expansion:
+
+~~~text
+s a^3 approximately constant
+~~~
+
+The effective thermal degree count g_*s therefore provides an established example of scale- and temperature-dependent accessible degrees of freedom.
+
+This is directly analogous to the project quantity:
+
+~~~text
+N_eff(E, chi)
+~~~
+
+but the two should not be identified without a model.
+
+The useful principle is:
+
+> Present entropy and relic temperatures can constrain how many effective degrees of freedom were active at earlier epochs.
+
+### Reverse-problem data vector
+
+Define a schematic present-information vector:
+
+~~~text
+I_now =
+{
+stress-energy densities,
+entropy density,
+conserved charges,
+particle abundances,
+radiation temperatures,
+correlation functions,
+relic spectra,
+topological / defect constraints
+}
+~~~
+
+Then the theory should solve an inverse problem:
+
+~~~text
+C_before
+    ->
+transition dynamics
+    ->
+C_after
+    ->
+I_now
+~~~
+
+and retain only pre-transition models whose forward evolution reproduces the measured I_now.
+
+This is stronger than fitting one present quantity at a time.
+
+### Degree release versus geometric expansion
+
+Two distinct effects must be separated.
+
+First, accessible state space may expand:
+
+~~~text
+N_eff increases
+Omega increases
+effective dimensionality may increase
+~~~
+
+Second, physical spacetime may expand:
+
+~~~text
+a(t) increases
+~~~
+
+A phase transition can produce the first without producing the second.
+
+To drive accelerated geometric expansion in ordinary GR, the effective stress-energy must satisfy:
+
+~~~text
+rho + 3 p < 0
+~~~
+
+For vacuum-like energy:
+
+~~~text
+p approximately -rho
+~~~
+
+so accelerated expansion is possible.
+
+The working "Bang" hypothesis should therefore be written as two coupled transitions:
+
+~~~text
+release / reorganization of effective degrees of freedom
++
+conversion or persistence of vacuum-like stress-energy that drives geometry
+~~~
+
+rather than as a simple explosion into empty space.
+
+### A minimal instability model
+
+Let chi control the constrained state-space phase.
+
+Near a local configuration chi_0:
+
+~~~text
+V(chi) ~= V(chi_0)
+          + (1/2) V''(chi_0) (delta chi)^2
+~~~
+
+If:
+
+~~~text
+V''(chi_0) > 0
+~~~
+
+small deviations oscillate.
+
+If:
+
+~~~text
+V''(chi_0) = 0
+~~~
+
+a critical soft mode appears.
+
+If:
+
+~~~text
+V''(chi_0) < 0
+~~~
+
+the configuration is unstable and the relevant mode grows rather than oscillates.
+
+This provides a precise version of:
+
+~~~text
+stable constrained cosmo
+    ->
+softening
+    ->
+critical point
+    ->
+instability
+    ->
+rapid state-space reorganization
+~~~
+
+The characteristic expansion / growth rate and the geometric Hubble rate are not automatically the same quantity; a model must specify how chi couples to stress-energy and geometry.
+
+### Stored energy and redistribution
+
+The current framework should avoid saying that a Bang requires externally supplied fuel.
+
+A more conservative possibility is redistribution:
+
+~~~text
+energy stored in vacuum / constraints / curvature / internal modes
+    ->
+expansion work
++ particle excitations
++ radiation
++ internal excitations
++ residual vacuum energy
+~~~
+
+The relevant question is then not:
+
+~~~text
+How much external energy was injected?
+~~~
+
+but:
+
+~~~text
+What pre-transition energy-density and constraint structure
+could evolve into the observed post-transition contents?
+~~~
+
+### Falsifiable inverse target
+
+A useful candidate model must predict several present observables from the same pre-transition parameters.
+
+For example:
+
+~~~text
+theta_pre
+    ->
+rho_r today
+rho_m today
+entropy per comoving volume
+relic abundance pattern
+gravitational-wave / defect constraints
+coupling relations
+~~~
+
+If different observables require unrelated retuning of theta_pre, the model has not achieved unification.
+
+The strongest version of the present program is therefore:
+
+> Reconstruct the smallest pre-transition constrained state space consistent with all surviving conservation, entropy, charge, and correlation information.
+
+This turns the "ask today's conserved quantities" intuition into a concrete inverse problem rather than a metaphor.
+
 ## Canonical current map
 
 The current physically disciplined map is:
