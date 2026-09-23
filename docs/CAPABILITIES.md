@@ -857,3 +857,31 @@ capacity <= log2(K) bits
 ~~~
 
 This distinction prevents repeated, deterministic, or shared references from being counted as newly compressed source information.
+
+## 39. Derived-metadata omission from one received board
+
+The current HexDoku one-board baseline receives only the 25-hole Sudoku board.
+
+From that board, HDE can reconstruct the hole coordinates, solution values, deterministic solve order, HR trajectory, and the locations of HR-derived branch/reference slots.
+
+This means those metadata fields do not need separate wire representations when the decoder rules are pinned.
+
+~~~text
+coordinate list   -> omitted
+solution list     -> omitted
+order field       -> omitted when derivable
+HR list           -> omitted
+branch-slot map   -> omitted
+~~~
+
+The reference values stored in those slots are not automatically omitted; only their structural placement can be derived.
+
+## 40. Current order-compression boundary
+
+Twenty-five distinct hole coordinates have an absolute order-space ceiling of `log2(25!) ≈ 83.6815` bits.
+
+For the fixed 9+9+7 243-bit board, omitting a fully independent 83.6815-bit order field would reduce `326.6815 -> 243` bits, approximately 25.62%.
+
+For a generic 324-bit board, the analogous comparison is `407.6815 -> 324` bits, approximately 20.53%.
+
+These are upper-bound comparisons. If only K distinct valid solve orders are realizable, the real independent order capacity is `log2(K)`; if K=1, the order-derived saving is zero.
