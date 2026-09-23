@@ -209,3 +209,84 @@ The first implementation should optimize for auditability, not performance:
 - byte equality tests
 
 Only after this passes should more complex layouts or distributed execution be added.
+
+
+## 10. Descriptor-only communication bus
+
+HexDoku can separate the transport layer from semantic reconstruction.
+
+A sender may transmit only:
+
+```text
+Seed Cell
+HexDoku / board identifier
+rule and generator versions
+root / manifest hash
+chunk references
+residual bits or delta
+```
+
+Intermediate transport nodes may forward these descriptors without interpreting the final reconstructed application data.
+
+The receiver resolves the descriptors, executes the pinned reconstruction procedure, and accepts the result only if it produces the required canonical bit string and verification hash.
+
+A unique solution alone is not sufficient. The full path from solution to bytes must also be canonical and versioned.
+
+## 11. Canonical parallel reconstruction
+
+Substructures may be evaluated concurrently as long as the final ordering is independent of runtime completion order.
+
+The HexDoku layout can assign every partial result a fixed logical position.
+
+Therefore:
+
+```text
+physical execution order != logical serialization order
+```
+
+while still preserving:
+
+```text
+same Seed + same rules + same universe -> same final bytes
+```
+
+Probabilistic internal computation is allowed only when its accepted external output is determinized by fixed seeds, canonical selection, exact numerical rules, or final hash verification.
+
+## 12. Arithmetic reconstruction and omitted bits
+
+When one region of the final bit string is a deterministic arithmetic function of another region, only the independent information needs explicit representation.
+
+The expander recreates omitted predictable bits from the versioned rule.
+
+This can reduce the explicit Seed/residual representation for structured data.
+
+It cannot remove incompressible independent information.
+
+## 13. Asymmetric codec hypothesis
+
+HexDoku intentionally permits a computationally expensive compressor and a simpler deterministic expander.
+
+The compressor may search for:
+
+- reusable shared chunks,
+- deterministic generators,
+- arithmetic dependencies,
+- HexDoku layouts,
+- compact residual descriptions,
+- Seed Cell hierarchies.
+
+The expander only needs to execute the selected versioned reconstruction recipe.
+
+This creates a path to transfer ratios much higher than conventional self-contained ZIP archives on suitable workloads, particularly where decoder-side shared state is large.
+
+Any claim of total storage compression must still count all decoder dependencies and shared data.
+
+This ZIP comparison is currently a **testable design hypothesis, not a measured benchmark result**.
+
+## 14. Obfuscation versus security
+
+Increasing board size or structural complexity can make direct interpretation more difficult and may serve as an obfuscation layer.
+
+It must not be described as cryptographic confidentiality.
+
+Security-sensitive deployments should use authenticated encryption independently of HexDoku.
