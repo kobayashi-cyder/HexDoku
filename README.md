@@ -112,7 +112,7 @@ HR0 = one candidate remains; logically determined, even if not yet committed
 HR8 = all nine candidates remain; maximum unresolved multiplicity
 ```
 
-Within every turn, cells are canonically ordered by **HR ascending → candidate-value table → coordinate**. This order is shared by HDC and HDE, so parallel execution cannot change logical reconstruction order.
+Within every turn, **calculation positions are always scanned in fixed board order: left-to-right across the top row, then row-by-row from top to bottom (`r1c1 → r1c9 → r2c1 → ... → r9c9`)**. Filled cells are skipped. HR and candidate tables are calculated from that scan. Any later commit/compression priority is a separate deterministic stage.
 
 Standard bitwise Hamming distance, if used, is a separate optional addressing mechanism and is no longer the meaning of “Hamming Rank”.
 
