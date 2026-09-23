@@ -23,6 +23,14 @@ The repository is being opened early so the model, protocol, assumptions, and ev
 
 Claims such as compression ratio, reconstruction speed, fault tolerance, and scaling behavior are **not considered established until measured**.
 
+### Documentation
+
+- [Origin of the idea](docs/ORIGIN.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Protocol draft](docs/PROTOCOL.md)
+- [Project status and milestones](docs/STATUS.md)
+- [Contributing](CONTRIBUTING.md)
+
 ---
 
 ## Core idea
@@ -240,7 +248,9 @@ Planned areas:
 ```text
 /
 ├─ README.md
+├─ CONTRIBUTING.md
 ├─ docs/
+│  ├─ ORIGIN.md
 │  ├─ ARCHITECTURE.md
 │  ├─ PROTOCOL.md
 │  └─ STATUS.md
