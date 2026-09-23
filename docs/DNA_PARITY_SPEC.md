@@ -628,3 +628,60 @@ Therefore the effective independent payload capacity of T76 in Sudoku Profile v1
 A later Payload Profile may define an independent selector, sidecar, alternate q semantics, or other payload carrier. Such a profile must use a new version and must not retroactively change Sudoku Profile v1 trajectories.
 
 See [SUDOKU_PROFILE_V1.md](SUDOKU_PROFILE_V1.md).
+
+## 25. HR-derived branch-reference slots
+
+HexDoku may use HR as a structural count of alternative candidate branches.
+
+~~~text
+HR = candidate_count - 1
+~~~
+
+If one canonical candidate is treated as an implicit anchor, an HR value `h` exposes exactly `h` alternative branch-reference slots.
+
+Examples:
+
+~~~text
+HR0 -> 0 alternative slots
+HR1 -> 1
+HR2 -> 2
+...
+HR8 -> 8
+~~~
+
+A slot may map to a hash, object/chunk ID, manifest index, Seed reference, or a dictionary index under a separately versioned profile.
+
+Hashes remain identifiers/checks; unknown content is not reconstructed from a digest alone.
+
+Two accounting scopes are defined:
+
+~~~text
+B_target = sum_t HR(t,E_t)
+B_DNA    = sum_t sum_{c in active(t)} HR(t,c)
+~~~
+
+With 325 evaluated coordinate states and generic HR<=8:
+
+~~~text
+B_DNA <= 2,600 slots
+~~~
+
+For a `9+9+7` trajectory whose legal candidate domain remains within `{1,2,3}`, HR<=2 and:
+
+~~~text
+B_DNA <= 650 slots
+~~~
+
+These bounds count structural positions only.
+
+If K complete branch/reference assignments are actually reachable while preserving valid deterministic reconstruction and exact Parity, independent channel capacity is at most:
+
+~~~text
+log2(K) bits
+~~~
+
+not `slot_count × reference_width` by default.
+
+HDE may omit explicit HR and branch-position metadata when the received board and pinned rule profile regenerate them exactly.
+
+See [HR_BRANCH_REFERENCES.md](HR_BRANCH_REFERENCES.md).
