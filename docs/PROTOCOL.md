@@ -196,11 +196,21 @@ HDE must obtain the HCT before decoding any HCT-coded payload.
 
 The HCT may be omitted only when it is deterministically regenerable from already shared state.
 
-### 11.3 Terminal Reference
+### 11.3 Terminal Reference / T76
 
-The terminal field must specify an unambiguous type/length or a deterministic reference scheme.
+For the baseline 8-bit-q terminal profile, P24 packs:
 
-The terminal value may be non-numeric.
+~~~text
+q1..q9 in candidate identity order = 72 bits
+terminal_extension                = 4 bits
+T76                               = 76 bits
+~~~
+
+The terminal extension is not HR.
+
+T76 may select a Parity/permutation entry under a versioned mapping. Its field capacity is 2^76 states, but actual entropy may be lower if the q evaluator cannot reach every 72-bit pattern.
+
+A terminal text representation must be explicitly identified. The canonical compact 13-symbol form uses the Base64url alphabet as radix-64 integer digits and is not standard byte-oriented Base64url.
 
 A hash can validate a known Parity but does not by itself recover unknown Parity bytes.
 
@@ -269,3 +279,38 @@ The protocol must distinguish:
 - bytes used for the block contents themselves.
 
 For arbitrary n-element permutations, compression claims must be compared with the information requirement `log2(n!)`, not only with a naive fixed-width ID list.
+
+
+## 15. T76 permutation-selector record
+
+A permutation profile may include or derive:
+
+~~~text
+terminal_selector_t76 : 76 bits
+permutation_rule_version
+universe_id / manifest_hash
+context_rank_version
+~~~
+
+For an n-element universe with n! >= 2^76:
+
+~~~text
+s      = UInt76(T76)
+N      = n!
+offset = ContextRank(context) mod N
+rank   = (offset + s) mod N
+order  = FactoradicUnrank(n, rank)
+~~~
+
+For n=81, all T76 values can select distinct orders for a fixed context.
+
+The receiver must reject:
+
+- wrong T76 width;
+- noncanonical terminal text;
+- incompatible permutation-rule version;
+- wrong universe identity;
+- a mapping that is ambiguous for the selected profile;
+- final object hash mismatch.
+
+T76 is an address/selector field. A protocol requiring modern cryptographic confidentiality must use a separately specified standard cryptographic primitive.
