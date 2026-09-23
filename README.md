@@ -31,6 +31,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md)
 - [Sudoku Profile v1](docs/SUDOKU_PROFILE_V1.md)
 - [HDC-Lite v1](docs/HDC_LITE_V1.md)
+- [HDE Minimum Packet](docs/HDE_MIN_PACKET.md)
 - [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [Turn trajectory and optional Hamming addressing](docs/TRAJECTORY.md)
@@ -133,6 +134,28 @@ HDC runs the exact Sudoku-v1 HDE procedure on each candidate and keeps only mask
 This makes the first HDC a small mask-search encoder rather than a broad combinatorial compressor. HDE never repeats the 36-mask search.
 
 See [HDC-Lite v1](docs/HDC_LITE_V1.md).
+
+---
+## One-board HDE packet spectrum
+
+For the current 9×9 single-board scope, packet size and decoder simplicity are separate goals.
+
+| Representation | Packet | Decoder character |
+|---|---:|---|
+| Full Parity, 4 bit/cell | 324 bit | trivial |
+| 9+9+7 masked board, 3 bit/cell | 243 bit | very small |
+| Arbitrary-Sudoku rank | ~73 bit | compact packet, complex rank/unrank |
+| Canonical board + transform Seed | 41 bit | low/moderate, no search |
+| Transform Seed + 5-bit coordinate payload | 46 bit | low/moderate |
+| Exact Parity already shared | 0 new Parity bit | trivial, shared-state case |
+
+The practical current target is the **41-bit canonical-transform Seed**. Compared with direct 324-bit Parity transmission this reduces the board descriptor by about **87.35%** (about **7.9× smaller**), while avoiding a global Sudoku rank/unrank decoder.
+
+Compared with the 243-bit masked-board representation, 41 bits is about **83.13% smaller** (about **5.93× smaller**).
+
+This 41-bit profile covers the transformation orbit of one shared canonical Sudoku board, not every possible Sudoku solution.
+
+See [HDE Minimum Packet](docs/HDE_MIN_PACKET.md).
 
 ---
 ## DNA / Parity trajectory
