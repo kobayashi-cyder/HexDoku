@@ -9,10 +9,9 @@ This document compares packet size against HDE implementation complexity for exa
 The current scope is intentionally limited to:
 
 ~~~text
-one 9×9 board
+one received 9×9 Sudoku board
+exactly 25 holes
 Sudoku Profile v1
-HDC-Lite 9+9+7
-25 holes
 one HDE reconstruction
 ~~~
 
@@ -20,13 +19,9 @@ No multi-board chaining is included.
 
 ## 2. Important distinction
 
-The smallest packet and the simplest decoder are not the same design point.
+The current reference transport is the **received-board profile**: HDE receives the 81-cell board itself. Alternative Seed/rank transports remain research comparisons and are not the current baseline.
 
-HexDoku therefore distinguishes:
-
-- **packet-light**: minimize transmitted bits;
-- **decoder-light**: minimize HDE code, state, and search;
-- **shared-state-light**: transmit almost nothing because the Parity is already known externally.
+HexDoku therefore distinguishes the actual received board from optional alternate encodings of that board.
 
 ## 3. Packet-size spectrum
 
@@ -76,7 +71,7 @@ This is information-efficient for the complete valid-Sudoku set, but it requires
 
 HDE complexity: high compared with the other profiles. This is not the current recommended baseline.
 
-### D. Canonical Parity + transform Seed
+### D. Alternate research transport: canonical Parity + transform Seed
 
 Choose one shared canonical solved Sudoku board and allow only standard Sudoku-preserving transformations:
 
@@ -105,7 +100,7 @@ HDE complexity: low to moderate. It does not solve or enumerate Sudoku. It start
 
 Important: this profile covers only the orbit generated from the chosen canonical board under those transformations. It does **not** represent every possible completed Sudoku grid.
 
-### E. Canonical Seed + coordinate-bearing mode
+### E. Alternate research transport: canonical Seed + coordinate-bearing mode
 
 If the one-board HDC-Lite mask family has at least 32 reconstructible masks, five fixed payload bits can be assigned to 32 masks:
 
@@ -169,63 +164,47 @@ These are representation-size comparisons, not measured general-purpose compress
 | Seed + coordinate payload | 46 bit | none for Parity generation; small mask reconstruction if used | low/moderate | one orbit + coordinate channel |
 | Shared exact Parity | 0 Parity bit | none | trivial | only already-shared state |
 
-## 6. Recommended current minimum
+## 6. Current reference input
 
-For the current HexDoku experiment, the recommended practical minimum is:
+The current HexDoku experiment receives the 25-hole board itself.
 
-~~~text
-shared canonical solved board
-+ 41-bit transform Seed
-+ fixed sudoku-v1 / hdc-lite-9-9-7 rules
-+ optional 5-bit coordinate payload
-~~~
+For a generic Sudoku board, a simple fixed-width representation is 324 bits (`81 × 4`). Under the fixed `9+9+7` profile, the eight visible cell states fit in 243 bits (`81 × 3`).
 
-Reasons:
+No separate coordinate list is transmitted because the 25 hole positions are already present in the 81-cell array. No separate solution-value, solve-order, HR, or HR-slot-position fields are transmitted when HDE can regenerate them exactly.
 
-1. no global Sudoku rank/unrank machinery;
-2. no transmission of 81 cells;
-3. no 36-mask search on HDE;
-4. only deterministic row/column/band/stack/digit permutations;
-5. row-major E0..E24 remains implicit;
-6. q and HR remain recomputable when required.
+The 41-bit transform Seed remains an alternate restricted transport experiment, not the current received-board baseline.
 
 ## 7. Minimal HDE work
 
-For the 41-bit neutral profile, the HDE's conceptual work is:
+For the current received-board profile:
 
 ~~~text
-read 41-bit transform Seed
--> decode transform parameters
--> copy canonical 9×9 board
--> relabel digits
--> permute rows/bands
--> permute columns/stacks
--> optional transpose
--> obtain ParityGrid
-~~~
-
-This path needs no Sudoku backtracking and no probability-table transmission.
-
-If the masked-board reconstruction step is also required:
-
-~~~text
-ParityGrid / masked board
--> build 27 small 9-bit masks
--> scan 25 holes row-major
--> apply sudoku-v1 reconstruction
+read 81-cell board
+-> scan once to find 25 holes and build row/column/box masks
+-> evaluate candidates with 9-bit masks
+-> reconstruct the 25 values under the pinned deterministic rule
+-> record the deterministic solve/commit order
+-> regenerate HR and branch-slot positions
 -> verify final board
 ~~~
 
+For a no-backtracking path, a simple repeated scan evaluates at most `25+24+...+1 = 325` remaining-cell states. The intended cost is therefore a few thousand simple integer/bit operations, not a measured CPU-instruction guarantee.
+
 ## 8. What must still be measured
 
-The 41-bit transform Seed is a format width, not a measured entropy result.
+Benchmark the received-board path directly:
 
-Benchmark:
+- actual board bytes on wire;
+- actual HDE code size and working memory;
+- candidate-cell evaluation count;
+- measured CPU instructions/cycles;
+- number K of distinct solve orders HDC can deliberately realize;
+- `log2(K)` order-channel capacity;
+- HR histogram and `sum(HR)`;
+- reference-dictionary/manifest overhead;
+- exact final Parity equality.
 
-- actual HDE code size;
-- working memory;
-- transform decode time;
-- masked-board reconstruction time;
-- number of valid 9+9+7 masks;
-- whether >=32 masks are reliably available for a five-bit coordinate-bearing channel;
-- full packet overhead once integrity/version fields are included.
+Alternate 41-bit transform-Seed experiments must be reported separately.
+
+
+See [ONE_BOARD_DERIVED_INFORMATION.md](ONE_BOARD_DERIVED_INFORMATION.md) for the authoritative current information accounting.
