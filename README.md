@@ -30,6 +30,7 @@ Claims such as compression ratio, reconstruction speed, fault tolerance, and sca
 - [Architecture](docs/ARCHITECTURE.md)
 - [DNA / Parity Model v0.2](docs/DNA_PARITY_SPEC.md)
 - [Sudoku Profile v1](docs/SUDOKU_PROFILE_V1.md)
+- [HDC-Lite v1](docs/HDC_LITE_V1.md)
 - [Permutation / Address Compression](docs/PERMUTATION_ADDRESSING.md)
 - [Canonical order and HexDoku Hamming Rank](docs/CANONICAL_ORDER.md)
 - [Turn trajectory and optional Hamming addressing](docs/TRAJECTORY.md)
@@ -89,7 +90,7 @@ Seed Cell + references + residual bits
 canonical reconstructed bytes
 ```
 
-HDC may be computationally expensive. HDE is intended to be deterministic, reproducible, and simpler to execute.
+HDC may be computationally expensive in general. The first Sudoku baseline instead uses **HDC-Lite v1**, which restricts encoder search to 36 canonical `9+9+7` hole masks. HDE is deterministic and does not repeat that mask search.
 
 ## First reference rule: Sudoku Profile v1
 
@@ -106,6 +107,32 @@ Sudoku Profile v1 fixes 9×9 geometry, digits 1..9, row/column/3×3 constraints,
 This gives a clean baseline for measuring the 2,925-byte raw DNA trajectory, HCT compression, repeated q values, and HDC/HDE equality before payload-specific rules are introduced.
 
 See [Sudoku Profile v1](docs/SUDOKU_PROFILE_V1.md).
+
+---
+## HDC-Lite v1: Parity-first hole search
+
+The first encoder strategy starts from the completed Sudoku ParityGrid and searches only a tiny family of reconstruction-friendly 25-hole masks.
+
+Baseline removal rule:
+
+~~~text
+remove all nine 1s
+remove all nine 2s
+remove seven of the nine 3s
+= 25 holes
+~~~
+
+Only the two visible 3-cells vary, so there are exactly:
+
+~~~text
+C(9,2) = 36 candidate masks
+~~~
+
+HDC runs the exact Sudoku-v1 HDE procedure on each candidate and keeps only masks that reconstruct the source ParityGrid exactly. A canonical six-bit rank identifies the chosen mask (`0..35`; `36..63` invalid).
+
+This makes the first HDC a small mask-search encoder rather than a broad combinatorial compressor. HDE never repeats the 36-mask search.
+
+See [HDC-Lite v1](docs/HDC_LITE_V1.md).
 
 ---
 ## DNA / Parity trajectory
