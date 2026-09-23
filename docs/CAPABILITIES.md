@@ -576,3 +576,29 @@ This lets the same HDE-generated state act as an address base for hashes, bus va
 The full Hamming space of a 72-bit base contains 2^72 possible vectors, but that address space is not 2^72 bits of independent information. It is a deterministic space generated from the base and addressing rule.
 
 See [Turn trajectory and Hamming addressing](TRAJECTORY.md).
+
+
+## 19. HexDoku Hamming Rank
+
+HexDoku's primary rank is now defined as an uncertainty/multiplicity rank from 0 through 8:
+
+```text
+HR0 -> one candidate remains; already determined logically, even if not yet written
+HR1 -> two candidates remain
+...
+HR8 -> all nine candidates remain
+```
+
+Every turn evaluates all unresolved cells first. Cells are then sorted deterministically by:
+
+```text
+HR
+-> canonical candidate-value table
+-> coordinate
+```
+
+This gives HDC and HDE the same compression/reconstruction order even when evaluation is parallel.
+
+The term **Hamming Rank** is project-specific here. Standard bitwise Hamming distance is written **HD** and remains only an optional derived-bit addressing layer.
+
+See [Canonical Order v0.1](CANONICAL_ORDER.md).
