@@ -240,3 +240,24 @@ Measure at least:
 - exact Parity equality.
 
 Only measured results should be reported as HDC-Lite performance.
+
+## 13. Packet-light HDE target
+
+HDC-Lite may pair the 9+9+7 mask strategy with a shared canonical Sudoku board and a 41-bit transform Seed.
+
+Under that restricted profile, HDE can regenerate Parity by applying fixed Sudoku-preserving transformations rather than receiving 81 cells.
+
+Reference sizes:
+
+~~~text
+full Parity direct      324 bits
+masked board direct     243 bits
+canonical transform Seed 41 bits
+Seed + 5 coordinate bits 46 bits
+~~~
+
+The 41-bit profile is approximately 87.35% smaller than the 324-bit direct-grid baseline and 83.13% smaller than the 243-bit masked-board baseline.
+
+This does not cover all completed Sudoku boards; it covers the orbit of the shared canonical board.
+
+See [HDE_MIN_PACKET.md](HDE_MIN_PACKET.md).
