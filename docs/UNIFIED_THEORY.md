@@ -1314,6 +1314,93 @@ The next test is therefore representation-theoretic:
 
 This test is useful because it distinguishes a genuine structural consequence from merely inserting a Higgs field by hand.
 
+
+---
+
+## Higgs representation from left-right representation mismatch
+
+Using the Standard Model convention:
+
+~~~text
+Q = T3 + Y
+~~~
+
+the one-generation fermion representations are:
+
+~~~text
+L_L  ~ (1, 2, -1/2)
+e_R  ~ (1, 1, -1)
+
+Q_L  ~ (3, 2, +1/6)
+u_R  ~ (3, 1, +2/3)
+d_R  ~ (3, 1, -1/3)
+~~~
+
+If the Higgs-like internal connection maps a right-handed singlet into a left-handed SU(2)_L doublet, then its SU(2)_L transformation law must itself be doublet-like.
+
+For the charged-lepton Yukawa structure:
+
+~~~text
+bar(L_L) H e_R
+~~~
+
+U(1)_Y invariance requires:
+
+~~~text
+-Y(L_L) + Y(H) + Y(e_R) = 0
+~~~
+
+hence:
+
+~~~text
++1/2 + Y(H) - 1 = 0
+Y(H) = +1/2
+~~~
+
+Color does not need to be changed by the connection, so:
+
+~~~text
+H ~ (1, 2, +1/2)
+~~~
+
+The same H then supports the down-type Yukawa coupling:
+
+~~~text
+bar(Q_L) H d_R
+~~~
+
+while the conjugate doublet:
+
+~~~text
+H_tilde = i sigma_2 H*
+~~~
+
+with hypercharge -1/2 supports the up-type coupling:
+
+~~~text
+bar(Q_L) H_tilde u_R
+~~~
+
+Thus, once the observed left/right fermion representations are given, the Higgs representation is strongly constrained by the requirement that one internal connection make the Yukawa maps gauge invariant.
+
+This is not yet a derivation of the Higgs from first principles because the fermion representations were used as input.
+
+The deeper problem is therefore shifted to:
+
+~~~text
+Why do the left/right fermion sectors carry exactly these gauge representations and hypercharges?
+~~~
+
+The next test combines:
+
+~~~text
+Yukawa-connectability
++
+gauge-anomaly cancellation
+~~~
+
+to determine how much of the hypercharge pattern can be fixed without inserting the observed numbers independently.
+
 ## Canonical current map
 
 The current physically disciplined map is:
