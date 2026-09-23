@@ -2430,6 +2430,159 @@ reconstruction of constraints
 
 This three-part structure is now the preferred general template.
 
+
+---
+
+## Axis selection and recurring 3+1 decompositions
+
+The current framework can simplify the language of "new constraints" in an important special case.
+
+Suppose a four-component state space is initially isotropic or otherwise does not distinguish one preferred direction.
+
+Let a unit vector n become selected by the state.
+
+Then any fluctuation can be decomposed as:
+
+~~~text
+delta Phi
+=
+delta Phi_perp
++
+h n
+~~~
+
+with:
+
+~~~text
+n dot delta Phi_perp = 0
+~~~
+
+so locally:
+
+~~~text
+R^4
+=
+R^3_perp
++
+R^1_parallel
+~~~
+
+This is the minimal geometric meaning of:
+
+~~~text
+4 -> 3 + 1
+~~~
+
+One direction is selected, while the three orthogonal directions remain equivalent with respect to that selection.
+
+In this restricted sense, "constraint formation" can be interpreted as:
+
+~~~text
+selection of a preferred axis
+    ->
+reduction of equivalent choices
+    ->
+concentration of dynamics into a structured subspace
+~~~
+
+The earlier "specialization / selection and concentration" analogy belongs here: restricting the exploration direction reduces the accessible search space while allowing more depth along the retained structure.
+
+### Vacuum-manifold example
+
+For an O(4)-type scalar prototype with:
+
+~~~text
+|Phi| = v
+~~~
+
+a chosen vacuum Phi_0 defines:
+
+~~~text
+3 tangent directions
++
+1 normal / radial direction
+~~~
+
+or:
+
+~~~text
+4
+->
+3_tangent
++
+1_normal
+~~~
+
+The tangent directions describe motion along the vacuum manifold.
+
+The normal direction changes the distance away from that manifold.
+
+This prototype is mathematically clean, but it does not by itself derive the Standard Model.
+
+### Do not identify distinct 3+1 structures prematurely
+
+Several physically different systems can display a 3+1 decomposition:
+
+~~~text
+3 spatial + 1 temporal directions
+3 color components + 1 lepton-like component
+3 Goldstone-like tangent directions + 1 Higgs-like radial direction
+3 orthogonal directions + 1 selected axis in a generic four-state model
+~~~
+
+The appearance of the same integer decomposition is not evidence that these are the same physical degrees of freedom.
+
+The current theory must therefore distinguish:
+
+~~~text
+same dimension count
+from
+same representation
+from
+same dynamics
+from
+same underlying state space
+~~~
+
+### Strong unification test
+
+A genuine unification would require one primitive four-component structure, together with one physically defined symmetry-breaking / axis-selection mechanism, to generate more than one observed 3+1 structure without independently inserting each one.
+
+Schematically:
+
+~~~text
+primitive four-component structure
+    ->
+one selection / symmetry-breaking rule
+    ->
+representation A: spacetime-like 3+1
+representation B: internal 3+1
+representation C: tangent/radial 3+1
+~~~
+
+The same primitive parameters would then need to predict quantitative relations across those sectors.
+
+If the three appearances of 3+1 require independent definitions, unrelated metrics, or separately fitted couplings, then the shared 3+1 count is only analogy.
+
+### Revised interpretation of constraints
+
+The framework should therefore use two levels of "constraint":
+
+~~~text
+general constraint:
+    any rule that restricts accessible state space
+
+axis-selection constraint:
+    a special case in which one direction is distinguished
+    and the remainder decompose into its orthogonal complement
+~~~
+
+This avoids claiming that every stable structure requires the same type of constraint.
+
+The immediate research target is now narrower:
+
+> Determine whether the recurring 3+1 decompositions can be represented as different projections or representations of one underlying four-component state structure, while preserving the known physical distinctions among spacetime, gauge, and Higgs sectors.
+
 ## Canonical current map
 
 The current physically disciplined map is:
