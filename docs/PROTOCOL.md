@@ -314,3 +314,42 @@ The receiver must reject:
 - final object hash mismatch.
 
 T76 is an address/selector field. A protocol requiring modern cryptographic confidentiality must use a separately specified standard cryptographic primitive.
+
+## 16. Compression-reporting profile
+
+A T76 benchmark must declare the baseline representation.
+
+Required fields in a benchmark report:
+
+~~~text
+element_count
+baseline_id_width_bits
+baseline_order_bits
+t76_bits = 76
+seed_bytes_transmitted
+rule_profile_bytes_transmitted
+universe_reference_bytes_transmitted
+residual_bytes_transmitted
+verification_auth_bytes_transmitted
+shared_context_bytes
+full_descriptor_bytes
+~~~
+
+For a naive 25-element explicit ordering:
+
+~~~text
+baseline_order_bits = 25 × baseline_id_width_bits
+~~~
+
+Example reductions when all non-order context is already shared:
+
+~~~text
+5-bit IDs   : 125  -> 76 bits = 39.20%
+32-bit IDs  : 800  -> 76 bits = 90.50%
+64-bit IDs  : 1600 -> 76 bits = 95.25%
+256-bit IDs : 6400 -> 76 bits = 98.81%
+~~~
+
+The protocol must not report those values as total-object compression unless the block universe and block contents are intentionally excluded and that exclusion is clearly stated.
+
+For comparison with optimal permutation coding, a 25-element arbitrary permutation has 25! states and needs approximately 83.68 bits of information. T76 does not cover all of that state space.
