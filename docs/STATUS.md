@@ -12,6 +12,7 @@ The architecture has a defined direction, but performance and scaling claims rem
 
 - HDC-Lite v1 9+9+7 Parity-first mask search (36 masks / 6-bit rank)
 - HR branch-reference channel: one implicit anchor plus HR alternative reference slots
+- One-board derived-information model: received 25-hole board; coordinates/values/order/HR/slot positions are decoder-derived when reproducible
 
 - Seed Cell as a minimal bootstrap descriptor
 - HexDoku ID / serial
@@ -74,6 +75,9 @@ Compare the one-board packet modes: 324-bit full Parity, 243-bit masked board, ~
 
 ### M1E — HR branch-reference benchmark
 Measure `sum_hr_targets`, `sum_hr_commits`, and `sum_hr_dna` on the 25-hole corpus; record HR histograms, deduplicated reference-slot counts, dictionary overhead, HDE regeneration operations, and the reachable complete-assignment count K where feasible. Report `log2(K)` separately from raw slot width.
+
+### M1F — Reachable-order and instruction benchmark
+Use the received 25-hole board as the only board input. Measure the number K of distinct valid deterministic solve orders HDC can deliberately realize, report `log2(K)`, and instrument HDE candidate-cell evaluations plus actual CPU instructions/cycles. Compare against a conventional 84-bit factoradic order field.
 
 ### M2 — Bit-perfect cross-process reconstruction
 Prove exact reconstruction in a fresh process.
